@@ -4,12 +4,12 @@ namespace Murtukov\PHPCodeGenerator;
 
 class Method implements GeneratorInterface
 {
-    private string  $name;
-    private string  $modifier;
-    private ?string $returnType;
-    private array   $args = [];
-    private array   $lines = []; // todo
-    private string  $return;
+    private $name;
+    private $modifier;
+    private $returnType;
+    private $args = [];
+    private $lines = []; // todo
+    private $return;
 
 
     public static function create(string $name, string $modifier = 'public', ?string $returnType = null): self
@@ -43,6 +43,11 @@ class Method implements GeneratorInterface
 
     private function getReturnType(): string
     {
-        return ": $this->returnType" ?? '';
+        return $this->returnType ? ": $this->returnType" : '';
+    }
+
+    public function __toString()
+    {
+        return $this->generate();
     }
 }

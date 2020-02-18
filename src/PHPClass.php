@@ -2,22 +2,28 @@
 
 namespace Murtukov\PHPCodeGenerator;
 
+use function count;
+use function implode;
 use function str_replace;
 
-class Klass implements GeneratorInterface
+class PHPClass implements GeneratorInterface
 {
-    private int     $indent = 4;
-    private array   $properties;
+    private $indent = 4;
+
+    /**
+     * @var Property[]
+     */
+    private $properties;
 
     /**
      * @var Method[]
      */
-    private array   $methods = [];
-    private ?string $namespace = null;
-    private array   $useStatements = [];
-    private string  $name;
-    private ?string $extends = null;
-    private array   $implements = [];
+    private $methods = [];
+    private $namespace = null;
+    private $useStatements = [];
+    private $name;
+    private $extends = null;
+    private $implements = [];
 
     public function __construct(string $name)
     {
@@ -29,7 +35,7 @@ class Klass implements GeneratorInterface
         return <<<CODE
         <?php declare(strict_types=1);
         
-        class $this->name
+        class $this->name {$this->generateImplements()}
         {
         {$this->generateContent()}
         }
@@ -88,9 +94,9 @@ class Klass implements GeneratorInterface
     {
         $code = '';
 
-        foreach ($this->methods as $method) {
-            $code .= $method->generate();
-        }
+        $code .= implode("\n", $this->properties);
+        $code .= "\n\n";
+        $code .= implode("\n\n", $this->methods);
 
         return $this->indent($code);
     }
@@ -122,5 +128,10 @@ class Klass implements GeneratorInterface
     private function getDeclare(): string
     {
         return '';
+    }
+
+    private function generateImplements(): string
+    {
+        return count($this->implements) > 0 ? 'implements ' . implode(', ', $this->implements) : '';
     }
 }

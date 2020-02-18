@@ -4,10 +4,10 @@ namespace Murtukov\PHPCodeGenerator;
 
 class ArrayVariable implements GeneratorInterface
 {
-    private bool    $oldSyntax = false;
-    private bool    $oneLiner = false;
-    private bool    $numeric = true;
-    private array   $items = [];
+    private $oldSyntax = false;
+    private $oneLiner = false;
+    private $numeric = true;
+    private $items = [];
 
     public function addItem(string $key, string $value): self
     {

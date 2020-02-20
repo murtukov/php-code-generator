@@ -42,6 +42,10 @@ class PHPClass implements GeneratorInterface
         CODE;
     }
 
+    public function __toString(): string
+    {
+        return $this->generate();
+    }
 
     public function setName(string $name): self
     {
@@ -92,9 +96,7 @@ class PHPClass implements GeneratorInterface
 
     private function generateContent(): string
     {
-        $code = '';
-
-        $code .= implode("\n", $this->properties);
+        $code  = implode("\n", $this->properties);
         $code .= "\n\n";
         $code .= implode("\n\n", $this->methods);
 

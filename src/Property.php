@@ -32,7 +32,7 @@ class Property implements GeneratorInterface
         return $this->defaulValue ? " = $this->defaulValue" : '';
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->generate();
     }

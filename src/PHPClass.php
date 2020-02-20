@@ -2,28 +2,39 @@
 
 namespace Murtukov\PHPCodeGenerator;
 
+use function array_pop;
 use function count;
+use function explode;
 use function implode;
+use function in_array;
 use function str_replace;
 
 class PHPClass implements GeneratorInterface
 {
-    private $indent = 4;
+    /** @var Property[] */
+    private array $properties = [];
 
-    /**
-     * @var Property[]
-     */
-    private $properties;
+    /** @var Method[] */
+    private array $methods = [];
 
-    /**
-     * @var Method[]
-     */
-    private $methods = [];
-    private $namespace = null;
-    private $useStatements = [];
-    private $name;
-    private $extends = null;
-    private $implements = [];
+    /** @var string[] */
+    private array $useStatements = [];
+
+    /** @var string[] */
+    private array $implements = [];
+
+    /** @var string[] */
+    private array $declares;
+
+    /** @var string[] */
+    private array $consts = [];
+
+    private int     $indent = 4;
+    private string  $namespace = '';
+    private string  $extends = '';
+    private bool    $isFinal = false;
+    private bool    $isAbstract = false;
+    private string  $name;
 
     public function __construct(string $name)
     {
@@ -33,9 +44,9 @@ class PHPClass implements GeneratorInterface
     public function generate(): string
     {
         return <<<CODE
-        <?php declare(strict_types=1);
-        
-        class $this->name {$this->generateImplements()}
+        <?php 
+        {$this->generateNamespace()}{$this->generateUseStatements()}
+        {$this->generatePrefix()}class $this->name {$this->generateExtends()}{$this->generateImplements()}
         {
         {$this->generateContent()}
         }
@@ -54,7 +65,6 @@ class PHPClass implements GeneratorInterface
         return $this;
     }
 
-
     public function addMethod(Method $method): self
     {
         $this->methods[] = $method;
@@ -62,30 +72,65 @@ class PHPClass implements GeneratorInterface
         return $this;
     }
 
-
-    public function addImplements(string $className): self
+    public function addImplements(string $fqcn): self
     {
-        $this->implements[] = $className;
+        $parts = explode('\\', $fqcn);
+        $className = array_pop($parts);
+
+        if ($this->hasUseStatementAlias($className)) {
+            $this->implements[] = $fqcn;
+        } else {
+            $this->addUseStatement($fqcn);
+            // todo: make unique
+            // todo: remove classname from use statements array by removing the class name of 'implements'
+            $this->implements[] = $className;
+        }
 
         return $this;
     }
 
-
-    public function setExtends(string $className): self
+    public function setExtends(string $fqcn): self
     {
-        $this->extends = $className;
+        $parts = explode('\\', $fqcn);
+        $className = array_pop($parts);
+
+        if ($this->hasUseStatementAlias($className)) {
+            $this->extends = $fqcn;
+        } else {
+            $this->addUseStatement($fqcn);
+            // todo: remove classname from use statements array by change of 'extends'
+            $this->extends = $className;
+        }
 
         return $this;
     }
 
-
-    public function addUseStatement(string $className): self
+    public function addUseStatement(string $fqcn, string $alias = ''): self
     {
-        $this->useStatements[] = $className;
+        $this->useStatements[$fqcn] = $alias;
 
         return $this;
     }
 
+    public function generateUseStatements(): string
+    {
+        $code = '';
+
+        if (count($this->useStatements) > 0) {
+            $code = "\n";
+            foreach ($this->useStatements as $stm => $as) {
+                $code .= "use $stm";
+
+                if ($as) {
+                    $code .= " as $as";
+                }
+
+                $code .= ";\n";
+            }
+        }
+
+        return $code;
+    }
 
     public function addProperty(Property $property): self
     {
@@ -96,7 +141,7 @@ class PHPClass implements GeneratorInterface
 
     private function generateContent(): string
     {
-        $code  = implode("\n", $this->properties);
+        $code .= implode("\n", $this->properties);
         $code .= "\n\n";
         $code .= implode("\n\n", $this->methods);
 
@@ -135,5 +180,108 @@ class PHPClass implements GeneratorInterface
     private function generateImplements(): string
     {
         return count($this->implements) > 0 ? 'implements ' . implode(', ', $this->implements) : '';
+    }
+
+    private function generatePrefix(): string
+    {
+        $modifiers = '';
+
+        if ($this->isFinal) {
+            $modifiers .= 'final ';
+        } elseif ($this->isAbstract) {
+            $modifiers .= 'abstract ';
+        }
+
+        return $modifiers;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFinal(): bool
+    {
+        return $this->isFinal;
+    }
+
+    /**
+     * @param bool $isFinal
+     * @return PHPClass
+     */
+    public function setIsFinal(bool $isFinal): PHPClass
+    {
+        $this->isFinal = $isFinal;
+
+        // Class cannot be final and abstract at the same time
+        if ($isFinal) {
+            $this->isAbstract = false;
+        }
+
+        return $this;
+    }
+
+    public function isAbstract(): bool
+    {
+        return $this->isAbstract;
+    }
+
+    public function setIsAbstract(bool $isAbstract): PHPClass
+    {
+        $this->isAbstract = $isAbstract;
+
+        // Class cannot be final and abstract at the same time
+        if (true === $isAbstract) {
+            $this->isFinal = false;
+        }
+
+        return $this;
+    }
+
+    private function generateNamespace(): string
+    {
+        if ($this->namespace) {
+            return "\nnamespace $this->namespace;\n";
+        }
+
+        return '';
+    }
+
+    public function hasUseStatementAlias(string $alias): bool
+    {
+        if (in_array($alias, $this->useStatements)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function getNamespace(): string
+    {
+        return $this->namespace;
+    }
+
+    public function setNamespace(string $namespace): PHPClass
+    {
+        $this->namespace = $namespace;
+        return $this;
+    }
+
+    private function generateExtends()
+    {
+        if ($this->extends) {
+            return "extends $this->extends ";
+        }
+
+        return '';
+    }
+
+    public function getConsts(): array
+    {
+        return $this->consts;
+    }
+
+    public function addConst(string $name, $value): PHPClass
+    {
+        $this->consts[$name] = $value;
+        return $this;
     }
 }

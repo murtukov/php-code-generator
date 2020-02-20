@@ -7,41 +7,42 @@ use function implode;
 
 class Method implements GeneratorInterface
 {
-    private $name;
-    private $modifier;
-    private $returnType;
-    private $args = [];
-    private $content = []; // todo
-    private $return;
-    private $indent = 4;
+    private string  $name;
+    private string  $modifier;
+    private string  $returnType;
+    private array   $args = [];
+    private array   $content = [];
+    private int     $indent = 4;   // spaces
 
-
-    public static function create(string $name, string $modifier = 'public', ?string $returnType = null): self
+    public static function create(string $name, string $modifier = 'public', string $returnType = ''): self
     {
         return new self($name, $modifier, $returnType);
     }
 
-
-    public function __construct(string $name, string $modifier = 'public', ?string $returnType = null)
+    public function __construct(string $name, string $modifier = 'public', string $returnType = '')
     {
         $this->name = $name;
         $this->modifier = $modifier;
         $this->returnType = $returnType;
     }
 
-
     public function generate(): string
     {
+        $signature = "$this->modifier function $this->name()";
+
+        if ($this->returnType) {
+            $signature .= ": $this->returnType";
+        }
+
         return <<<CODE
-        $this->modifier function $this->name(){$this->getReturnType()}
+        $signature
         {
-        {$this->getContent()}
+        {$this->generateContent()}
         }
         CODE;
     }
 
-
-    private function getContent(): string
+    private function generateContent(): string
     {
         $content = '';
 
@@ -52,23 +53,17 @@ class Method implements GeneratorInterface
         return $content;
     }
 
-    /**
-     * Adds offsets to each line in the code.
-     *
-     * @param string $code
-     * @return string
-     */
     private function indent(string $code): string
     {
-        $indent = $this->getIndent();
+        $indent = $this->createOffset();
 
         return $indent . str_replace("\n", "\n$indent", $code);
     }
 
-    private function getIndent(): string
+    private function createOffset(): string
     {
         $indent = '';
-
+        
         for ($i = 0; $i < $this->indent; ++$i) {
             $indent .= " ";
         }
@@ -76,7 +71,7 @@ class Method implements GeneratorInterface
         return $indent;
     }
 
-    private function getReturnType(): string
+    private function generateReturnType(): string
     {
         return $this->returnType ? ": $this->returnType" : '';
     }
@@ -113,4 +108,34 @@ class Method implements GeneratorInterface
 
         return $this;
     }
+
+    public function getIndent(): int
+    {
+        return $this->indent;
+    }
+
+    public function setIndent(int $indent): Method
+    {
+        $this->indent = $indent;
+        return $this;
+    }
+
+    public function getReturnType(): string
+    {
+        return $this->returnType;
+    }
+
+    public function setReturnType(string $returnType): Method
+    {
+        $this->returnType = $returnType;
+        return $this;
+    }
+
+
+}
+
+
+function method(string $name, string $modifier = 'public', ?string $returnType = null): Method
+{
+    return new Method($name, $modifier, $returnType);
 }

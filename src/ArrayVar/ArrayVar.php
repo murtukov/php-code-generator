@@ -3,27 +3,29 @@
 namespace Murtukov\PHPCodeGenerator\ArrayVar;
 
 use Murtukov\PHPCodeGenerator\GeneratorInterface;
+use function array_key_last;
 use function gettype;
+use function is_int;
 use function json_encode;
 
 class ArrayVar implements GeneratorInterface
 {
-    private $oldSyntax = false;
-    private $multiline = false;
-    private $isNumeric = true;
-    private $items;
-    private $indent = 4;
+    private bool    $oldSyntax = false;
+    private bool    $multiline = false;
+    private bool    $isAssoc = true;
+    private array   $items;
+    private int     $indent = 4;
 
-    public function __construct(array $items = [], bool $multiline = false, bool $isNumeric = true)
+    public function __construct(array $items = [], bool $multiline = false, bool $isAssoc = true)
     {
         $this->items = $items;
         $this->multiline = $multiline;
-        $this->isNumeric = $isNumeric;
+        $this->isAssoc = $isAssoc;
     }
 
-    public static function create(array $items = [], bool $multiline = false, bool $isNumeric = true): self
+    public static function create(array $items = [], bool $multiline = false, bool $isAssoc = true): self
     {
-        return new self($items, $multiline, $isNumeric);
+        return new self($items, $multiline, $isAssoc);
     }
 
     public function addItem(string $key, string $value): self
@@ -35,11 +37,15 @@ class ArrayVar implements GeneratorInterface
 
     public function generate(): string
     {
-        if ($this->isNumeric) {
-            return $this->generateNumericArray();
+        if (0 === count($this->items)) {
+            return '[]';
         }
 
-        return $this->generateAssocArray($this->items);
+        if ($this->isAssoc) {
+            return $this->generateAssocArray($this->items);
+        }
+
+        return $this->generateNumericArray();
     }
 
     public function generateNumericArray(): string
@@ -55,22 +61,29 @@ class ArrayVar implements GeneratorInterface
 
     private function generateAssocArray($items): string
     {
-        if ($this->multiline) {
-            $code = '';
-            foreach ($items as $key => $value) {
-                $code .= "'$key' => " . $this->stringifyValue($value);
+        $code = '';
+        $last = array_key_last($items);
 
-                if ($key !== array_key_last($items)) {
+        if ($this->multiline) {
+            foreach ($items as $key => $value) {
+                $code .= "{$this->stringifyKey($key)} => {$this->stringifyValue($value)},";
+
+                if ($key !== $last) {
                     $code .= "\n";
                 }
             }
 
             return "[\n{$this->indent($code)}\n]";
         } else {
-            $code = "[";
             foreach ($items as $key => $value) {
-                $code .= "'$key' => " . $this->stringifyValue($value) . ", ";
+                $code .= "'$key' => " . $this->stringifyValue($value);
+
+                if ($key !== $last) {
+                    $code .= ", ";
+                }
             }
+
+            return "[$code]";
         }
     }
 
@@ -93,6 +106,11 @@ class ArrayVar implements GeneratorInterface
                 return "undefined";
 
         }
+    }
+
+    private function stringifyKey($key)
+    {
+        return is_int($key) ? $key : "'$key'";
     }
 
     /**
@@ -123,4 +141,9 @@ class ArrayVar implements GeneratorInterface
 
         return $indent;
     }
+}
+
+
+function arrayVar() {
+
 }

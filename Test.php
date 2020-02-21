@@ -5,11 +5,11 @@ declare(strict_types=1);
 require __DIR__ . '/vendor/autoload.php';
 
 use Murtukov\PHPCodeGenerator\Argument;
-use Murtukov\PHPCodeGenerator\ArrayVar\AssocArray;
-use Murtukov\PHPCodeGenerator\ArrayVar\NumericArray;
-use Murtukov\PHPCodeGenerator\Closure\ArrowFunction;
+use Murtukov\PHPCodeGenerator\Arrays\AssocArray;
+use Murtukov\PHPCodeGenerator\Arrays\NumericArray;
+use Murtukov\PHPCodeGenerator\Functions\ArrowFunction;
 use Murtukov\PHPCodeGenerator\PHPClass;
-use Murtukov\PHPCodeGenerator\Method;
+use Murtukov\PHPCodeGenerator\Functions\Method;
 
 $class = new PHPClass("Mutation");
 $class->setIsFinal(true);
@@ -38,8 +38,8 @@ $cascadeMethod = Method::create('cascadeValidation', 'public', 'string')
     ->appendVar('numbers', NumericArray::create([22, 33, 44]))
 ;
 
-$class->addProperty('firstName', 'public');
-$class->addProperty('friends', 'public', '[]');
+$property = $class->addProperty('firstName', 'public');
+$prop = $class->addProperty('friends', 'public', '[]');
 $class->addMethod($cascadeMethod);
 $class->createMethod('__toString')->setReturnType('string');
 
@@ -47,3 +47,30 @@ $class->addImplements("Overblog\GraphQLBundle\Definition\Type\GeneratedTypeInter
 $class->setExtends("GraphQL\Type\Definition\ObjectType");
 
 echo $class->generate();
+//
+//// Function
+//function tiesto(string $test): string
+//{
+//    echo "Hello, World!";
+//
+//    return "Yes!";
+//}
+//
+//// Method
+//public function tiesto2(string $test): string
+//{
+//    echo "Hello, World!";
+//
+//    return "Yes!";
+//}
+//
+//// Closure
+//function (string $test) use ($class): string  {
+//    echo "Hello, World!";
+//
+//    return "Yes!";
+//}
+//
+//// Arrow function
+//fn(string $test) => 11 + 15
+

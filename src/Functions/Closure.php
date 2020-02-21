@@ -1,6 +1,6 @@
 <?php
 
-namespace Murtukov\PHPCodeGenerator\Closure;
+namespace Murtukov\PHPCodeGenerator\Functions;
 
 class Closure extends AbstractClosure
 {
@@ -13,10 +13,5 @@ class Closure extends AbstractClosure
         }";
 
         return $code;
-    }
-
-    protected function generateArgs(): string
-    {
-        return '';
     }
 }

@@ -1,22 +1,25 @@
 <?php
 
-namespace Murtukov\PHPCodeGenerator\Closure;
+namespace Murtukov\PHPCodeGenerator\Functions;
 
 use Murtukov\PHPCodeGenerator\AbstractGenerator;
 use Murtukov\PHPCodeGenerator\Argument;
 
-abstract class AbstractClosure extends AbstractGenerator
+abstract class AbstractFunction extends AbstractGenerator
 {
     protected string  $returnType;
-    protected array   $args;
+    protected array   $args = [];
 
     abstract public function generate(): string;
-    abstract protected function generateArgs(): string;
 
-    public function __construct(string $returnType, array $args)
+    protected function generateArgs(): string
+    {
+        return \implode(", ", $this->args);
+    }
+
+    public function __construct(string $returnType)
     {
         $this->returnType = $returnType;
-        $this->args = $args;
     }
 
     public function getReturnType(): string

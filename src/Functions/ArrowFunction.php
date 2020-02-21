@@ -2,18 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Murtukov\PHPCodeGenerator\Closure;
+namespace Murtukov\PHPCodeGenerator\Functions;
 
-use Murtukov\PHPCodeGenerator\Argument;
-
-class ArrowFunction extends AbstractClosure
+class ArrowFunction extends AbstractFunction
 {
     private string $expression;
 
     public function __construct(array $args = [], string $returnType = '', string $expression = '')
     {
         $this->expression = $expression;
-        parent::__construct($returnType, $args);
+        $this->setArguments($args);
+        parent::__construct($returnType);
     }
 
     public static function create(array $args = [], string $returnType = '', string $expression = '')
@@ -24,11 +23,6 @@ class ArrowFunction extends AbstractClosure
     public function generate(): string
     {
         return "fn({$this->generateArgs()}) => $this->expression";
-    }
-
-    protected function generateArgs(): string
-    {
-        return \implode(", ", $this->args);
     }
 
     public function getExpression(): string

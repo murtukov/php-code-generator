@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Murtukov\PHPCodeGenerator\ArrayVar;
+namespace Murtukov\PHPCodeGenerator\Arrays;
 
 class AssocArray extends AbstractArray
 {

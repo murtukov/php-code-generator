@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator;
 
+use Murtukov\PHPCodeGenerator\Functions\Method;
 use Murtukov\PHPCodeGenerator\Traits\IndentableTrait;
 use function array_pop;
 use function count;
 use function explode;
 use function implode;
 use function in_array;
-use function str_replace;
 
 class PHPClass implements GeneratorInterface
 {

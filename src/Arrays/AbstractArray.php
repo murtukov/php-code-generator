@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Murtukov\PHPCodeGenerator\ArrayVar;
+namespace Murtukov\PHPCodeGenerator\Arrays;
 
 use Murtukov\PHPCodeGenerator\AbstractGenerator;
 use Murtukov\PHPCodeGenerator\Traits\IndentableTrait;

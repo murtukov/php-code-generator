@@ -2,21 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Murtukov\PHPCodeGenerator;
+namespace Murtukov\PHPCodeGenerator\Functions;
 
-use Murtukov\PHPCodeGenerator\Closure\ArrowFunction;
+use Murtukov\PHPCodeGenerator\GeneratorInterface;
 use Murtukov\PHPCodeGenerator\Traits\IndentableTrait;
 use function array_unshift;
 use function implode;
 
-class Method implements GeneratorInterface
+class Method extends AbstractFunction
 {
     use IndentableTrait;
 
     private string  $name;
     private string  $modifier;
-    private string  $returnType;
-    private array   $args = [];
     private array   $content = [];
     private array   $customStack = [];
 
@@ -30,6 +28,8 @@ class Method implements GeneratorInterface
         $this->name = $name;
         $this->modifier = $modifier;
         $this->returnType = $returnType;
+
+        parent::__construct($returnType);
     }
 
     public function generate(): string

@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Murtukov\PHPCodeGenerator;
 
+use Murtukov\PHPCodeGenerator\Traits\IndentableTrait;
 use function array_pop;
 use function count;
 use function explode;
@@ -11,8 +14,16 @@ use function str_replace;
 
 class PHPClass implements GeneratorInterface
 {
-    /** @var Property[] */
-    private array $properties = [];
+    use IndentableTrait;
+
+    /** @var array[] */
+    private array $constants = [];
+
+    /** @var array[] */
+    private array $staticProps = [];
+
+    /** @var array[] */
+    private array $props = [];
 
     /** @var Method[] */
     private array $methods = [];
@@ -29,7 +40,6 @@ class PHPClass implements GeneratorInterface
     /** @var string[] */
     private array $consts = [];
 
-    private int     $indent = 4;
     private string  $namespace = '';
     private string  $extends = '';
     private bool    $isFinal = false;
@@ -70,6 +80,11 @@ class PHPClass implements GeneratorInterface
         $this->methods[] = $method;
 
         return $this;
+    }
+
+    public function createMethod(string $name, string $modifier = 'public', string $returnType = ''): Method
+    {
+        return $this->methods[] = new Method($name, $modifier, $returnType);
     }
 
     public function addImplements(string $fqcn): self
@@ -132,44 +147,13 @@ class PHPClass implements GeneratorInterface
         return $code;
     }
 
-    public function addProperty(Property $property): self
-    {
-        $this->properties[] = $property;
-
-        return $this;
-    }
-
     private function generateContent(): string
     {
-        $code .= implode("\n", $this->properties);
+        $code = implode("\n", $this->props);
         $code .= "\n\n";
         $code .= implode("\n\n", $this->methods);
 
         return $this->indent($code);
-    }
-
-    /**
-     * Adds offsets to each line in the code.
-     *
-     * @param string $code
-     * @return string
-     */
-    private function indent(string $code): string
-    {
-        $indent = $this->getIndent();
-
-        return $indent . str_replace("\n", "\n$indent", $code);
-    }
-
-    private function getIndent(): string
-    {
-        $indent = '';
-
-        for ($i = 0; $i < $this->indent; ++$i) {
-            $indent .= " ";
-        }
-
-        return $indent;
     }
 
     private function getDeclare(): string
@@ -195,18 +179,11 @@ class PHPClass implements GeneratorInterface
         return $modifiers;
     }
 
-    /**
-     * @return bool
-     */
     public function isFinal(): bool
     {
         return $this->isFinal;
     }
 
-    /**
-     * @param bool $isFinal
-     * @return PHPClass
-     */
     public function setIsFinal(bool $isFinal): PHPClass
     {
         $this->isFinal = $isFinal;
@@ -283,5 +260,87 @@ class PHPClass implements GeneratorInterface
     {
         $this->consts[$name] = $value;
         return $this;
+    }
+
+    public function addProperty(string $name, string $modifier = 'public', string $defaultValue = ''): PropertyInterface
+    {
+        return $this->props[] = self::Property($name, $modifier, $defaultValue);
+    }
+
+
+    /**
+     * Inner class for properties
+     *
+     * @param string $name
+     * @param string $modifier
+     * @param string $defaultValue
+     * @return PropertyInterface
+     */
+    private static function Property(string $name, string $modifier = 'public', string $defaultValue = '')
+    {
+        return new class($name, $modifier, $defaultValue) extends AbstractGenerator implements PropertyInterface {
+            private string  $name;
+            private string  $modifier;
+            private string  $defaulValue;
+            private bool    $isStatic;
+
+            public function __construct(string $name, string $modifier, string $defaulValue = '', bool $isStatic = false)
+            {
+                $this->name = $name;
+                $this->modifier = $modifier ?? 'public';
+                $this->defaulValue = $defaulValue;
+                $this->isStatic = $isStatic;
+            }
+
+            public function generate(): string
+            {
+                return "$this->modifier $$this->name{$this->generateDefaultValue()};";
+            }
+
+            private function generateDefaultValue(): string
+            {
+                return $this->defaulValue ? " = $this->defaulValue" : '';
+            }
+
+            public function getName(): string
+            {
+                return $this->name;
+            }
+
+            public function setName(string $name): void
+            {
+                $this->name = $name;
+            }
+
+            public function getModifier(): string
+            {
+                return $this->modifier;
+            }
+
+            public function setModifier(string $modifier): void
+            {
+                $this->modifier = $modifier;
+            }
+
+            public function getDefaulValue(): string
+            {
+                return $this->defaulValue;
+            }
+
+            public function setDefaulValue(string $defaulValue): void
+            {
+                $this->defaulValue = $defaulValue;
+            }
+
+            public function isStatic(): bool
+            {
+                return $this->isStatic;
+            }
+
+            public function setIsStatic(bool $isStatic): void
+            {
+                $this->isStatic = $isStatic;
+            }
+        };
     }
 }

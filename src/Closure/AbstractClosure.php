@@ -2,10 +2,10 @@
 
 namespace Murtukov\PHPCodeGenerator\Closure;
 
+use Murtukov\PHPCodeGenerator\AbstractGenerator;
 use Murtukov\PHPCodeGenerator\Argument;
-use Murtukov\PHPCodeGenerator\GeneratorInterface;
 
-abstract class AbstractClosure implements GeneratorInterface
+abstract class AbstractClosure extends AbstractGenerator
 {
     protected string  $returnType;
     protected array   $args;
@@ -19,17 +19,12 @@ abstract class AbstractClosure implements GeneratorInterface
         $this->args = $args;
     }
 
-    public function __toString(): string
-    {
-        return $this->generate();
-    }
-
     public function getReturnType(): string
     {
         return $this->returnType;
     }
 
-    public function setReturnType(string $returnType): AbstractClosure
+    public function setReturnType(string $returnType): self
     {
         $this->returnType = $returnType;
         return $this;
@@ -40,7 +35,7 @@ abstract class AbstractClosure implements GeneratorInterface
         return $this->args;
     }
 
-    public function setArguments(array $args): AbstractClosure
+    public function setArguments(array $args): self
     {
         $this->args = $args;
         return $this;
@@ -52,7 +47,14 @@ abstract class AbstractClosure implements GeneratorInterface
         return $this;
     }
 
-    public function removeArgument(int $index): self
+    public function createArgument()
+    {
+        return new class {
+
+        };
+    }
+
+    public function removeArgumentAt(int $index): self
     {
         unset($this->args[$index]);
         return $this;

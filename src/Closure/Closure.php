@@ -8,11 +8,15 @@ class Closure extends AbstractClosure
 
     public function generate(): string
     {
-        // TODO: Implement generate() method.
+        $code = "function ({$this->generateArgs()})[: RETURN_TYPE] {\n
+            [CONTENT]
+        }";
+
+        return $code;
     }
 
     protected function generateArgs(): string
     {
-        // TODO: Implement generateArgs() method.
+        return '';
     }
 }

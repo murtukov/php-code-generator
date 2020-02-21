@@ -1,18 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Murtukov\PHPCodeGenerator;
 
+use Murtukov\PHPCodeGenerator\Closure\ArrowFunction;
+use Murtukov\PHPCodeGenerator\Traits\IndentableTrait;
 use function array_unshift;
 use function implode;
 
 class Method implements GeneratorInterface
 {
+    use IndentableTrait;
+
     private string  $name;
     private string  $modifier;
     private string  $returnType;
     private array   $args = [];
     private array   $content = [];
-    private int     $indent = 4;   // spaces
+    private array   $customStack = [];
 
     public static function create(string $name, string $modifier = 'public', string $returnType = ''): self
     {
@@ -53,24 +59,6 @@ class Method implements GeneratorInterface
         return $content;
     }
 
-    private function indent(string $code): string
-    {
-        $indent = $this->createOffset();
-
-        return $indent . str_replace("\n", "\n$indent", $code);
-    }
-
-    private function createOffset(): string
-    {
-        $indent = '';
-        
-        for ($i = 0; $i < $this->indent; ++$i) {
-            $indent .= " ";
-        }
-
-        return $indent;
-    }
-
     private function generateReturnType(): string
     {
         return $this->returnType ? ": $this->returnType" : '';
@@ -109,17 +97,6 @@ class Method implements GeneratorInterface
         return $this;
     }
 
-    public function getIndent(): int
-    {
-        return $this->indent;
-    }
-
-    public function setIndent(int $indent): Method
-    {
-        $this->indent = $indent;
-        return $this;
-    }
-
     public function getReturnType(): string
     {
         return $this->returnType;
@@ -131,11 +108,8 @@ class Method implements GeneratorInterface
         return $this;
     }
 
-
-}
-
-
-function method(string $name, string $modifier = 'public', ?string $returnType = null): Method
-{
-    return new Method($name, $modifier, $returnType);
+    public function appendFn(array $args = [], string $returnType = '', string $expression = ''): ArrowFunction
+    {
+        return $this->content[] = new ArrowFunction($args, $returnType, $expression);
+    }
 }

@@ -1,6 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Murtukov\PHPCodeGenerator\Closure;
+
+use Murtukov\PHPCodeGenerator\Argument;
 
 class ArrowFunction extends AbstractClosure
 {

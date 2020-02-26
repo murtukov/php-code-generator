@@ -5,17 +5,19 @@ declare(strict_types=1);
 namespace Murtukov\PHPCodeGenerator\Functions;
 
 use Murtukov\PHPCodeGenerator\GeneratorInterface;
+use Murtukov\PHPCodeGenerator\Traits\FunctionTrait;
 use Murtukov\PHPCodeGenerator\Traits\IndentableTrait;
-use function array_unshift;
+use Murtukov\PHPCodeGenerator\Traits\ScopedContentTrait;
 use function implode;
 
-class Method extends AbstractFunction
+class Method implements GeneratorInterface
 {
     use IndentableTrait;
+    use ScopedContentTrait;
+    use FunctionTrait;
 
     private string  $name;
     private string  $modifier;
-    private array   $content = [];
     private array   $customStack = [];
 
     public static function create(string $name, string $modifier = 'public', string $returnType = ''): self
@@ -28,8 +30,6 @@ class Method extends AbstractFunction
         $this->name = $name;
         $this->modifier = $modifier;
         $this->returnType = $returnType;
-
-        parent::__construct($returnType);
     }
 
     public function generate(): string
@@ -52,14 +52,14 @@ class Method extends AbstractFunction
     {
         $content = '';
 
-        if (count($this->content) > 0) {
+        if (!empty($this->content)) {
             $content = $this->indent(implode(";\n", $this->content).';');
         }
 
         return $content;
     }
 
-    private function generateReturnType(): string
+    private function buildReturnType(): string
     {
         return $this->returnType ? ": $this->returnType" : '';
     }
@@ -67,34 +67,6 @@ class Method extends AbstractFunction
     public function __toString(): string
     {
         return $this->generate();
-    }
-
-    public function appendVar(string $name, GeneratorInterface $var): self
-    {
-        $this->content[] = "$$name = $var";
-
-        return $this;
-    }
-
-    public function append(GeneratorInterface $object): self
-    {
-        $this->content[] = $object;
-
-        return $this;
-    }
-
-    public function prepend(GeneratorInterface $object): self
-    {
-        array_unshift($this->content, $object);
-
-        return $this;
-    }
-
-    public function appendEmptyLine(): self
-    {
-        $this->content[] = "\n";
-
-        return $this;
     }
 
     public function getReturnType(): string
@@ -106,10 +78,5 @@ class Method extends AbstractFunction
     {
         $this->returnType = $returnType;
         return $this;
-    }
-
-    public function appendFn(array $args = [], string $returnType = '', string $expression = ''): ArrowFunction
-    {
-        return $this->content[] = new ArrowFunction($args, $returnType, $expression);
     }
 }

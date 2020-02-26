@@ -6,11 +6,14 @@ interface PropertyInterface
 {
     function generate(): string;
     function getName(): string;
-    function setName(string $name): void;
+    function setName(string $name): self;
     function getModifier(): string;
-    function setModifier(string $modifier): void;
+    function setPublic(): self;
+    function setPrivate(): self;
+    function setProtected(): self;
     function getDefaulValue(): string;
-    function setDefaulValue(string $defaulValue): void;
+    function setDefaulValue($defaulValue, bool $isString = false): self;
     function isStatic(): bool;
-    function setIsStatic(bool $isStatic): void;
+    function setIsStatic(bool $isStatic): self;
+    function setIsConst(bool $isConst): self;
 }

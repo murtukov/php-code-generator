@@ -4,20 +4,23 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator\Functions;
 
+use Murtukov\PHPCodeGenerator\Traits\FunctionTrait;
+
 class ArrowFunction extends AbstractFunction
 {
+    use FunctionTrait;
+
     private string $expression;
 
-    public function __construct(array $args = [], string $returnType = '', string $expression = '')
+    public function __construct(string $returnType = '', string $expression = '')
     {
         $this->expression = $expression;
-        $this->setArguments($args);
-        parent::__construct($returnType);
+        $this->returnType = $returnType;
     }
 
-    public static function create(array $args = [], string $returnType = '', string $expression = '')
+    public static function create(string $returnType = '', string $expression = '')
     {
-        return new self($args, $returnType, $expression);
+        return new self($returnType, $expression);
     }
 
     public function generate(): string

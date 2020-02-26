@@ -2,16 +2,43 @@
 
 namespace Murtukov\PHPCodeGenerator\Functions;
 
-class Closure extends AbstractClosure
+class Closure extends AbstractFunction
 {
-    private string  $name;
+    private array   $uses = []; // variables of parent scope
+
 
     public function generate(): string
     {
-        $code = "function ({$this->generateArgs()})[: RETURN_TYPE] {\n
-            [CONTENT]
-        }";
-
+        $code = <<<CODE
+        function ({$this->generateArgs()}){$this->buildUses()}{$this->buildReturnType()} {
+        {$this->generateContent()}
+        }
+        CODE;
         return $code;
+    }
+
+    private function buildUses(): string
+    {
+        if (count($this->uses) > 0) {
+            $last = array_key_last($this->uses);
+
+            $code = '';
+            foreach ($this->uses as $key => $var) {
+                $code .= "$$var";
+
+                if ($key !== $last) {
+                    $code .= ', ';
+                }
+            }
+
+            return " use ($code)";
+        }
+
+        return '';
+    }
+
+    private function buildReturnType()
+    {
+        return $this->returnType ? ": $this->returnType" : '';
     }
 }

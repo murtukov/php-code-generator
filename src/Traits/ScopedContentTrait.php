@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator\Traits;
 
-
 use Murtukov\PHPCodeGenerator\Functions\ArrowFunction;
 use Murtukov\PHPCodeGenerator\GeneratorInterface;
+use function array_unshift;
 
 trait ScopedContentTrait
 {
@@ -41,6 +42,24 @@ trait ScopedContentTrait
 
     public function appendFn(array $args = [], string $returnType = '', string $expression = ''): ArrowFunction
     {
-        return $this->content[] = new ArrowFunction($args, $returnType, $expression);
+        return $this->content[] = new ArrowFunction($returnType, $expression);
+    }
+
+    public function setReturn(GeneratorInterface $object): self
+    {
+        $this->content[] = "return $object";
+
+        return $this;
+    }
+
+    private function generateContent(): string
+    {
+        $content = '';
+
+        if (!empty($this->content)) {
+            $content = $this->indent(implode(";\n", $this->content).';');
+        }
+
+        return $content;
     }
 }

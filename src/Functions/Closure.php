@@ -1,11 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Murtukov\PHPCodeGenerator\Functions;
 
-class Closure extends AbstractFunction
+use Murtukov\PHPCodeGenerator\GeneratorInterface;
+use Murtukov\PHPCodeGenerator\Traits\FunctionTrait;
+use Murtukov\PHPCodeGenerator\Traits\IndentableTrait;
+use Murtukov\PHPCodeGenerator\Traits\ScopedContentTrait;
+
+class Closure implements GeneratorInterface
 {
+    use FunctionTrait;
+    use ScopedContentTrait;
+    use IndentableTrait;
+
     private array   $uses = []; // variables of parent scope
 
+    public static function create()
+    {
+        return new self();
+    }
 
     public function generate(): string
     {
@@ -40,5 +55,10 @@ class Closure extends AbstractFunction
     private function buildReturnType()
     {
         return $this->returnType ? ": $this->returnType" : '';
+    }
+
+    public function __toString(): string
+    {
+        return $this->generate();
     }
 }

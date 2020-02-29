@@ -1,19 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Murtukov\PHPCodeGenerator\Traits;
 
 use Murtukov\PHPCodeGenerator\ArgumentInterface;
 use Murtukov\PHPCodeGenerator\GeneratorInterface;
-use function class_exists;
-use function strpos;
-use function strrchr;
-use function substr;
 
 trait FunctionTrait
 {
     use DependencyAwareTrait;
 
-    protected string  $returnType;
+    protected string  $returnType = '';
     protected array   $args = [];
 
 
@@ -38,12 +36,6 @@ trait FunctionTrait
         return $this->args;
     }
 
-    public function setArguments(array $args): self
-    {
-        $this->args = $args;
-        return $this;
-    }
-
     public function removeArgumentAt(int $index): self
     {
         unset($this->args[$index]);
@@ -52,9 +44,8 @@ trait FunctionTrait
 
     public function createArgument(string $name, string $type = '', $defaultValue = ''): ArgumentInterface
     {
-        $type = $this->addUseIfNecessary($type);
 
-        return $this->args[] = self::newArgument($name, $this->addUseIfNecessary($type), $defaultValue);
+        return $this->args[] = self::newArgument($name, $type, $defaultValue);
     }
 
     private static function newArgument(string $name, string $type = '', $defaultValue = ''): ArgumentInterface
@@ -65,7 +56,7 @@ trait FunctionTrait
             private string  $name;
             private bool    $isSpread = false;
             private bool    $isByReference = false;
-            private string  $defaultValue;
+            private $defaultValue;
 
             public function __construct(string $name, string $type = '', $defaultValue = '')
             {

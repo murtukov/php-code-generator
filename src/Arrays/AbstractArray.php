@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Murtukov\PHPCodeGenerator\Arrays;
 
 use Murtukov\PHPCodeGenerator\AbstractGenerator;
+use Murtukov\PHPCodeGenerator\GeneratorInterface;
 use Murtukov\PHPCodeGenerator\Traits\IndentableTrait;
 use function gettype;
 use function json_encode;
@@ -28,7 +29,12 @@ abstract class AbstractArray extends AbstractGenerator
         return new static($items, $multiline);
     }
 
-    public function addItem(string $key, string $value): self
+    /**
+     * @param string $key
+     * @param string|GeneratorInterface $value
+     * @return $this
+     */
+    public function addItem(string $key, $value): self
     {
         $this->items[$key] = $value;
 

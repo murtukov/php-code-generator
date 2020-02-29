@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Murtukov\PHPCodeGenerator\Structures;
 
 use Murtukov\PHPCodeGenerator\AbstractGenerator;
@@ -23,18 +25,11 @@ abstract class OOPStructure extends AbstractGenerator
     private array $methods = [];
 
     /** @var string[] */
-    private array $declares;
-
-    /** @var string[] */
-    protected array   $implements = [];
+    protected array $implements = [];
 
     /** @var array[] */
     protected array $props = [];
 
-    /** @var string[] */
-    protected array $usePaths = [];
-
-    protected string  $namespace = '';
     protected string  $extends = '';
     protected string  $name;
 
@@ -46,24 +41,18 @@ abstract class OOPStructure extends AbstractGenerator
 
     public function setExtends(string $fqcn): self
     {
-        $this->extends = $this->addUseIfNecessary($fqcn);
+        $this->extends = $fqcn;
 
         return $this;
     }
 
-    public function addImplements(string $fqcn): self
+    public function addImplement(string $name): self
     {
-        $parts = explode('\\', $fqcn);
-        $className = array_pop($parts);
+        if ($this->shortenQualifiers) {
 
-        if ($this->hasUseStatementAlias($className)) {
-            $this->implements[] = $fqcn;
-        } else {
-            $this->addUseStatement($fqcn);
-            // todo: make unique
-            // todo: remove classname from use statements array by removing the class name of 'implements'
-            $this->implements[] = $className;
         }
+
+        $this->implements[] = $name;
 
         return $this;
     }
@@ -88,36 +77,9 @@ abstract class OOPStructure extends AbstractGenerator
         return $this;
     }
 
-    protected function buildNamespace(): string
-    {
-        if ($this->namespace) {
-            return "\nnamespace $this->namespace;\n";
-        }
-
-        return '';
-    }
-
-    public function getNamespace(): string
-    {
-        return $this->namespace;
-    }
-
-    public function setNamespace(string $namespace): self
-    {
-        $this->namespace = $namespace;
-        return $this;
-    }
-
     public function createProperty(string $name, string $modifier = 'public', string $defaultValue = ''): PropertyInterface
     {
         return $this->props[] = self::newProperty($name, $modifier, $defaultValue);
-    }
-
-    public function addMethod(Method $method): self
-    {
-        $this->methods[] = $method;
-
-        return $this;
     }
 
     public function createMethod(string $name, string $modifier = 'public', string $returnType = ''): Method
@@ -128,48 +90,6 @@ abstract class OOPStructure extends AbstractGenerator
     public function createConstructor(string $modifier = 'public', string $returnType = ''): Method
     {
         return $this->methods[] = new Method('__constructor', $modifier, $returnType);
-    }
-
-    public function addUseStatement(string $fqcn, string $alias = ''): self
-    {
-        $this->usePaths[$fqcn] = $alias;
-
-        return $this;
-    }
-
-    public function buildUseStatements(): string
-    {
-        # Aggregate use paths from all dependency aware child components
-        $usePaths = [];
-
-        # From methods
-        foreach ($this->methods as $method) {
-            $usePaths = array_replace($usePaths, $method->getUsePaths());
-        }
-
-        # From properties
-        foreach ($this->props as $prop) {
-            $usePaths = array_replace($usePaths, $prop->getUsePaths());
-        }
-
-        # From itself
-
-        $code = '';
-
-        if (!empty($this->usePaths)) {
-            $code = "\n";
-            foreach ($this->usePaths as $stm => $as) {
-                $code .= "use $stm";
-
-                if ($as) {
-                    $code .= " as $as";
-                }
-
-                $code .= ";\n";
-            }
-        }
-
-        return $code;
     }
 
     protected function buildContent(): string
@@ -214,7 +134,7 @@ abstract class OOPStructure extends AbstractGenerator
             public function generate(): string
             {
                 if ($this->isConst) {
-                    return "$this->modifier $this->name{$this->compileDefaultValue()};";
+                    return "$this->modifier const $this->name{$this->compileDefaultValue()};";
                 } elseif ($this->isStatic) {
                     return "$this->modifier static $$this->name{$this->compileDefaultValue()};";
                 }

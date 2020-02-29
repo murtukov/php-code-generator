@@ -7,49 +7,62 @@ require __DIR__ . '/vendor/autoload.php';
 use Murtukov\PHPCodeGenerator\Arrays\AssocArray;
 use Murtukov\PHPCodeGenerator\Arrays\NumericArray;
 use Murtukov\PHPCodeGenerator\Functions\ArrowFunction;
+use Murtukov\PHPCodeGenerator\PhpFile;
 use Murtukov\PHPCodeGenerator\Structures\PhpClass;
-use Murtukov\PHPCodeGenerator\Functions\Method;
+use Murtukov\PHPCodeGenerator\Functions\Closure;
 
-$class = new PhpClass("Mutation");
-$class->setIsFinal(true);
 
-$class->setNamespace("Overblog\GraphQLBundle\__DEFINITIONS__");
-$class->addUseStatement("Overblog\GraphQLBundle\Definition\ConfigProcessor");
-$class->addUseStatement("Overblog\GraphQLBundle\Definition\GlobalVariables");
-$class->addUseStatement("Symfony\Component\Validator\Constraints", "Assert");
-$class->addUseStatement("GraphQL\Type\Definition\Type");
+$class = PhpClass::create("Mutation")
+    ->setIsFinal(true)
+    ->setExtends('GraphQL\Type\Definition\ObjectType')
+    ->addImplement('Overblog\GraphQLBundle\Definition\Type\GeneratedTypeInterface');
 
-$resolverClosure = ArrowFunction::create('int', '11 + 22');
-$resolverClosure->createArgument('name', 'string', 'test');
-$resolverClosure->createArgument('age', AssocArray::class, 'new \DateTime()');
+$class->createProperty('NAME', 'public')
+    ->setIsConst(true)
+    ->setDefaulValue('Mutation', true);
 
-$cascadeMethod = Method::create('cascadeValidation', 'public', 'string')
-    ->appendVar('numbers', AssocArray::create([
-        'name' => '$Timur',
-        'age' => 29,
-        'options' => [
-            "loko" => "shmoko",
-            'rollo' => 'ragnar'
-        ],
-        'subarray' => AssocArray::create([], true),
-        'resolver' => $resolverClosure
-    ], true))
-    ->appendVar('numbers', NumericArray::create([22, 33, 44]))
-;
+$returnArray = AssocArray::create([], true)
+    ->addItem('name', 'Mutation')
+    ->addItem('description', null)
+    ->addItem('fields', ArrowFunction::create()
+        ->setExpression(AssocArray::create([], true)
+            ->addItem('updateAppState', AssocArray::create([], true)
+                ->addItem('type', 'Type::nonNull($globalVariable->get(\'typeResolver\')->resolve(\'AppStateUpdatePayload\'))')
+                ->addItem('args', NumericArray::create([], true)
+                    ->push(
+                        AssocArray::create([], true)
+                            ->addItem('name', 'input') // create different methods addItem, addLiterall, addString, addObject
+                            ->addItem('type', 'Type::nonNull($globalVariable->get(\'typeResolver\')->resolve(\'AppStateUpdateInput\'))')
+                            ->addItem('description', null)
+                        )
+                    ->push(
+                        AssocArray::create([], true)
+                            ->addItem('name', 'input') // create different methods addItem, addLiterall, addString, addObject
+                            ->addItem('type', "Type::nonNull(\$globalVariable->get('typeResolver')->resolve('AppStateUpdateInput'))")
+                            ->addItem('description', null)
+                    )
+                )
+            )
+        )
+    );
 
-$class->createProperty('NAME', 'public')->setIsConst(true)->setDefaulValue('Mutation', true);
+$constructor = $class->createConstructor();
 
-$class->addMethod($cascadeMethod);
+$constructor->createArgument('configProcessor', 'Overblog\GraphQLBundle\Definition\ConfigProcessor');
+$constructor->createArgument('globalVariables', 'Overblog\GraphQLBundle\Definition\GlobalVariables', null);
+$constructor->appendVar('configLoader', ArrowFunction::create()->setExpression($returnArray));
+
+
 $class->createMethod('__toString')->setReturnType('string');
 
-$class->addImplements("Overblog\GraphQLBundle\Definition\Type\GeneratedTypeInterface");
-$class->setExtends("GraphQL\Type\Definition\ObjectType");
+$class2 = new PhpClass('Malakos');
 
-//$string = \Murtukov\PHPCodeGenerator\Traits\DependencyAwareTrait::class;
+$file = PhpFile::create('Mutation')
+    ->setNamespace("Overblog\GraphQLBundle\__DEFINITIONS__")
+    ->addClass($class)
+    ->addClass($class2);
 
-// echo DateTime::class;
-
-echo $class->generate();
+echo $file;
 
 
 // ================================================================================

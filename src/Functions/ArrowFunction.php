@@ -4,15 +4,19 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator\Functions;
 
+use Murtukov\PHPCodeGenerator\GeneratorInterface;
 use Murtukov\PHPCodeGenerator\Traits\FunctionTrait;
 
-class ArrowFunction extends AbstractFunction
+class ArrowFunction implements GeneratorInterface
 {
     use FunctionTrait;
 
-    private string $expression;
+    /**
+     * @var string|GeneratorInterface
+     */
+    private $expression;
 
-    public function __construct(string $returnType = '', string $expression = '')
+    public function __construct(string $returnType = '', $expression = '')
     {
         $this->expression = $expression;
         $this->returnType = $returnType;
@@ -33,9 +37,18 @@ class ArrowFunction extends AbstractFunction
         return $this->expression;
     }
 
-    public function setExpression(string $expression): ArrowFunction
+    /**
+     * @param string|GeneratorInterface $expression
+     * @return ArrowFunction
+     */
+    public function setExpression($expression): ArrowFunction
     {
         $this->expression = $expression;
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->generate();
     }
 }

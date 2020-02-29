@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator\Structures;
 
+use Murtukov\PHPCodeGenerator\Functions\Method;
+
 class PhpClass extends OOPStructure
 {
     private bool $isFinal = false;
@@ -11,14 +13,12 @@ class PhpClass extends OOPStructure
 
     public function generate(): string
     {
-        return <<<CODE
-        <?php 
-        {$this->buildNamespace()}{$this->buildUseStatements()}
+        return <<<CLASS
         {$this->build()}class $this->name {$this->buildExtends()}{$this->buildImplements()}
         {
         {$this->buildContent()}
         }
-        CODE;
+        CLASS;
     }
 
     public static function create(string $name): self

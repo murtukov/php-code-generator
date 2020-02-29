@@ -4,17 +4,22 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator\Functions;
 
+use Murtukov\PHPCodeGenerator\DependencyAwareInterface;
 use Murtukov\PHPCodeGenerator\GeneratorInterface;
 use Murtukov\PHPCodeGenerator\Traits\FunctionTrait;
 use Murtukov\PHPCodeGenerator\Traits\IndentableTrait;
 use Murtukov\PHPCodeGenerator\Traits\ScopedContentTrait;
 use function implode;
 
-class Method implements GeneratorInterface
+class Method implements DependencyAwareInterface, GeneratorInterface
 {
     use IndentableTrait;
     use ScopedContentTrait;
     use FunctionTrait;
+
+    const PUBLIC = 'public';
+    const PROTECTED = 'protected';
+    const PRIVATE = 'private';
 
     private string  $name;
     private string  $modifier;
@@ -34,7 +39,7 @@ class Method implements GeneratorInterface
 
     public function generate(): string
     {
-        $signature = "$this->modifier function $this->name()";
+        $signature = "$this->modifier function $this->name({$this->generateArgs()})";
 
         if ($this->returnType) {
             $signature .= ": $this->returnType";
@@ -46,17 +51,6 @@ class Method implements GeneratorInterface
         {$this->generateContent()}
         }
         CODE;
-    }
-
-    private function generateContent(): string
-    {
-        $content = '';
-
-        if (!empty($this->content)) {
-            $content = $this->indent(implode(";\n", $this->content).';');
-        }
-
-        return $content;
     }
 
     private function buildReturnType(): string
@@ -77,6 +71,18 @@ class Method implements GeneratorInterface
     public function setReturnType(string $returnType): Method
     {
         $this->returnType = $returnType;
+        return $this;
+    }
+
+    public function getUsePaths(bool $recursive = true): array
+    {
+        return [];
+    }
+
+    public function shortenQulifiers(bool $value): self
+    {
+        $this->shortenQualifiers = $value;
+
         return $this;
     }
 }

@@ -41,18 +41,14 @@ abstract class OOPStructure extends AbstractGenerator
 
     public function setExtends(string $fqcn): self
     {
-        $this->extends = $fqcn;
+        $this->extends = $this->resolveQualifier($fqcn);
 
         return $this;
     }
 
     public function addImplement(string $name): self
     {
-        if ($this->shortenQualifiers) {
-
-        }
-
-        $this->implements[] = $name;
+        $this->implements[] = $this->resolveQualifier($name);
 
         return $this;
     }
@@ -80,6 +76,14 @@ abstract class OOPStructure extends AbstractGenerator
     public function createProperty(string $name, string $modifier = 'public', string $defaultValue = ''): PropertyInterface
     {
         return $this->props[] = self::newProperty($name, $modifier, $defaultValue);
+    }
+
+    /**
+     * Shorthand for `createProperty->setIsConst(true)`
+     */
+    public function createConst(string $name, string $modifier = 'public', string $defaultValue = ''): PropertyInterface
+    {
+        return $this->createProperty($name, $modifier, $defaultValue)->setIsConst(true);
     }
 
     public function createMethod(string $name, string $modifier = 'public', string $returnType = ''): Method

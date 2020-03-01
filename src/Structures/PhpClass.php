@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator\Structures;
 
-use Murtukov\PHPCodeGenerator\Functions\Method;
-
 class PhpClass extends OOPStructure
 {
     private bool $isFinal = false;
@@ -44,14 +42,19 @@ class PhpClass extends OOPStructure
         return $this->isFinal;
     }
 
-    public function setIsFinal(bool $isFinal): PhpClass
+    public function setFinal(): self
     {
-        $this->isFinal = $isFinal;
+        $this->isFinal = true;
 
         // Class cannot be final and abstract at the same time
-        if ($isFinal) {
-            $this->isAbstract = false;
-        }
+        $this->isAbstract = false;
+
+        return $this;
+    }
+
+    public function unsetFinal(): self
+    {
+        $this->isFinal = false;
 
         return $this;
     }

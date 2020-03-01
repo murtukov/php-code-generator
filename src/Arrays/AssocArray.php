@@ -32,7 +32,7 @@ class AssocArray extends AbstractArray
             return "[\n{$this->indent($code)}\n]";
         } else {
             foreach ($items as $key => $value) {
-                $code .= "'$key' => " . $this->stringifyValue($value);
+                $code .= "{$this->stringifyKey($key)} => {$this->stringifyValue($value)}";
 
                 if ($key !== $last) {
                     $code .= ", ";

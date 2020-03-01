@@ -69,7 +69,7 @@ class PhpFile implements DependencyAwareInterface, GeneratorInterface
 
     public function createClass(string $name): PhpClass
     {
-        return new PhpClass($name);
+        return $this->classes[] = new PhpClass($name);
     }
 
     protected function buildNamespace(): string
@@ -107,19 +107,9 @@ class PhpFile implements DependencyAwareInterface, GeneratorInterface
     public function buildUseStatements(): string
     {
         # Aggregate use paths from all dependency aware child components
-        $usePaths = [];
-
-        # From methods
-        /*        foreach ($this->methods as $method) {
-                    $usePaths = array_replace($usePaths, $method->getUsePaths());
-                }
-
-                # From properties
-                foreach ($this->props as $prop) {
-                    $usePaths = array_replace($usePaths, $prop->getUsePaths());
-                }*/
-
-        # From itself
+        foreach ($this->classes as $class) {
+            $this->usePaths = array_replace($this->usePaths, $class->getUsePaths());
+        }
 
         $code = '';
 

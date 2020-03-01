@@ -16,15 +16,15 @@ class ArrowFunction implements GeneratorInterface
      */
     private $expression;
 
-    public function __construct(string $returnType = '', $expression = '')
+    public function __construct($expression = '', string $returnType = '')
     {
         $this->expression = $expression;
         $this->returnType = $returnType;
     }
 
-    public static function create(string $returnType = '', string $expression = '')
+    public static function create($expression = '', string $returnType = '')
     {
-        return new self($returnType, $expression);
+        return new self($expression, $returnType);
     }
 
     public function generate(): string

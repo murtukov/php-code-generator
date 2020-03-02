@@ -106,10 +106,12 @@ class PhpFile implements DependencyAwareInterface, GeneratorInterface
 
     public function buildUseStatements(): string
     {
-        # Aggregate use paths from all dependency aware child components
+        // Aggregate use paths from all dependency aware child components
         foreach ($this->classes as $class) {
             $this->usePaths = array_replace($this->usePaths, $class->getUsePaths());
         }
+
+        ksort($this->usePaths);
 
         $code = '';
 

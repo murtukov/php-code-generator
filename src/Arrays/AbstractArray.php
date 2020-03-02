@@ -44,7 +44,18 @@ abstract class AbstractArray extends AbstractGenerator
         return new static($items, true);
     }
 
-    public static function map(array $items, callable $map): self
+    public static function mapMultiline(array $items, callable $map): self
+    {
+        $array = new static();
+        $array->items = $items;
+        $array->map = $map;
+        $array->isMap = true;
+        $array->multiline = true;
+
+        return $array;
+    }
+
+    public static function mapInline(array $items, callable $map)
     {
         $array = new static();
         $array->items = $items;

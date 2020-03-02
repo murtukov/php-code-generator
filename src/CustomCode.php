@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator;
 
-class CustomString implements GeneratorInterface
+class CustomCode implements GeneratorInterface
 {
     private string $value;
 

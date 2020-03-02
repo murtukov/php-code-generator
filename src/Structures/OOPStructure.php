@@ -79,7 +79,12 @@ abstract class OOPStructure extends AbstractGenerator
     }
 
     /**
-     * Shorthand for `createProperty->setIsConst(true)`
+     * Shorthand for `createProperty(...)->setIsConst(true)`
+     *
+     * @param string $name
+     * @param string $modifier
+     * @param string $defaultValue
+     * @return PropertyInterface
      */
     public function createConst(string $name, string $modifier = 'public', string $defaultValue = ''): PropertyInterface
     {

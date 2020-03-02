@@ -8,12 +8,27 @@ class AssocArray extends AbstractArray
 {
     public function generate(): string
     {
+        if ($this->isMap) {
+            return $this->generateMap();
+        }
+
         return $this->generateRecursive($this->items);
+    }
+
+    public function generateMap(): string
+    {
+        $result = [];
+
+        foreach ($this->items as $key => $value) {
+            $result[$key] = ($this->map)($key, $value);
+        }
+
+        return $this->generateRecursive($result);
     }
 
     public function generateRecursive(array $items): string
     {
-        if (0 === count($this->items)) {
+        if (empty($this->items)) {
             return '[]';
         }
 

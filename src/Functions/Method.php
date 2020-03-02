@@ -74,11 +74,6 @@ class Method implements DependencyAwareInterface, GeneratorInterface
         return $this;
     }
 
-    public function getUsePaths(bool $recursive = true): array
-    {
-        return [];
-    }
-
     public function shortenQulifiers(bool $value): self
     {
         $this->shortenQualifiers = $value;

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator\Functions;
 
-use Murtukov\PHPCodeGenerator\GeneratorInterface;
+use Murtukov\PHPCodeGenerator\DependencyAwareGenerator;
 use Murtukov\PHPCodeGenerator\Traits\FunctionTrait;
 use Murtukov\PHPCodeGenerator\Traits\IndentableTrait;
 use Murtukov\PHPCodeGenerator\Traits\ScopedContentTrait;
 
-class Closure implements GeneratorInterface
+class Closure extends DependencyAwareGenerator
 {
     use FunctionTrait;
     use ScopedContentTrait;

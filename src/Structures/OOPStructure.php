@@ -5,24 +5,24 @@ declare(strict_types=1);
 namespace Murtukov\PHPCodeGenerator\Structures;
 
 use Murtukov\PHPCodeGenerator\AbstractGenerator;
+use Murtukov\PHPCodeGenerator\DependencyAwareGenerator;
 use Murtukov\PHPCodeGenerator\Functions\Method;
 use Murtukov\PHPCodeGenerator\PropertyInterface;
 use Murtukov\PHPCodeGenerator\Traits\DependencyAwareTrait;
 use Murtukov\PHPCodeGenerator\Traits\IndentableTrait;
 
-abstract class OOPStructure extends AbstractGenerator
+abstract class OOPStructure extends DependencyAwareGenerator
 {
     use IndentableTrait;
-    use DependencyAwareTrait;
 
     /** @var array[] */
-    private array $constants = [];
+    protected array $constants = [];
 
     /** @var array[] */
-    private array $staticProps = [];
+    protected array $staticProps = [];
 
     /** @var Method[] */
-    private array $methods = [];
+    protected array $methods = [];
 
     /** @var string[] */
     protected array $implements = [];
@@ -125,7 +125,10 @@ abstract class OOPStructure extends AbstractGenerator
      */
     private static function newProperty(string $name, string $modifier = 'public', string $defaultValue = '')
     {
-        return new class($name, $modifier, $defaultValue) extends AbstractGenerator implements PropertyInterface {
+        return new class($name, $modifier, $defaultValue) extends AbstractGenerator implements PropertyInterface
+        {
+            use DependencyAwareTrait;
+
             private string  $name;
             private string  $modifier;
             private string  $defaulValue = '';

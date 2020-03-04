@@ -5,18 +5,20 @@ declare(strict_types=1);
 namespace Murtukov\PHPCodeGenerator\Arrays;
 
 use Murtukov\PHPCodeGenerator\AbstractGenerator;
+use Murtukov\PHPCodeGenerator\DependencyAwareGenerator;
 use Murtukov\PHPCodeGenerator\GeneratorInterface;
+use Murtukov\PHPCodeGenerator\Traits\DependencyAwareTrait;
 use Murtukov\PHPCodeGenerator\Traits\IndentableTrait;
 use function gettype;
 use function json_encode;
 
-abstract class AbstractArray extends AbstractGenerator
+abstract class AbstractArray extends DependencyAwareGenerator
 {
     use IndentableTrait;
 
     protected bool  $oldSyntax = false;
     protected bool  $multiline = false;
-    protected array $items;
+    protected array $items = [];
     protected bool  $isMap = false;
 
     /** @var callable */
@@ -26,6 +28,7 @@ abstract class AbstractArray extends AbstractGenerator
     {
         $this->items = $items;
         $this->multiline = $multiline;
+        $this->dependencyAwareChildren = [&$this->items];
     }
 
     public static function create(array $items = [], bool $multiline = false): self
@@ -80,6 +83,7 @@ abstract class AbstractArray extends AbstractGenerator
     public function removeItemAt(int $index): self
     {
         unset($this->items[$index]);
+        return $this;
     }
 
     protected function stringifyValue($value)

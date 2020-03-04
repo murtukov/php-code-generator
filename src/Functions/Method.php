@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator\Functions;
 
-use Murtukov\PHPCodeGenerator\DependencyAwareInterface;
-use Murtukov\PHPCodeGenerator\GeneratorInterface;
+use Murtukov\PHPCodeGenerator\DependencyAwareGenerator;
 use Murtukov\PHPCodeGenerator\Traits\FunctionTrait;
 use Murtukov\PHPCodeGenerator\Traits\IndentableTrait;
 use Murtukov\PHPCodeGenerator\Traits\ScopedContentTrait;
 use function implode;
 
-class Method implements DependencyAwareInterface, GeneratorInterface
+class Method extends DependencyAwareGenerator
 {
     use IndentableTrait;
     use ScopedContentTrait;
@@ -35,6 +34,8 @@ class Method implements DependencyAwareInterface, GeneratorInterface
         $this->name = $name;
         $this->modifier = $modifier;
         $this->returnType = $returnType;
+
+        $this->dependencyAwareChildren = [&$this->args];
     }
 
     public function generate(): string

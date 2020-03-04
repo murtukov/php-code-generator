@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator\Functions;
 
+use Murtukov\PHPCodeGenerator\DependencyAwareGenerator;
 use Murtukov\PHPCodeGenerator\GeneratorInterface;
 use Murtukov\PHPCodeGenerator\Traits\FunctionTrait;
 
-class ArrowFunction implements GeneratorInterface
+class ArrowFunction extends DependencyAwareGenerator
 {
     use FunctionTrait;
 

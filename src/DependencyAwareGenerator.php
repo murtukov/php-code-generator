@@ -1,13 +1,10 @@
 <?php
 
-declare(strict_types=1);
 
-namespace Murtukov\PHPCodeGenerator\Traits;
+namespace Murtukov\PHPCodeGenerator;
 
-use function strrchr;
-use function substr;
 
-trait DependencyAwareTrait
+abstract class DependencyAwareGenerator extends AbstractGenerator
 {
     /**
      * @var bool

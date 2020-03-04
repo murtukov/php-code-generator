@@ -8,8 +8,6 @@ use Murtukov\PHPCodeGenerator\Functions\Argument;
 
 trait FunctionTrait
 {
-    use DependencyAwareTrait;
-
     protected string  $returnType = '';
     protected array   $args = [];
 
@@ -26,7 +24,7 @@ trait FunctionTrait
 
     public function setReturnType(string $returnType): self
     {
-        $this->returnType = $returnType;
+        $this->returnType = $this->resolveQualifier($returnType);
         return $this;
     }
 

@@ -7,15 +7,13 @@ namespace Murtukov\PHPCodeGenerator;
 use Murtukov\PHPCodeGenerator\Structures\PhpClass;
 use Murtukov\PHPCodeGenerator\Traits\DependencyAwareTrait;
 use Murtukov\PHPCodeGenerator\Traits\IndentableTrait;
-use function array_replace;
 
-class PhpFile implements DependencyAwareInterface, GeneratorInterface
+class PhpFile extends DependencyAwareGenerator
 {
-    use DependencyAwareTrait;
     use IndentableTrait;
 
     /** @var PhpClass[]  */
-    private array $classes;
+    private array $classes = [];
 
     /** @var string[] */
     private array $declares;
@@ -28,6 +26,7 @@ class PhpFile implements DependencyAwareInterface, GeneratorInterface
     public function __construct(string $name)
     {
         $this->name = $name;
+        $this->dependencyAwareChildren = [&$this->classes];
     }
 
     public static function create(string $name): self
@@ -47,17 +46,6 @@ class PhpFile implements DependencyAwareInterface, GeneratorInterface
     public function __toString(): string
     {
         return $this->generate();
-    }
-
-    public function getUsePaths(bool $recursive = true): array
-    {
-        if ($recursive) {
-            foreach ($this->classes as $class) {
-                $this->usePaths = array_replace($this->usePaths, $class->usePaths);
-            }
-        }
-
-        return $this->usePaths;
     }
 
     public function addClass(PhpClass $class): self
@@ -106,22 +94,18 @@ class PhpFile implements DependencyAwareInterface, GeneratorInterface
 
     public function buildUseStatements(): string
     {
-        // Aggregate use paths from all dependency aware child components
-        foreach ($this->classes as $class) {
-            $this->usePaths = array_replace($this->usePaths, $class->getUsePaths());
-        }
-
-        ksort($this->usePaths);
-
         $code = '';
 
-        if (!empty($this->usePaths)) {
-            $code = "\n";
-            foreach ($this->usePaths as $stm => $as) {
-                $code .= "use $stm";
+        $paths = $this->getUsePaths();
 
-                if ($as) {
-                    $code .= " as $as";
+        if (!empty(ksort($paths))) {
+            $code = "\n";
+
+            foreach ($paths as $path => $alias) {
+                $code .= "use $path";
+
+                if ($alias) {
+                    $code .= " as $alias";
                 }
 
                 $code .= ";\n";

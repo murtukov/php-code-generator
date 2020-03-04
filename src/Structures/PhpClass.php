@@ -9,6 +9,13 @@ class PhpClass extends OOPStructure
     private bool $isFinal = false;
     private bool $isAbstract = false;
 
+    public function __construct(string $name)
+    {
+        $this->dependencyAwareChildren = [&$this->methods, &$this->props, &$this->staticProps, &$this->constants];
+
+        parent::__construct($name);
+    }
+
     public function generate(): string
     {
         return <<<CLASS

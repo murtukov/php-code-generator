@@ -146,7 +146,7 @@ foreach ($configs as $typeName => $typeConfig) {
                                     ->addArgument(Argument::create('value'))
                                     ->addArgument(Argument::create('args'))
                                     ->addArgument(Argument::create('context'))
-                                    ->addArgument(Argument::create('info', 'ResolveInfo'))
+                                    ->addArgument(Argument::create('info', 'GraphQL\Type\Definition\ResolveInfo'))
                             );
                     })
                 )

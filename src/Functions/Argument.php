@@ -4,14 +4,10 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator\Functions;
 
-use Murtukov\PHPCodeGenerator\ArgumentInterface;
-use Murtukov\PHPCodeGenerator\GeneratorInterface;
-use Murtukov\PHPCodeGenerator\Traits\DependencyAwareTrait;
+use Murtukov\PHPCodeGenerator\DependencyAwareGenerator;
 
-class Argument implements ArgumentInterface, GeneratorInterface
+class Argument extends DependencyAwareGenerator
 {
-    use DependencyAwareTrait;
-
     private string  $type;
     private string  $name;
     private bool    $isSpread = false;
@@ -64,7 +60,7 @@ class Argument implements ArgumentInterface, GeneratorInterface
         return $this->isSpread;
     }
 
-    public function setIsSpread(bool $isSpread): ArgumentInterface
+    public function setIsSpread(bool $isSpread): self
     {
         $this->isSpread = $isSpread;
         return $this;
@@ -75,7 +71,7 @@ class Argument implements ArgumentInterface, GeneratorInterface
         return $this->isByReference;
     }
 
-    public function setIsByReference(bool $isByReference): ArgumentInterface
+    public function setIsByReference(bool $isByReference): self
     {
         $this->isByReference = $isByReference;
         return $this;

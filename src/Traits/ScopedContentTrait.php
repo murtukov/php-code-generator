@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator\Traits;
 
+use Murtukov\PHPCodeGenerator\AbstractGenerator;
+use Murtukov\PHPCodeGenerator\DependencyAwareGenerator;
 use Murtukov\PHPCodeGenerator\Functions\ArrowFunction;
 use Murtukov\PHPCodeGenerator\GeneratorInterface;
 use function array_unshift;
@@ -14,7 +16,9 @@ trait ScopedContentTrait
 
     public function appendVar(string $name, GeneratorInterface $var): self
     {
-        $this->content[] = "$$name = $var";
+        $this->content[] = self::createBlock("$$name = ", $var);
+
+        $this->checkIfChildWithDependency($var);
 
         return $this;
     }
@@ -23,12 +27,16 @@ trait ScopedContentTrait
     {
         $this->content[] = $object;
 
+        $this->checkIfChildWithDependency($object);
+
         return $this;
     }
 
     public function prepend(GeneratorInterface $object): self
     {
         array_unshift($this->content, $object);
+
+        $this->checkIfChildWithDependency($object);
 
         return $this;
     }
@@ -40,9 +48,14 @@ trait ScopedContentTrait
         return $this;
     }
 
-    public function appendFn(array $args = [], string $returnType = '', string $expression = ''): ArrowFunction
+    public function appendFn(array $args = [], string $returnType = '', GeneratorInterface $expression = null): self
     {
-        return $this->content[] = new ArrowFunction($returnType, $expression);
+        $function = new ArrowFunction($expression, $returnType);
+        $this->content[] = &$function;
+
+        $this->checkIfChildWithDependency($function);
+
+        return $this;
     }
 
     public function setReturn(GeneratorInterface $object): self
@@ -50,6 +63,13 @@ trait ScopedContentTrait
         $this->content[] = "return $object";
 
         return $this;
+    }
+
+    private function checkIfChildWithDependency($child)
+    {
+        if ($child instanceof DependencyAwareGenerator) {
+            $this->dependencyAwareChildren[] = &$child;
+        }
     }
 
     private function generateContent(): string
@@ -61,5 +81,26 @@ trait ScopedContentTrait
         }
 
         return $content;
+    }
+
+    private static function createBlock(...$parts)
+    {
+        /**
+         * @class Block
+         */
+        return new class(...$parts) extends AbstractGenerator
+        {
+            public array $parts;
+
+            public function __construct(...$args)
+            {
+                $this->parts = $args;
+            }
+
+            public function generate(): string
+            {
+                return implode($this->parts);
+            }
+        };
     }
 }

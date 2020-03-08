@@ -10,10 +10,6 @@ class NumericArray extends AbstractArray
 {
     public function generate(): string
     {
-        if ($this->isMap) {
-            return $this->generateMap();
-        }
-
         return $this->generateRecursive($this->items);
     }
 
@@ -28,7 +24,7 @@ class NumericArray extends AbstractArray
         return $this->generateRecursive($result);
     }
 
-    public function generateRecursive(array $items): string
+    private function generateRecursive(array $items): string
     {
         if (0 === count($this->items)) {
             return '[]';

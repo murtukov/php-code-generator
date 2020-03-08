@@ -24,7 +24,6 @@ abstract class DependencyAwareGenerator extends AbstractGenerator
      */
     protected array $dependencyAwareChildren = [];
 
-
     /**
      * @param string $path
      * @param string $alias

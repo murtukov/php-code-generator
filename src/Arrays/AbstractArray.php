@@ -28,7 +28,6 @@ abstract class AbstractArray extends DependencyAwareGenerator
     {
         $this->items = $items;
         $this->multiline = $multiline;
-        $this->dependencyAwareChildren = [&$this->items];
     }
 
     public static function create(array $items = [], bool $multiline = false): self
@@ -50,10 +49,17 @@ abstract class AbstractArray extends DependencyAwareGenerator
     public static function mapMultiline(array $items, callable $map): self
     {
         $array = new static();
-        $array->items = $items;
         $array->map = $map;
         $array->isMap = true;
         $array->multiline = true;
+
+        foreach ($items as $key => $value) {
+            $array->items[$key] = ($array->map)($key, $value);
+
+            if ($array->items[$key] instanceof DependencyAwareGenerator) {
+                $array->dependencyAwareChildren[] = $array->items[$key];
+            }
+        }
 
         return $array;
     }
@@ -76,6 +82,10 @@ abstract class AbstractArray extends DependencyAwareGenerator
     public function addItem(string $key, $value): self
     {
         $this->items[$key] = $value;
+
+        if ($value instanceof DependencyAwareGenerator) {
+            $this->dependencyAwareChildren[] = $value;
+        }
 
         return $this;
     }

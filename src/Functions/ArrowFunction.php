@@ -12,18 +12,17 @@ class ArrowFunction extends DependencyAwareGenerator
 {
     use FunctionTrait;
 
-    /**
-     * @var string|GeneratorInterface
-     */
-    private $expression;
+    private ?GeneratorInterface $expression;
 
-    public function __construct($expression = '', string $returnType = '')
+    public function __construct(?GeneratorInterface $expression, string $returnType = '')
     {
         $this->expression = $expression;
         $this->returnType = $returnType;
+
+        $this->dependencyAwareChildren = [&$this->args, &$this->expression];
     }
 
-    public static function create($expression = '', string $returnType = '')
+    public static function create($expression = null, string $returnType = '')
     {
         return new self($expression, $returnType);
     }
@@ -33,7 +32,7 @@ class ArrowFunction extends DependencyAwareGenerator
         return "fn({$this->generateArgs()}) => $this->expression";
     }
 
-    public function getExpression(): string
+    public function getExpression(): ?GeneratorInterface
     {
         return $this->expression;
     }

@@ -17,7 +17,7 @@ class Argument extends DependencyAwareGenerator
     public function __construct(string $name, string $type = '', $defaultValue = '')
     {
         $this->name = $name;
-        $this->type = $this->resolveQualifier($type);
+        $this->type = $type ? $this->resolveQualifier($type) : $type;
 
         $this->setDefaultValue($defaultValue);
     }

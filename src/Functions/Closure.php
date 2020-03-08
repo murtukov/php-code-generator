@@ -17,6 +17,11 @@ class Closure extends DependencyAwareGenerator
 
     private array   $uses = []; // variables of parent scope
 
+    public function __construct()
+    {
+        $this->dependencyAwareChildren = [&$this->args];
+    }
+
     public static function create()
     {
         return new self();
@@ -34,7 +39,7 @@ class Closure extends DependencyAwareGenerator
 
     private function buildUses(): string
     {
-        if (count($this->uses) > 0) {
+        if (!empty($this->uses) > 0) {
             $last = array_key_last($this->uses);
 
             $code = '';

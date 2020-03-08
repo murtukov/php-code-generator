@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator\Arrays;
 
-use Murtukov\PHPCodeGenerator\AbstractGenerator;
 use Murtukov\PHPCodeGenerator\DependencyAwareGenerator;
 use Murtukov\PHPCodeGenerator\GeneratorInterface;
-use Murtukov\PHPCodeGenerator\Traits\DependencyAwareTrait;
 use Murtukov\PHPCodeGenerator\Traits\IndentableTrait;
 use function gettype;
 use function json_encode;
@@ -90,10 +88,22 @@ abstract class AbstractArray extends DependencyAwareGenerator
         return $this;
     }
 
-    public function removeItemAt(int $index): self
+    public function addIfNotNull(string $key, $value): self
     {
-        unset($this->items[$index]);
-        return $this;
+        if (null === $value) {
+            return $this;
+        }
+
+        return $this->addItem($key, $value);
+    }
+
+    public function addIfNotEmpty(string $key, $value)
+    {
+        if (empty($value)) {
+            return $this;
+        }
+
+        return $this->addItem($key, $value);
     }
 
     protected function stringifyValue($value)

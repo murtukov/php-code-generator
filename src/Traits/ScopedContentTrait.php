@@ -4,72 +4,62 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator\Traits;
 
-use Murtukov\PHPCodeGenerator\AbstractGenerator;
-use Murtukov\PHPCodeGenerator\DependencyAwareGenerator;
-use Murtukov\PHPCodeGenerator\Functions\ArrowFunction;
 use Murtukov\PHPCodeGenerator\GeneratorInterface;
+use Murtukov\PHPCodeGenerator\Utils;
 use function array_unshift;
 
 trait ScopedContentTrait
 {
     private array $content = [];
 
-    public function appendVar(string $name, GeneratorInterface $var): self
+    /**
+     * @param GeneratorInterface[]|string[] $values
+     * @return self
+     */
+    public function append(...$values): self
     {
-        $this->content[] = self::createBlock("$$name = ", $var);
+        $argNum = func_num_args();
 
-        $this->checkIfChildWithDependency($var);
-
-        return $this;
-    }
-
-    public function append(GeneratorInterface $object): self
-    {
-        $this->content[] = $object;
-
-        $this->checkIfChildWithDependency($object);
-
-        return $this;
-    }
-
-    public function prepend(GeneratorInterface $object): self
-    {
-        array_unshift($this->content, $object);
-
-        $this->checkIfChildWithDependency($object);
-
-        return $this;
-    }
-
-    public function appendEmptyLine(): self
-    {
-        $this->content[] = "\n";
-
-        return $this;
-    }
-
-    public function appendFn(array $args = [], string $returnType = '', GeneratorInterface $expression = null): self
-    {
-        $function = new ArrowFunction($expression, $returnType);
-        $this->content[] = &$function;
-
-        $this->checkIfChildWithDependency($function);
-
-        return $this;
-    }
-
-    public function setReturn(GeneratorInterface $object): self
-    {
-        $this->content[] = "return $object";
-
-        return $this;
-    }
-
-    private function checkIfChildWithDependency($child)
-    {
-        if ($child instanceof DependencyAwareGenerator) {
-            $this->dependencyAwareChildren[] = &$child;
+        if ($argNum === 0) {
+            return $this;
         }
+
+        if ($argNum === 1) {
+            $this->content[] = $values[0];
+        } else {
+            $this->content[] = self::createBlock(...$values);
+        }
+
+        foreach ($values as $value) {
+            if ($value instanceof GeneratorInterface) {
+                $this->dependencyAwareChildren[] = $value;
+            }
+        }
+
+        return $this;
+    }
+
+    public function prepend(...$values): self
+    {
+        $argNum = func_num_args();
+
+        if ($argNum === 0) {
+            return $this;
+        }
+
+        if ($argNum === 1) {
+            array_unshift($this->content, $values[0]);
+        } else {
+            array_unshift($this->content, self::createBlock(...$values));
+        }
+
+        foreach ($values as $value) {
+            if ($value instanceof GeneratorInterface) {
+                $this->dependencyAwareChildren[] = $value;
+            }
+        }
+
+        return $this;
     }
 
     private function generateContent(): string
@@ -77,7 +67,7 @@ trait ScopedContentTrait
         $content = '';
 
         if (!empty($this->content)) {
-            $content = $this->indent(implode(";\n", $this->content).';');
+            $content = Utils::indent(implode(";\n", $this->content).';');
         }
 
         return $content;
@@ -85,10 +75,7 @@ trait ScopedContentTrait
 
     private static function createBlock(...$parts)
     {
-        /**
-         * @class Block
-         */
-        return new class(...$parts) extends AbstractGenerator
+        return new class(...$parts) implements GeneratorInterface
         {
             public array $parts;
 
@@ -97,7 +84,7 @@ trait ScopedContentTrait
                 $this->parts = $args;
             }
 
-            public function generate(): string
+            public function __toString(): string
             {
                 return implode($this->parts);
             }

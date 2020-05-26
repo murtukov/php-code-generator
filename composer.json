@@ -9,6 +9,7 @@
             "email": "murtukov@gmail.com"
         }
     ],
+    "minimum-stability": "dev",
     "require": {
         "php": "^7.4"
     },

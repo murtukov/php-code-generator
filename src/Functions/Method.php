@@ -6,13 +6,10 @@ namespace Murtukov\PHPCodeGenerator\Functions;
 
 use Murtukov\PHPCodeGenerator\DependencyAwareGenerator;
 use Murtukov\PHPCodeGenerator\Traits\FunctionTrait;
-use Murtukov\PHPCodeGenerator\Traits\IndentableTrait;
 use Murtukov\PHPCodeGenerator\Traits\ScopedContentTrait;
-use function implode;
 
 class Method extends DependencyAwareGenerator
 {
-    use IndentableTrait;
     use ScopedContentTrait;
     use FunctionTrait;
 
@@ -23,13 +20,19 @@ class Method extends DependencyAwareGenerator
     private string  $name;
     private string  $modifier;
     private array   $customStack = [];
+    public  bool    $isStatic = false;
 
-    public static function create(string $name, string $modifier = 'public', string $returnType = ''): self
+    public static function create(string $name, string $modifier = self::PUBLIC, string $returnType = ''): self
     {
         return new self($name, $modifier, $returnType);
     }
 
-    public function __construct(string $name, string $modifier = 'public', string $returnType = '')
+    public static function createConstructor(string $modifier = self::PUBLIC): self
+    {
+        return new self('__construct', $modifier, '');
+    }
+
+    public function __construct(string $name, string $modifier = self::PUBLIC, string $returnType = '')
     {
         $this->name = $name;
         $this->modifier = $modifier;
@@ -40,7 +43,10 @@ class Method extends DependencyAwareGenerator
 
     public function generate(): string
     {
-        $signature = "$this->modifier function $this->name({$this->generateArgs()})";
+        $isStatic = $this->isStatic ? 'static ' : '';
+        $args = \implode(", ", $this->args);
+
+        $signature = "$this->modifier {$isStatic}function $this->name($args)";
 
         if ($this->returnType) {
             $signature .= ": $this->returnType";
@@ -52,11 +58,6 @@ class Method extends DependencyAwareGenerator
         {$this->generateContent()}
         }
         CODE;
-    }
-
-    private function buildReturnType(): string
-    {
-        return $this->returnType ? ": $this->returnType" : '';
     }
 
     public function __toString(): string
@@ -79,6 +80,23 @@ class Method extends DependencyAwareGenerator
     {
         $this->shortenQualifiers = $value;
 
+        return $this;
+    }
+
+    public function isStatic(): bool
+    {
+        return $this->isStatic;
+    }
+
+    public function setStatic(): self
+    {
+        $this->isStatic = true;
+        return $this;
+    }
+
+    public function unsetStatic()
+    {
+        $this->isStatic = false;
         return $this;
     }
 }

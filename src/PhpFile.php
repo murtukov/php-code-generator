@@ -4,14 +4,10 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator;
 
-use Murtukov\PHPCodeGenerator\Structures\PhpClass;
-use Murtukov\PHPCodeGenerator\Traits\DependencyAwareTrait;
-use Murtukov\PHPCodeGenerator\Traits\IndentableTrait;
+use Murtukov\PHPCodeGenerator\OOP\PhpClass;
 
 class PhpFile extends DependencyAwareGenerator
 {
-    use IndentableTrait;
-
     /** @var PhpClass[]  */
     private array $classes = [];
 
@@ -36,11 +32,14 @@ class PhpFile extends DependencyAwareGenerator
 
     public function generate(): string
     {
-        return <<<FILE
-        <?php 
-        {$this->buildNamespace()}{$this->buildUseStatements()}
-        {$this->buildClasses()}
-        FILE;
+        $namespace = $this->namespace ? "\nnamespace $this->namespace;\n" : '';
+        $classes = implode("\n\n", $this->classes);
+
+        return <<<CODE
+        <?php
+        $namespace{$this->buildUseStatements()}
+        $classes
+        CODE;
     }
 
     public function __toString(): string
@@ -60,20 +59,6 @@ class PhpFile extends DependencyAwareGenerator
         return $this->classes[] = new PhpClass($name);
     }
 
-    protected function buildNamespace(): string
-    {
-        if ($this->namespace) {
-            return "\nnamespace $this->namespace;\n";
-        }
-
-        return '';
-    }
-
-    private function buildClasses(): string
-    {
-        return implode("\n\n", $this->classes);
-    }
-
     public function getNamespace(): string
     {
         return $this->namespace;
@@ -90,6 +75,17 @@ class PhpFile extends DependencyAwareGenerator
         $this->usePaths[$fqcn] = $alias;
 
         return $this;
+    }
+
+    public function addUseStatements(array $paths)
+    {
+        foreach ($paths as $key => $value) {
+            if (is_int($key)) {
+                $this->usePaths[$value] = '';
+            } else {
+                $this->usePaths[$key] = $value;
+            }
+        }
     }
 
     public function buildUseStatements(): string
@@ -113,5 +109,19 @@ class PhpFile extends DependencyAwareGenerator
         }
 
         return $code;
+    }
+
+
+    public function save(string $path)
+    {
+        $dir = dirname($path);
+
+        if (!is_dir($dir)) {
+            mkdir($dir, 0777, true);
+        }
+
+        if (!file_exists($path)) {
+            file_put_contents($path, $this);
+        }
     }
 }

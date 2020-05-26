@@ -4,17 +4,13 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator\Arrays;
 
+use Closure;
 use Murtukov\PHPCodeGenerator\DependencyAwareGenerator;
 use Murtukov\PHPCodeGenerator\GeneratorInterface;
-use Murtukov\PHPCodeGenerator\Traits\IndentableTrait;
-use function gettype;
-use function json_encode;
+use Murtukov\PHPCodeGenerator\Mock;
 
 abstract class AbstractArray extends DependencyAwareGenerator
 {
-    use IndentableTrait;
-
-    protected bool  $oldSyntax = false;
     protected bool  $multiline = false;
     protected array $items = [];
     protected bool  $isMap = false;
@@ -52,7 +48,7 @@ abstract class AbstractArray extends DependencyAwareGenerator
         $array->multiline = true;
 
         foreach ($items as $key => $value) {
-            $array->items[$key] = ($array->map)($key, $value);
+            $array->items[$key] = ($array->map)($value, $key);
 
             if ($array->items[$key] instanceof DependencyAwareGenerator) {
                 $array->dependencyAwareChildren[] = $array->items[$key];
@@ -106,24 +102,53 @@ abstract class AbstractArray extends DependencyAwareGenerator
         return $this->addItem($key, $value);
     }
 
-    protected function stringifyValue($value)
+    public function addIfNotFalse(string $key, $value)
     {
-        switch (gettype($value)) {
-            case 'boolean':
-            case 'integer':
-            case 'double':
-                return json_encode($value);
-            case 'string':
-                return "'$value'";
-            case 'array':
-                return $this->generateRecursive($value);
-            case 'object':
-                return $value;
-            case 'NULL':
-                return "'null'";
-            default:
-                return "undefined";
-
+        if (!$value) {
+            return $this;
         }
+
+        return $this->addItem($key, $value);
+    }
+
+    /**
+     * @param mixed $value
+     * @return self|Mock
+     */
+    public function ifNotNull($value)
+    {
+        if (null !== $value) {
+            return $this;
+        }
+        return Mock::getInstance($this);
+    }
+
+    /**
+     * @param bool|Closure $value
+     * @return self|Mock
+     */
+    public function ifTrue($value)
+    {
+        if (is_bool($value)) {
+            return $value ? $this : Mock::getInstance($this);
+        } elseif (is_callable($value)) {
+            return $value() ? $this : Mock::getInstance($this);
+        }
+
+        return Mock::getInstance($this);
+    }
+
+    /**
+     * @param mixed $value
+     * @return self|Mock
+     */
+    public function ifNotEmpty($value)
+    {
+        return !empty($value) ? $this : Mock::getInstance($this);
+    }
+
+    public static function getStringifiers()
+    {
+        return [];
     }
 }

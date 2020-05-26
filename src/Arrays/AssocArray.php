@@ -4,47 +4,17 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator\Arrays;
 
+use Murtukov\PHPCodeGenerator\Exception\UnrecognizedValueTypeException;
+use Murtukov\PHPCodeGenerator\Utils;
+
 class AssocArray extends AbstractArray
 {
+    /**
+     * @return string
+     * @throws UnrecognizedValueTypeException
+     */
     public function generate(): string
     {
-        return $this->generateRecursive($this->items);
-    }
-
-    public function generateRecursive(array $items): string
-    {
-        if (empty($this->items)) {
-            return '[]';
-        }
-
-        $code = '';
-        $last = array_key_last($items);
-
-        if ($this->multiline) {
-            foreach ($items as $key => $value) {
-                $code .= "{$this->stringifyKey($key)} => {$this->stringifyValue($value)},";
-
-                if ($key !== $last) {
-                    $code .= "\n";
-                }
-            }
-
-            return "[\n{$this->indent($code)}\n]";
-        } else {
-            foreach ($items as $key => $value) {
-                $code .= "{$this->stringifyKey($key)} => {$this->stringifyValue($value)}";
-
-                if ($key !== $last) {
-                    $code .= ", ";
-                }
-            }
-
-            return "[$code]";
-        }
-    }
-
-    private function stringifyKey($key)
-    {
-        return is_int($key) ? $key : "'$key'";
+        return Utils::stringify($this->items, $this->multiline, true, static::getStringifiers());
     }
 }

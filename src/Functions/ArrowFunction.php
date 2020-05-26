@@ -12,17 +12,18 @@ class ArrowFunction extends DependencyAwareGenerator
 {
     use FunctionTrait;
 
-    private ?GeneratorInterface $expression;
+    /** @var GeneratorInterface|string  */
+    private $expression;
 
-    public function __construct(?GeneratorInterface $expression, string $returnType = '')
+    public function __construct($expression = '', string $returnType = '')
     {
-        $this->expression = $expression;
+        $this->expression = $this->manageDependency($expression);
         $this->returnType = $returnType;
 
-        $this->dependencyAwareChildren = [&$this->args, &$this->expression];
+        $this->dependencyAwareChildren[] = $this->args;
     }
 
-    public static function create($expression = null, string $returnType = '')
+    public static function create($expression = '', string $returnType = '')
     {
         return new self($expression, $returnType);
     }
@@ -32,23 +33,32 @@ class ArrowFunction extends DependencyAwareGenerator
         return "fn({$this->generateArgs()}) => $this->expression";
     }
 
-    public function getExpression(): ?GeneratorInterface
+    /**
+     * @return GeneratorInterface|string
+     */
+    public function getExpression()
     {
         return $this->expression;
     }
 
     /**
-     * @param string|GeneratorInterface $expression
-     * @return ArrowFunction
+     * @param GeneratorInterface|string $expression
+     * @return self
      */
-    public function setExpression($expression): ArrowFunction
+    public function setExpression($expression): self
     {
-        $this->expression = $expression;
+        $this->expression = $this->manageDependency($expression);
         return $this;
     }
 
-    public function __toString(): string
+    protected function manageDependency($value)
     {
-        return $this->generate();
+        if ($value instanceof DependencyAwareGenerator) {
+            $this->dependencyAwareChildren['expr'] = $value;
+        } elseif (is_string($value)) {
+            unset($this->dependencyAwareChildren['expr']);
+        }
+
+        return $value;
     }
 }

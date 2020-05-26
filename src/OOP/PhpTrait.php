@@ -1,6 +1,6 @@
 <?php
 
-namespace Murtukov\PHPCodeGenerator\Structures;
+namespace Murtukov\PHPCodeGenerator\OOP;
 
 class PhpTrait extends OOPStructure
 {

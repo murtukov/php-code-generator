@@ -31,15 +31,26 @@ abstract class DependencyAwareGenerator extends AbstractGenerator
      */
     public function resolveQualifier(string $path, $alias = ''): string
     {
-        if (!empty($path) && '\\' === $path[0]) {
+        if (empty($path)) {
             return $path;
         }
 
-        $this->usePaths[$path] = $alias;
+        if (false === Config::$shortenQualifiers) {
+            return $path;
+        }
+
+        if (Config::$suppressSymbol === $path[0]) {
+            return substr($path, 1);
+        }
+
+        if ('\\' === $path[0]) {
+            return $path;
+        }
 
         $portion = strrchr($path, '\\');
 
         if ($portion) {
+            $this->usePaths[$path] = $alias;
             $path = substr($portion, 1);
         }
 

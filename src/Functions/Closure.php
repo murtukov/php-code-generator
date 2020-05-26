@@ -6,14 +6,12 @@ namespace Murtukov\PHPCodeGenerator\Functions;
 
 use Murtukov\PHPCodeGenerator\DependencyAwareGenerator;
 use Murtukov\PHPCodeGenerator\Traits\FunctionTrait;
-use Murtukov\PHPCodeGenerator\Traits\IndentableTrait;
 use Murtukov\PHPCodeGenerator\Traits\ScopedContentTrait;
 
 class Closure extends DependencyAwareGenerator
 {
     use FunctionTrait;
     use ScopedContentTrait;
-    use IndentableTrait;
 
     private array   $uses = []; // variables of parent scope
 
@@ -29,12 +27,11 @@ class Closure extends DependencyAwareGenerator
 
     public function generate(): string
     {
-        $code = <<<CODE
+        return <<<CODE
         function ({$this->generateArgs()}){$this->buildUses()}{$this->buildReturnType()} {
         {$this->generateContent()}
         }
         CODE;
-        return $code;
     }
 
     private function buildUses(): string

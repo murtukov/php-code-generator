@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Murtukov\PHPCodeGenerator\Structures;
+namespace Murtukov\PHPCodeGenerator\OOP;
 
 class PhpClass extends OOPStructure
 {
@@ -11,19 +11,19 @@ class PhpClass extends OOPStructure
 
     public function __construct(string $name)
     {
-        $this->dependencyAwareChildren = [&$this->methods, &$this->props, &$this->staticProps, &$this->constants];
+        $this->dependencyAwareChildren = [&$this->methods, &$this->props];
 
         parent::__construct($name);
     }
 
     public function generate(): string
     {
-        return <<<CLASS
-        {$this->build()}class $this->name {$this->buildExtends()}{$this->buildImplements()}
+        return <<<CODE
+        {$this->buildDocBlock()}{$this->buildPrefix()}class $this->name {$this->buildExtends()}{$this->buildImplements()}
         {
         {$this->buildContent()}
         }
-        CLASS;
+        CODE;
     }
 
     public static function create(string $name): self
@@ -31,17 +31,22 @@ class PhpClass extends OOPStructure
         return new self($name);
     }
 
-    private function build(): string
+    private function buildPrefix(): string
     {
-        $modifiers = '';
+        $prefix = '';
 
         if ($this->isFinal) {
-            $modifiers .= 'final ';
+            $prefix .= 'final ';
         } elseif ($this->isAbstract) {
-            $modifiers .= 'abstract ';
+            $prefix .= 'abstract ';
         }
 
-        return $modifiers;
+        return $prefix;
+    }
+
+    private function buildDocBlock()
+    {
+        return $this->docBlock ? "$this->docBlock\n" : '';
     }
 
     public function isFinal(): bool
@@ -62,7 +67,6 @@ class PhpClass extends OOPStructure
     public function unsetFinal(): self
     {
         $this->isFinal = false;
-
         return $this;
     }
 
@@ -71,15 +75,18 @@ class PhpClass extends OOPStructure
         return $this->isAbstract;
     }
 
-    public function setIsAbstract(bool $isAbstract): PhpClass
+    public function setAbstract(): PhpClass
     {
-        $this->isAbstract = $isAbstract;
+        $this->isAbstract = true;
 
         // Class cannot be final and abstract at the same time
-        if (true === $isAbstract) {
-            $this->isFinal = false;
-        }
+        $this->isFinal = false;
+        return $this;
+    }
 
+    public function unsetAbstract(): PhpClass
+    {
+        $this->isAbstract = false;
         return $this;
     }
 }

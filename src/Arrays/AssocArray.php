@@ -19,7 +19,7 @@ class AssocArray extends AbstractArray
             $this->items,
             $this->multiline,
             true,
-            self::getConverters()
+            static::getConverters()
         );
     }
 }

@@ -16,7 +16,7 @@ class NumericArray extends AbstractArray
      */
     public function generate(): string
     {
-        return Utils::stringify($this->items, $this->multiline, false);
+        return Utils::stringify($this->items, $this->multiline, false, static::getConverters());
     }
 
     /**

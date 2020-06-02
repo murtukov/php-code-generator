@@ -51,6 +51,7 @@ class IfElse extends AbstractGenerator
         return $this;
     }
 
+    // TODO: use stringifier for expressions
     public function generate(): string
     {
         $elseIfBlocks = implode($this->elseIfBlocks);

@@ -18,6 +18,8 @@ trait ScopedContentTrait
     /**
      * Append contents to body.
      *
+     * @todo: use stringifier for contents
+     *
      * @param GeneratorInterface[]|string[] $values
      * @return self
      */

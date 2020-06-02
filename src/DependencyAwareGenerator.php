@@ -6,15 +6,9 @@ namespace Murtukov\PHPCodeGenerator;
 
 abstract class DependencyAwareGenerator extends AbstractGenerator
 {
-    /**
-     * @var bool
-     */
-    protected bool $shortenQualifiers = true;
-
-    /**
-     * @var array
-     */
+    protected bool  $shortenQualifiers = true;
     protected array $usePaths = [];
+    protected array $useGroups = [];
 
     /**
      * List of all generator children, which maintain their own use dependencies.
@@ -31,30 +25,47 @@ abstract class DependencyAwareGenerator extends AbstractGenerator
      */
     public function resolveQualifier(string $path, $alias = ''): string
     {
-        if (empty($path)) {
+        if (empty($path) || false === Config::$shortenQualifiers || '\\' === $path[0]) {
             return $path;
         }
 
-        if (false === Config::$shortenQualifiers) {
-            return $path;
-        }
-
-        if (Config::$suppressSymbol === $path[0]) {
+        if ($path[0] === Config::$suppressSymbol) {
             return substr($path, 1);
         }
 
-        if ('\\' === $path[0]) {
-            return $path;
-        }
-
-        $portion = strrchr($path, '\\');
-
-        if ($portion) {
+        if ($portion = strrchr($path, '\\')) {
             $this->usePaths[$path] = $alias;
             $path = substr($portion, 1);
         }
 
         return $path;
+    }
+
+    public function addUse(string $fqcn, string ...$aliases): self
+    {
+        $this->usePaths[$fqcn] = implode(', ', $aliases);
+        return $this;
+    }
+
+    public function addUseGroup(string $fqcn, string ...$classNames)
+    {
+        foreach ($classNames as $name) {
+            if (empty($this->useGroups[$fqcn]) || !in_array($name, $this->useGroups[$fqcn])) {
+                $this->useGroups[$fqcn][] = $name;
+            }
+        }
+        return $this;
+    }
+
+    public function useGroupsToArray()
+    {
+        $result = [];
+
+        foreach ($this->useGroups as $path => $classNames) {
+            $result[rtrim($path, '\\') . '\{'.implode(', ', $classNames).'}'] = '';
+        }
+
+        return $result;
     }
 
     /**
@@ -64,15 +75,19 @@ abstract class DependencyAwareGenerator extends AbstractGenerator
      */
     public function getUsePaths(): array
     {
-        $mergedPaths = $this->usePaths;
+        // Merge self use paths and use groups
+        $mergedPaths = $this->usePaths + $this->useGroupsToArray();
 
         foreach ($this->dependencyAwareChildren as $child) {
             if (is_array($child)) {
                 foreach ($child as $subchild) {
-                    $mergedPaths = array_replace($mergedPaths, $subchild->getUsePaths());
+                    if (!$subchild instanceof self) {
+                        continue;
+                    }
+                    $mergedPaths = $mergedPaths + $subchild->getUsePaths();
                 }
             } else {
-                $mergedPaths = array_replace($mergedPaths, $child->getUsePaths());
+                $mergedPaths = $mergedPaths + $child->getUsePaths();
             }
         }
 

@@ -5,6 +5,12 @@ declare(strict_types=1);
 namespace Murtukov\PHPCodeGenerator;
 
 use Murtukov\PHPCodeGenerator\OOP\PhpClass;
+use function array_replace;
+use function dirname;
+use function file_put_contents;
+use function implode;
+use function ksort;
+use function mkdir;
 
 class PhpFile extends DependencyAwareGenerator
 {
@@ -15,17 +21,15 @@ class PhpFile extends DependencyAwareGenerator
     private array $declares;
 
     protected string $namespace = '';
+    private   string $name;
 
-    private string $name;
-
-
-    public function __construct(string $name)
+    public function __construct(string $name = '')
     {
         $this->name = $name;
         $this->dependencyAwareChildren = [&$this->classes];
     }
 
-    public static function create(string $name): self
+    public static function create(string $name = ''): self
     {
         return new self($name);
     }
@@ -70,38 +74,24 @@ class PhpFile extends DependencyAwareGenerator
         return $this;
     }
 
-    public function addUseStatement(string $fqcn, string $alias = ''): self
-    {
-        $this->usePaths[$fqcn] = $alias;
-
-        return $this;
-    }
-
-    public function addUseStatements(array $paths)
-    {
-        foreach ($paths as $key => $value) {
-            if (is_int($key)) {
-                $this->usePaths[$value] = '';
-            } else {
-                $this->usePaths[$key] = $value;
-            }
-        }
-    }
-
     public function buildUseStatements(): string
     {
         $code = '';
 
         $paths = $this->getUsePaths();
 
+        if (empty($paths)) {
+            return $code;
+        }
+
         if (!empty(ksort($paths))) {
             $code = "\n";
 
-            foreach ($paths as $path => $alias) {
+            foreach ($paths as $path => $aliases) {
                 $code .= "use $path";
 
-                if ($alias) {
-                    $code .= " as $alias";
+                if ($aliases) {
+                    $code .= " as $aliases";
                 }
 
                 $code .= ";\n";
@@ -112,16 +102,14 @@ class PhpFile extends DependencyAwareGenerator
     }
 
 
-    public function save(string $path)
+    public function save(string $path, int $mask = 0777)
     {
         $dir = dirname($path);
 
         if (!is_dir($dir)) {
-            mkdir($dir, 0777, true);
+            mkdir($dir, $mask, true);
         }
 
-        if (!file_exists($path)) {
-            file_put_contents($path, $this);
-        }
+        file_put_contents($path, $this);
     }
 }

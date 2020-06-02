@@ -8,15 +8,14 @@ use Closure;
 use Murtukov\PHPCodeGenerator\DependencyAwareGenerator;
 use Murtukov\PHPCodeGenerator\GeneratorInterface;
 use Murtukov\PHPCodeGenerator\Mock;
+use function count;
+use function is_bool;
+use function is_callable;
 
 abstract class AbstractArray extends DependencyAwareGenerator
 {
     protected bool  $multiline = false;
     protected array $items = [];
-    protected bool  $isMap = false;
-
-    /** @var callable */
-    protected $map;
 
     public function __construct(array $items = [], bool $multiline = false)
     {
@@ -24,53 +23,37 @@ abstract class AbstractArray extends DependencyAwareGenerator
         $this->multiline = $multiline;
     }
 
-    public static function create(array $items = [], bool $multiline = false): self
+    public static function new(array $items = [], bool $multiline = false): self
     {
         return new static($items, $multiline);
     }
 
     /**
-     * Shorthand for new AssocArray([], true)
+     * Shorthand for `new AssocArray($items, true)`
      *
      * @param GeneratorInterface[]|string[] $items
      * @return AbstractArray
      */
-    public static function createMultiline(array $items = []): self
+    public static function multiline(array $items = []): self
     {
         return new static($items, true);
     }
 
-    public static function mapMultiline(array $items, callable $map): self
+    public static function map(array $items, callable $map): self
     {
         $array = new static();
-        $array->map = $map;
-        $array->isMap = true;
         $array->multiline = true;
 
         foreach ($items as $key => $value) {
-            $array->items[$key] = ($array->map)($value, $key);
-
-            if ($array->items[$key] instanceof DependencyAwareGenerator) {
-                $array->dependencyAwareChildren[] = $array->items[$key];
-            }
+            $array->addItem($key, $map($value, $key));
         }
-
-        return $array;
-    }
-
-    public static function mapInline(array $items, callable $map)
-    {
-        $array = new static();
-        $array->items = $items;
-        $array->map = $map;
-        $array->isMap = true;
 
         return $array;
     }
 
     /**
      * @param string $key
-     * @param string|GeneratorInterface $value
+     * @param mixed  $value
      * @return $this
      */
     public function addItem(string $key, $value): self
@@ -147,8 +130,33 @@ abstract class AbstractArray extends DependencyAwareGenerator
         return !empty($value) ? $this : Mock::getInstance($this);
     }
 
-    public static function getStringifiers()
+    public static function getConverters()
     {
         return [];
+    }
+
+    public function setMultiline(): self
+    {
+        $this->multiline = true;
+        return $this;
+    }
+
+    public function unsetMultiline(): self
+    {
+        $this->multiline = false;
+        return $this;
+    }
+
+    public function count()
+    {
+        return count($this->items);
+    }
+
+    /**
+     * @return GeneratorInterface|string|null
+     */
+    public function getFirstItem()
+    {
+        return $this->items[0] ?? null;
     }
 }

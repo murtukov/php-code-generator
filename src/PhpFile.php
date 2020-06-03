@@ -29,7 +29,7 @@ class PhpFile extends DependencyAwareGenerator
         $this->dependencyAwareChildren = [&$this->classes];
     }
 
-    public static function create(string $name = ''): self
+    public static function new(string $name = ''): self
     {
         return new self($name);
     }

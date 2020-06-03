@@ -17,7 +17,7 @@ abstract class OOPStructure extends DependencyAwareGenerator
     /** @var string[] */
     protected array $implements = [];
 
-    /** @var array[] */
+    /** @var Property[] */
     protected array $props = [];
 
     protected ?DocBlock $docBlock = null;
@@ -140,6 +140,17 @@ abstract class OOPStructure extends DependencyAwareGenerator
     public function addDocBlock(string $text): self
     {
         $this->docBlock = new DocBlock($text);
+        $this->parento('hi');
         return $this;
+    }
+
+    public function parento()
+    {
+        return $this->childo(...func_get_args());
+    }
+
+    function childo(string $hello)
+    {
+        return "test";
     }
 }

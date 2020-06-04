@@ -37,7 +37,7 @@ class Closure extends DependencyAwareGenerator
     private function buildUses(): string
     {
         if (!empty($this->uses)) {
-            return ' use (' .implode(', ', $this->uses). ')';
+            return ' use ('.implode(', ', $this->uses).')';
         }
 
         return '';
@@ -51,15 +51,17 @@ class Closure extends DependencyAwareGenerator
     public function bindVar(string $name, bool $isByReference = false): self
     {
         $this->uses[] = $isByReference ? "&$$name" : "$$name";
+
         return $this;
     }
 
     /**
-     * Remove all use-variables
+     * Remove all use-variables.
      */
     public function removeUses()
     {
         $this->uses = [];
+
         return $this;
     }
 }

@@ -10,7 +10,7 @@ use Murtukov\PHPCodeGenerator\Utils;
 class Argument extends DependencyAwareGenerator implements FunctionMemberInterface
 {
     /**
-     * Special value to represent that there is no argument passed
+     * Special value to represent that there is no argument passed.
      */
     public const NO_PARAM = INF;
 
@@ -27,8 +27,7 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
 
     /**
      * Argument constructor.
-     * @param string $name
-     * @param string $type
+     *
      * @param mixed $defaultValue
      */
     public function __construct(string $name, string $type = '', $defaultValue = self::NO_PARAM)
@@ -54,7 +53,7 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
             if ($this->isNullable && '?' !== $this->type[0]) {
                 $code .= '?';
             }
-            $code .= $this->type . ' ';
+            $code .= $this->type.' ';
         }
         if ($this->isByReference) {
             $code .= '&';
@@ -63,7 +62,7 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
             $code .= '...';
         }
 
-        $code .= '$' . $this->name;
+        $code .= '$'.$this->name;
 
         if ($this->defaultValue) {
             $code .= " = $this->defaultValue";
@@ -85,6 +84,7 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
     public function setIsSpread(bool $isSpread): self
     {
         $this->isSpread = $isSpread;
+
         return $this;
     }
 
@@ -96,12 +96,14 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
     public function setIsByReference(bool $isByReference): self
     {
         $this->isByReference = $isByReference;
+
         return $this;
     }
 
     public function setType(string $type): self
     {
         $this->type = $type;
+
         return $this;
     }
 
@@ -115,12 +117,14 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
     public function unsetNullable(): self
     {
         $this->isNullable = false;
+
         return $this;
     }
 
     public function setNullable(): self
     {
         $this->isNullable = true;
+
         return $this;
     }
 }

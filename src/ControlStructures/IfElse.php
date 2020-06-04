@@ -15,7 +15,7 @@ class IfElse extends AbstractGenerator
     /** @var GeneratorInterface|string */
     private $expression;
 
-    /** @var GeneratorInterface[]  */
+    /** @var GeneratorInterface[] */
     private array $elseIfBlocks = [];
 
     private ?GeneratorInterface $elseBlock = null;
@@ -35,16 +35,18 @@ class IfElse extends AbstractGenerator
 
     /**
      * @param GeneratorInterface|string $expression
+     *
      * @return IfElse
      */
     public function setExpression($expression): self
     {
         $this->expression = $expression;
+
         return $this;
     }
 
     /**
-     * Just a mock to be consistent with 'else' blocks
+     * Just a mock to be consistent with 'else' blocks.
      */
     public function end()
     {
@@ -65,12 +67,12 @@ class IfElse extends AbstractGenerator
 
     /**
      * @param GeneratorInterface|string $expression
+     *
      * @return IfElse
      */
     public function createElseIf($expression): object
     {
-        return $this->elseIfBlocks[] = new class($expression, $this) implements GeneratorInterface
-        {
+        return $this->elseIfBlocks[] = new class($expression, $this) implements GeneratorInterface {
             use ScopedContentTrait;
 
             /** @var GeneratorInterface|string */
@@ -84,11 +86,12 @@ class IfElse extends AbstractGenerator
                 $this->parent = $parent;
             }
 
-            function __toString(): string
+            public function __toString(): string
             {
                 if (empty($this->expression)) {
                     return '';
                 }
+
                 return " elseif ($this->expression) {\n{$this->generateContent()}\n}";
             }
 
@@ -104,8 +107,7 @@ class IfElse extends AbstractGenerator
      */
     public function createElse(): object
     {
-        return $this->elseBlock = new class($this) implements GeneratorInterface
-        {
+        return $this->elseBlock = new class($this) implements GeneratorInterface {
             use ScopedContentTrait;
 
             public IfElse $parent;

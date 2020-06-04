@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Murtukov\PHPCodeGenerator;
 
 /**
- * Static config to be used by all generator components
+ * Static config to be used by all generator components.
  */
 class Config
 {
-    public static string $indent = "    ";
+    public static string $indent = '    ';
     public static bool $shortenQualifiers = true;
     public static bool $manageUseStatements = true;
-    public static string $suppressSymbol = "@";
+    public static string $suppressSymbol = '@';
 
     /**
      * @var ConverterInterface[]
@@ -30,9 +30,6 @@ class Config
 
     /**
      * Registers user defined stringifiers.
-     *
-     * @param ConverterInterface $stringifierInstance
-     * @param string $type
      */
     public static function registerConverter(ConverterInterface $stringifierInstance, string $type)
     {
@@ -43,23 +40,22 @@ class Config
     }
 
     /**
-     * Unregister a previously registered custom stringifier
+     * Unregister a previously registered custom stringifier.
      *
      * @param string $fqcn - Fully qualified class name
      */
     public static function unregisterStringifier(string $fqcn)
     {
         // Remove instance
-        unset (self::$customStringifiers[$fqcn]);
+        unset(self::$customStringifiers[$fqcn]);
         // Remove map entry
         $type = array_search($fqcn, self::$customStringifiersTypeMap);
-        unset (self::$customStringifiersTypeMap[$type]);
+        unset(self::$customStringifiersTypeMap[$type]);
     }
 
     /**
      * Returns an instance of registered custom stringifier.
      *
-     * @param string $fqcn
      * @return ConverterInterface|null
      */
     public static function getConverter(string $fqcn): ?object

@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator;
 
-class Call extends DependencyAwareGenerator implements \ArrayAccess
+use ArrayAccess;
+use Exception;
+
+class Call extends DependencyAwareGenerator implements ArrayAccess
 {
     private const TYPE_VARIABLE = 0;
     private const TYPE_CLASS = 1;
@@ -19,18 +22,20 @@ class Call extends DependencyAwareGenerator implements \ArrayAccess
 
     public function generate(): string
     {
-        return $this->identifier . implode($this->chainParts);
+        return $this->identifier.implode($this->chainParts);
     }
 
     public function __call($name, $arguments)
     {
         self::$lastObject->chainParts[] = self::createChainPart($name, $arguments);
+
         return self::$lastObject;
     }
 
     public static function __callStatic(string $name, array $arguments)
     {
         self::$lastObject->chainParts[] = self::createChainPart($name, $arguments, true);
+
         return self::$lastObject;
     }
 
@@ -49,7 +54,7 @@ class Call extends DependencyAwareGenerator implements \ArrayAccess
     }
 
     /**
-     * Shortcut for $this[0]->addArgument()
+     * Shortcut for $this[0]->addArgument().
      */
     public function addArgumentAtFirst($argument)
     {
@@ -74,17 +79,17 @@ class Call extends DependencyAwareGenerator implements \ArrayAccess
     /**
      * @param mixed $offset
      * @param mixed $value
-     * @throws \Exception
+     *
+     * @throws Exception
      */
     public function offsetSet($offset, $value)
     {
-        throw new \Exception("Setting chain parts manually is not allowed.");
+        throw new Exception('Setting chain parts manually is not allowed.');
     }
 
     private static function createChainPart(string $name, array $arguments, bool $isStatic = false, bool $isProperty = false): GeneratorInterface
     {
-        return new class($name, $arguments, $isStatic, $isProperty) implements GeneratorInterface
-        {
+        return new class($name, $arguments, $isStatic, $isProperty) implements GeneratorInterface {
             private string $name;
             private array $arguments;
             private bool $isStatic;
@@ -101,7 +106,7 @@ class Call extends DependencyAwareGenerator implements \ArrayAccess
             public function __toString(): string
             {
                 $args = empty($this->arguments) ? '' : implode(', ', $this->arguments);
-                
+
                 if ($this->isStatic) {
                     return "::$this->name($args)";
                 } else {

@@ -9,14 +9,8 @@ use function substr;
 
 trait DependencyAwareTrait
 {
-    /**
-     * @var bool
-     */
     protected bool $shortenQualifiers = true;
 
-    /**
-     * @var array
-     */
     protected array $usePaths = [];
 
     /**
@@ -27,11 +21,8 @@ trait DependencyAwareTrait
      */
     protected array $dependencyAwareChildren = [];
 
-
     /**
-     * @param string $path
      * @param string $alias
-     * @return string
      */
     public function resolveQualifier(string $path, $alias = ''): string
     {

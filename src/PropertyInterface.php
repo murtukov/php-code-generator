@@ -4,16 +4,27 @@ namespace Murtukov\PHPCodeGenerator;
 
 interface PropertyInterface
 {
-    function generate(): string;
-    function getName(): string;
-    function setName(string $name): self;
-    function getModifier(): string;
-    function setPublic(): self;
-    function setPrivate(): self;
-    function setProtected(): self;
-    function getDefaulValue(): string;
-    function setDefaulValue($defaulValue, bool $isString = false): self;
-    function isStatic(): bool;
-    function setIsStatic(bool $isStatic): self;
-    function setIsConst(bool $isConst): self;
+    public function generate(): string;
+
+    public function getName(): string;
+
+    public function setName(string $name): self;
+
+    public function getModifier(): string;
+
+    public function setPublic(): self;
+
+    public function setPrivate(): self;
+
+    public function setProtected(): self;
+
+    public function getDefaulValue(): string;
+
+    public function setDefaulValue($defaulValue, bool $isString = false): self;
+
+    public function isStatic(): bool;
+
+    public function setIsStatic(bool $isStatic): self;
+
+    public function setIsConst(bool $isConst): self;
 }

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Murtukov\PHPCodeGenerator;
-
 
 abstract class DependencyAwareGenerator extends AbstractGenerator
 {
@@ -19,9 +17,7 @@ abstract class DependencyAwareGenerator extends AbstractGenerator
     protected array $dependencyAwareChildren = [];
 
     /**
-     * @param string $path
      * @param string $alias
-     * @return string
      */
     public function resolveQualifier(string $path, $alias = ''): string
     {
@@ -44,6 +40,7 @@ abstract class DependencyAwareGenerator extends AbstractGenerator
     public function addUse(string $fqcn, string ...$aliases): self
     {
         $this->usePaths[$fqcn] = implode(', ', $aliases);
+
         return $this;
     }
 
@@ -54,6 +51,7 @@ abstract class DependencyAwareGenerator extends AbstractGenerator
                 $this->useGroups[$fqcn][] = $name;
             }
         }
+
         return $this;
     }
 
@@ -62,7 +60,7 @@ abstract class DependencyAwareGenerator extends AbstractGenerator
         $result = [];
 
         foreach ($this->useGroups as $path => $classNames) {
-            $result[rtrim($path, '\\') . '\{'.implode(', ', $classNames).'}'] = '';
+            $result[rtrim($path, '\\').'\{'.implode(', ', $classNames).'}'] = '';
         }
 
         return $result;

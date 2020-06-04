@@ -7,6 +7,7 @@ namespace Murtukov\PHPCodeGenerator\Functions;
 use Murtukov\PHPCodeGenerator\DependencyAwareGenerator;
 use Murtukov\PHPCodeGenerator\Traits\FunctionTrait;
 use Murtukov\PHPCodeGenerator\Traits\ScopedContentTrait;
+use function implode;
 
 class Method extends DependencyAwareGenerator
 {
@@ -20,7 +21,7 @@ class Method extends DependencyAwareGenerator
     private string  $name;
     private string  $modifier;
     private array   $customStack = [];
-    public  bool    $isStatic = false;
+    public bool    $isStatic = false;
 
     public static function create(string $name, string $modifier = self::PUBLIC, string $returnType = ''): self
     {
@@ -44,7 +45,7 @@ class Method extends DependencyAwareGenerator
     public function generate(): string
     {
         $isStatic = $this->isStatic ? 'static ' : '';
-        $args = \implode(", ", $this->args);
+        $args = implode(', ', $this->args);
 
         $signature = "$this->modifier {$isStatic}function $this->name($args)";
 
@@ -73,6 +74,7 @@ class Method extends DependencyAwareGenerator
     public function setReturnType(string $returnType): Method
     {
         $this->returnType = $returnType;
+
         return $this;
     }
 
@@ -91,12 +93,14 @@ class Method extends DependencyAwareGenerator
     public function setStatic(): self
     {
         $this->isStatic = true;
+
         return $this;
     }
 
     public function unsetStatic()
     {
         $this->isStatic = false;
+
         return $this;
     }
 }

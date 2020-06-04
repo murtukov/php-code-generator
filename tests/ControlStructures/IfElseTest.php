@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace ControlStructures;
 
@@ -62,8 +64,8 @@ class IfElseTest extends TestCase
     /** @test */
     public function allPartsWithContent()
     {
-         $ifElse = IfElse::create('$name === 15');
-         $ifElse->append('$names = ', "['name' => 'Timur']")
+        $ifElse = IfElse::create('$name === 15');
+        $ifElse->append('$names = ', "['name' => 'Timur']")
             ->createElseIf(new Text('$name === 95'))
                 ->append('return null')
             ->end()

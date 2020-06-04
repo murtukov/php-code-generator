@@ -29,9 +29,10 @@ abstract class AbstractArray extends DependencyAwareGenerator
     }
 
     /**
-     * Shorthand for `new AssocArray($items, true)`
+     * Shorthand for `new AssocArray($items, true)`.
      *
      * @param GeneratorInterface[]|string[] $items
+     *
      * @return AbstractArray
      */
     public static function multiline(array $items = []): self
@@ -52,8 +53,8 @@ abstract class AbstractArray extends DependencyAwareGenerator
     }
 
     /**
-     * @param string $key
-     * @param mixed  $value
+     * @param mixed $value
+     *
      * @return $this
      */
     public function addItem(string $key, $value): self
@@ -96,6 +97,7 @@ abstract class AbstractArray extends DependencyAwareGenerator
 
     /**
      * @param mixed $value
+     *
      * @return self|Mock
      */
     public function ifNotNull($value)
@@ -103,11 +105,13 @@ abstract class AbstractArray extends DependencyAwareGenerator
         if (null !== $value) {
             return $this;
         }
+
         return Mock::getInstance($this);
     }
 
     /**
      * @param bool|Closure $value
+     *
      * @return self|Mock
      */
     public function ifTrue($value)
@@ -123,6 +127,7 @@ abstract class AbstractArray extends DependencyAwareGenerator
 
     /**
      * @param mixed $value
+     *
      * @return self|Mock
      */
     public function ifNotEmpty($value)
@@ -138,12 +143,14 @@ abstract class AbstractArray extends DependencyAwareGenerator
     public function setMultiline(): self
     {
         $this->multiline = true;
+
         return $this;
     }
 
     public function unsetMultiline(): self
     {
         $this->multiline = false;
+
         return $this;
     }
 

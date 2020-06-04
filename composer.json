@@ -20,5 +20,17 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^9.1"
+    },
+    "scripts": {
+        "test": "bin/phpunit --color=always -v --debug",
+        "install-cs": "test -f php-cs-fixer.phar || wget https://github.com/FriendsOfPHP/PHP-CS-Fixer/releases/download/v2.16.3/php-cs-fixer.phar -O php-cs-fixer.phar",
+        "fix-cs": [
+            "@install-cs",
+            "@php php-cs-fixer.phar fix --diff -v --allow-risky=yes --ansi"
+        ],
+        "check-cs": [
+            "@install-cs",
+            "@php php-cs-fixer.phar fix --dry-run --diff -v --allow-risky=yes --ansi"
+        ]
     }
 }

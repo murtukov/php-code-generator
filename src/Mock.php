@@ -3,7 +3,7 @@
 namespace Murtukov\PHPCodeGenerator;
 
 /**
- * Helper class for conditional builders
+ * Helper class for conditional builders.
  */
 class Mock
 {
@@ -13,6 +13,7 @@ class Mock
     public static function getInstance(object $caller): self
     {
         self::$caller = $caller;
+
         return self::$instance ?? self::$instance = new self();
     }
 

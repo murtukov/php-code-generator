@@ -51,6 +51,7 @@ class Property extends DependencyAwareGenerator
     public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -67,6 +68,7 @@ class Property extends DependencyAwareGenerator
     public function setDefaulValue($defaulValue): self
     {
         $this->defaulValue = Utils::stringify($defaulValue);
+
         return $this;
     }
 
@@ -79,6 +81,7 @@ class Property extends DependencyAwareGenerator
     {
         $this->isStatic = true;
         $this->isConst = false;
+
         return $this;
     }
 
@@ -86,24 +89,28 @@ class Property extends DependencyAwareGenerator
     {
         $this->isConst = true;
         $this->isStatic = false;
+
         return $this;
     }
 
-    function setPublic(): self
+    public function setPublic(): self
     {
         $this->modifier = 'public';
+
         return $this;
     }
 
-    function setPrivate(): self
+    public function setPrivate(): self
     {
         $this->modifier = 'private';
+
         return $this;
     }
 
-    function setProtected(): self
+    public function setProtected(): self
     {
         $this->modifier = 'protected';
+
         return $this;
     }
 
@@ -115,6 +122,7 @@ class Property extends DependencyAwareGenerator
     public function setType(string $type): self
     {
         $this->type = $this->resolveQualifier($type);
+
         return $this;
     }
 }

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Murtukov\PHPCodeGenerator;
 
 use Murtukov\PHPCodeGenerator\OOP\PhpClass;
-use function array_replace;
 use function dirname;
 use function file_put_contents;
 use function implode;
@@ -14,14 +13,14 @@ use function mkdir;
 
 class PhpFile extends DependencyAwareGenerator
 {
-    /** @var PhpClass[]  */
+    /** @var PhpClass[] */
     private array $classes = [];
 
     /** @var string[] */
     private array $declares;
 
     protected string $namespace = '';
-    private   string $name;
+    private string $name;
 
     public function __construct(string $name = '')
     {
@@ -71,6 +70,7 @@ class PhpFile extends DependencyAwareGenerator
     public function setNamespace(string $namespace): self
     {
         $this->namespace = $namespace;
+
         return $this;
     }
 
@@ -100,7 +100,6 @@ class PhpFile extends DependencyAwareGenerator
 
         return $code;
     }
-
 
     public function save(string $path, int $mask = 0777)
     {

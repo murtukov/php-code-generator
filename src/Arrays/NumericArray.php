@@ -11,7 +11,6 @@ use Murtukov\PHPCodeGenerator\Utils;
 class NumericArray extends AbstractArray
 {
     /**
-     * @return string
      * @throws UnrecognizedValueTypeException
      */
     public function generate(): string
@@ -21,7 +20,6 @@ class NumericArray extends AbstractArray
 
     /**
      * @param string|GeneratorInterface $item
-     * @return $this
      */
     public function push($item): self
     {

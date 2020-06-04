@@ -38,10 +38,9 @@ class Utils
 
     /**
      * @param mixed $value
-     * @param bool $multiline
-     * @param bool $withKeys
-     * @param array $converters
+     *
      * @return false|string
+     *
      * @throws UnrecognizedValueTypeException
      */
     public static function stringify($value, bool $multiline = false, bool $withKeys = false, array $converters = [])
@@ -56,7 +55,9 @@ class Utils
 
     /**
      * @param mixed $value
+     *
      * @return false|string
+     *
      * @throws UnrecognizedValueTypeException
      */
     private static function stringifyValue($value)
@@ -83,6 +84,7 @@ class Utils
                 if (empty($value)) {
                     return "''";
                 }
+
                 return self::filterString($value);
             case 'array':
                 return self::$withKeys ? self::stringifyAssocArray($value) : self::stringifyNumericArray($value);
@@ -90,11 +92,13 @@ class Utils
                 if (!$value instanceof GeneratorInterface) {
                     return json_encode($value->__toString());
                 }
+
                 return $value;
             case 'NULL':
                 if (self::$skipNullValues) {
                     return '';
                 }
+
                 return 'null';
             default:
                 throw new UnrecognizedValueTypeException();
@@ -102,8 +106,6 @@ class Utils
     }
 
     /**
-     * @param array $items
-     * @return string
      * @throws UnrecognizedValueTypeException
      */
     private static function stringifyAssocArray(array $items): string
@@ -139,8 +141,6 @@ class Utils
     }
 
     /**
-     * @param array $items
-     * @return string
      * @throws UnrecognizedValueTypeException
      */
     private static function stringifyNumericArray(array $items): string
@@ -188,6 +188,7 @@ class Utils
     public static function indent(string $code): string
     {
         $indent = Config::$indent;
-        return $indent . str_replace("\n", "\n$indent", $code);
+
+        return $indent.str_replace("\n", "\n$indent", $code);
     }
 }

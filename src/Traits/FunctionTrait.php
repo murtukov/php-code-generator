@@ -6,6 +6,7 @@ namespace Murtukov\PHPCodeGenerator\Traits;
 
 use Murtukov\PHPCodeGenerator\Functions\Argument;
 use Murtukov\PHPCodeGenerator\Functions\FunctionMemberInterface;
+use function implode;
 
 trait FunctionTrait
 {
@@ -14,7 +15,7 @@ trait FunctionTrait
 
     protected function generateArgs(): string
     {
-        return \implode(", ", $this->args);
+        return implode(', ', $this->args);
     }
 
     public function getReturnType(): string
@@ -25,6 +26,7 @@ trait FunctionTrait
     public function setReturnType(string $returnType): self
     {
         $this->returnType = $this->resolveQualifier($returnType);
+
         return $this;
     }
 
@@ -33,7 +35,6 @@ trait FunctionTrait
      * If they are requested, they are first converted into objects
      * then returned back.
      *
-     * @param int $index
      * @return Argument
      */
     public function getArgument(int $index): ?Argument
@@ -54,6 +55,7 @@ trait FunctionTrait
     public function removeArgument(int $index): self
     {
         unset($this->args[$index]);
+
         return $this;
     }
 
@@ -64,7 +66,7 @@ trait FunctionTrait
 
     public function addArgument(string $name, string $type = '', $defaultValue = Argument::NO_PARAM): self
     {
-        if (func_num_args() === 1) {
+        if (1 === func_num_args()) {
             $this->args[] = "$$name";
         } else {
             $this->args[] = new Argument($name, $type, $defaultValue);

@@ -67,6 +67,7 @@ class PhpClass extends OOPStructure
     public function unsetFinal(): self
     {
         $this->isFinal = false;
+
         return $this;
     }
 
@@ -81,12 +82,14 @@ class PhpClass extends OOPStructure
 
         // Class cannot be final and abstract at the same time
         $this->isFinal = false;
+
         return $this;
     }
 
     public function unsetAbstract(): PhpClass
     {
         $this->isAbstract = false;
+
         return $this;
     }
 }

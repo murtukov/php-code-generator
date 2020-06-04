@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator;
 
-
 interface ConverterInterface
 {
     const TYPE_STRING = 'string';
@@ -15,17 +14,16 @@ interface ConverterInterface
     const TYPE_ARRAY = 'array';
 
     /**
-     *
      * @param $value
+     *
      * @return mixed
      */
-    function convert($value);
+    public function convert($value);
 
     /**
      * Checks, whether the value should be converted.
      *
      * @param $value
-     * @return bool
      */
-    function check($value): bool;
+    public function check($value): bool;
 }

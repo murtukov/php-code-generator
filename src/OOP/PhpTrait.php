@@ -4,7 +4,6 @@ namespace Murtukov\PHPCodeGenerator\OOP;
 
 class PhpTrait extends OOPStructure
 {
-
     public function generate(): string
     {
         // TODO (murtukov): Implement generate() method.

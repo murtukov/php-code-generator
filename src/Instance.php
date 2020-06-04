@@ -8,8 +8,7 @@ class Instance extends DependencyAwareGenerator
 {
     private array  $args;
     private string $qualifier;
-    public  bool   $multiline = false;
-
+    public bool   $multiline = false;
 
     public function __construct(string $qualifier, ...$args)
     {
@@ -18,7 +17,6 @@ class Instance extends DependencyAwareGenerator
     }
 
     /**
-     * @return string
      * @throws Exception\UnrecognizedValueTypeException
      */
     public function generate(): string
@@ -32,11 +30,11 @@ class Instance extends DependencyAwareGenerator
             $suffix = ",\n";
         } else {
             $args = '';
-            $suffix = ", ";
+            $suffix = ', ';
         }
 
         foreach ($this->args as $arg) {
-            $args .= Utils::stringify($arg) . $suffix;
+            $args .= Utils::stringify($arg).$suffix;
         }
 
         if ($this->multiline) {
@@ -51,6 +49,7 @@ class Instance extends DependencyAwareGenerator
     public function addArgument($arg): self
     {
         $this->args[] = $arg;
+
         return $this;
     }
 
@@ -70,6 +69,7 @@ class Instance extends DependencyAwareGenerator
     public function setMultiline(): self
     {
         $this->multiline = true;
+
         return $this;
     }
 }

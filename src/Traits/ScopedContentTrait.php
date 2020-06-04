@@ -21,7 +21,6 @@ trait ScopedContentTrait
      * @todo: use stringifier for contents
      *
      * @param GeneratorInterface[]|string[] $values
-     * @return self
      */
     public function append(...$values): self
     {
@@ -55,11 +54,11 @@ trait ScopedContentTrait
     {
         $argNum = func_num_args();
 
-        if ($argNum === 0) {
+        if (0 === $argNum) {
             return $this;
         }
 
-        if ($argNum === 1) {
+        if (1 === $argNum) {
             array_unshift($this->content, $values[0]);
         } else {
             array_unshift($this->content, self::createBlock(...$values));
@@ -76,7 +75,8 @@ trait ScopedContentTrait
 
     public function emptyLine()
     {
-        $this->emptyLinesBuffer++;
+        ++$this->emptyLinesBuffer;
+
         return $this;
     }
 
@@ -93,8 +93,7 @@ trait ScopedContentTrait
 
     private static function createBlock(...$parts)
     {
-        return new class(...$parts) implements GeneratorInterface
-        {
+        return new class(...$parts) implements GeneratorInterface {
             public array $parts;
 
             public function __construct(...$args)

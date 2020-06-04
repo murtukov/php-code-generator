@@ -10,7 +10,6 @@ use Murtukov\PHPCodeGenerator\Utils;
 class AssocArray extends AbstractArray
 {
     /**
-     * @return string
      * @throws UnrecognizedValueTypeException
      */
     public function generate(): string

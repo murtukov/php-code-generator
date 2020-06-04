@@ -24,7 +24,6 @@ abstract class OOPStructure extends DependencyAwareGenerator
     protected string   $extends = '';
     protected string   $name;
 
-
     public function __construct(string $name)
     {
         $this->name = $name;
@@ -39,6 +38,7 @@ abstract class OOPStructure extends DependencyAwareGenerator
 
     /**
      * @param string ...$classNames
+     *
      * @return $this
      */
     public function addImplements(string ...$classNames): self
@@ -52,7 +52,7 @@ abstract class OOPStructure extends DependencyAwareGenerator
 
     protected function buildImplements(): string
     {
-        return count($this->implements) > 0 ? 'implements ' . implode(', ', $this->implements) : '';
+        return count($this->implements) > 0 ? 'implements '.implode(', ', $this->implements) : '';
     }
 
     protected function buildExtends()
@@ -67,6 +67,7 @@ abstract class OOPStructure extends DependencyAwareGenerator
     public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -83,12 +84,14 @@ abstract class OOPStructure extends DependencyAwareGenerator
     public function addConst(string $name, string $value, string $modifier = 'public'): self
     {
         $this->createProperty($name, $modifier, '', $value)->setConst();
+
         return $this;
     }
 
     public function addProperty(Property $property)
     {
         $this->props[] = $property;
+
         return $this;
     }
 
@@ -100,6 +103,7 @@ abstract class OOPStructure extends DependencyAwareGenerator
     public function addMethod(Method $method): self
     {
         $this->methods[] = $method;
+
         return $this;
     }
 
@@ -129,6 +133,7 @@ abstract class OOPStructure extends DependencyAwareGenerator
     public function setDocBlock(DocBlock $docBlock): self
     {
         $this->docBlock = $docBlock;
+
         return $this;
     }
 
@@ -141,6 +146,7 @@ abstract class OOPStructure extends DependencyAwareGenerator
     {
         $this->docBlock = new DocBlock($text);
         $this->parento('hi');
+
         return $this;
     }
 
@@ -149,8 +155,8 @@ abstract class OOPStructure extends DependencyAwareGenerator
         return $this->childo(...func_get_args());
     }
 
-    function childo(string $hello)
+    public function childo(string $hello)
     {
-        return "test";
+        return 'test';
     }
 }

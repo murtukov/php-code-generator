@@ -13,14 +13,16 @@ use function mkdir;
 
 class PhpFile extends DependencyAwareGenerator
 {
+    protected string   $namespace = '';
+    protected string   $name;
+    protected ?Comment $comment;
+
     /** @var PhpClass[] */
-    private array $classes = [];
+    protected array $classes = [];
 
     /** @var string[] */
-    private array $declares;
+    protected array $declares = [];
 
-    protected string $namespace = '';
-    private string $name;
 
     public function __construct(string $name = '')
     {
@@ -101,6 +103,33 @@ class PhpFile extends DependencyAwareGenerator
         return $code;
     }
 
+    public function getComment(): Comment
+    {
+        return $this->comment;
+    }
+
+    public function setComment(Comment $comment): self
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }
+
+    public function createComment(string $text): Comment
+    {
+        return $this->comment = Comment::block($text);
+    }
+
+    public function addComment(string $text): self
+    {
+        $this->comment = Comment::block($text);
+
+        return $this;
+    }
+
+    /**
+     * @return false|int
+     */
     public function save(string $path, int $mask = 0777)
     {
         $dir = dirname($path);
@@ -109,6 +138,6 @@ class PhpFile extends DependencyAwareGenerator
             mkdir($dir, $mask, true);
         }
 
-        file_put_contents($path, $this);
+        return file_put_contents($path, $this);
     }
 }

@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator\OOP;
 
-use Murtukov\PHPCodeGenerator\Comments\DocBlock;
+use Murtukov\PHPCodeGenerator\Comment;
 use Murtukov\PHPCodeGenerator\DependencyAwareGenerator;
 use Murtukov\PHPCodeGenerator\Functions\Method;
 use Murtukov\PHPCodeGenerator\Utils;
 
 abstract class OOPStructure extends DependencyAwareGenerator
 {
+    protected ?Comment $docBlock = null;
+    protected string   $extends = '';
+    protected string   $name;
+
     /** @var Method[] */
     protected array $methods = [];
 
@@ -19,10 +23,6 @@ abstract class OOPStructure extends DependencyAwareGenerator
 
     /** @var Property[] */
     protected array $props = [];
-
-    protected ?DocBlock $docBlock = null;
-    protected string   $extends = '';
-    protected string   $name;
 
     public function __construct(string $name)
     {
@@ -125,38 +125,27 @@ abstract class OOPStructure extends DependencyAwareGenerator
         return Utils::indent($code);
     }
 
-    public function getDocBlock(): DocBlock
+    public function getDocBlock(): Comment
     {
         return $this->docBlock;
     }
 
-    public function setDocBlock(DocBlock $docBlock): self
+    public function setDocBlock(Comment $docBlock): self
     {
         $this->docBlock = $docBlock;
 
         return $this;
     }
 
-    public function createDocBlock(string $text): DocBlock
+    public function createDocBlock(string $text): Comment
     {
-        return $this->docBlock = new DocBlock($text);
+        return $this->docBlock = Comment::docBlock($text);
     }
 
     public function addDocBlock(string $text): self
     {
-        $this->docBlock = new DocBlock($text);
-        $this->parento('hi');
+        $this->docBlock = Comment::docBlock($text);
 
         return $this;
-    }
-
-    public function parento()
-    {
-        return $this->childo(...func_get_args());
-    }
-
-    public function childo(string $hello)
-    {
-        return 'test';
     }
 }

@@ -21,7 +21,7 @@ class CommentTest extends TestCase
 
         $this->assertEquals(
             $expected,
-            (string) Comment::stars($this->oneLineText)
+            (string) Comment::block($this->oneLineText)
         );
     }
 

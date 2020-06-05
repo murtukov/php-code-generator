@@ -20,7 +20,7 @@ class Comment extends AbstractGenerator
         $this->type = $type;
     }
 
-    public static function stars(string $text = ''): self
+    public static function block(string $text = ''): self
     {
         return new self($text, self::TYPE_STAR);
     }

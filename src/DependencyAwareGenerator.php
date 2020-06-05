@@ -10,15 +10,13 @@ abstract class DependencyAwareGenerator extends AbstractGenerator
 
     /**
      * List of all generator children, which maintain their own use dependencies.
-     * The list will be defined in the constructor.
+     * The list should be defined in the constructor.
      *
      * @var mixed[]
      */
     protected array $dependencyAwareChildren = [];
 
-    /**
-     * @param string $alias
-     */
+
     public function resolveQualifier(string $path, $alias = ''): string
     {
         if (empty($path) || false === Config::$shortenQualifiers || '\\' === $path[0]) {

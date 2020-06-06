@@ -23,7 +23,6 @@ class PhpFile extends DependencyAwareGenerator
     /** @var string[] */
     protected array $declares = [];
 
-
     public function __construct(string $name = '')
     {
         $this->name = $name;

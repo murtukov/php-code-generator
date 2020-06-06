@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Murtukov\PHPCodeGenerator\OOP;
 
-use Murtukov\PHPCodeGenerator\Comments\DocBlock;
+use Murtukov\PHPCodeGenerator\Comment;
 use Murtukov\PHPCodeGenerator\DependencyAwareGenerator;
 use Murtukov\PHPCodeGenerator\Utils;
 
@@ -13,20 +15,20 @@ class Property extends DependencyAwareGenerator
     public const PUBLIC = 'public';
 
     public string $name;
-    public ?DocBlock $docBlock = null;
+    public ?Comment $docBlock = null;
 
-    private string $modifier;
     private string $defaulValue = '';
     private bool   $isStatic = false;
     private bool   $isConst = false;
+    private string $modifier;
     private string $type;
 
-    public function __construct(string $name, ?string $modifier, ?string $type, ?string $defaulValue)
+    public function __construct(string $name, ?string $modifier, string $type = '', $defaulValue = '')
     {
         $this->name = $name;
         $this->modifier = $modifier ?? self::PUBLIC;
-        $this->defaulValue = $defaulValue ? Utils::stringify($defaulValue) : '';
-        $this->type = $type ?? '';
+        $this->defaulValue = Utils::stringify($defaulValue);
+        $this->type = $type;
     }
 
     public function generate(): string

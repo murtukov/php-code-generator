@@ -16,7 +16,6 @@ abstract class DependencyAwareGenerator extends AbstractGenerator
      */
     protected array $dependencyAwareChildren = [];
 
-
     public function resolveQualifier(string $path, $alias = ''): string
     {
         if (empty($path) || false === Config::$shortenQualifiers || '\\' === $path[0]) {

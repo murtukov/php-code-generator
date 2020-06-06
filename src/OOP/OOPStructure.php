@@ -71,7 +71,10 @@ abstract class OOPStructure extends DependencyAwareGenerator
         return $this;
     }
 
-    public function createProperty(string $name, string $modifier = Property::PUBLIC, string $type = '', string $defaultValue = ''): Property
+    /**
+     * @param mixed $defaultValue
+     */
+    public function createProperty(string $name, string $modifier = Property::PUBLIC, string $type = '', $defaultValue = ''): Property
     {
         return $this->props[] = new Property($name, $modifier, $type, $defaultValue);
     }
@@ -81,28 +84,31 @@ abstract class OOPStructure extends DependencyAwareGenerator
         return $this->createProperty($name, $modifier, '', $value)->setConst();
     }
 
-    public function addConst(string $name, string $value, string $modifier = 'public'): self
+    /**
+     * @param mixed $value
+     */
+    public function addConst(string $name, $value, string $modifier = 'public'): self
     {
         $this->createProperty($name, $modifier, '', $value)->setConst();
 
         return $this;
     }
 
-    public function addProperty(Property $property)
+    public function addProperty(string $name, string $modifier = Property::PUBLIC, string $type = '', $defaulValue = ''): self
     {
-        $this->props[] = $property;
+        $this->props[] = new Property(...func_get_args());
 
         return $this;
     }
 
-    public function createMethod(string $name, string $modifier = 'public', string $returnType = ''): Method
+    public function createMethod(string $name, string $modifier = Property::PUBLIC, string $type = '', $defaulValue = ''): Method
     {
-        return $this->methods[] = new Method($name, $modifier, $returnType);
+        return $this->methods[] = new Method(...func_get_args());
     }
 
-    public function addMethod(Method $method): self
+    public function addMethod(string $name, string $modifier = 'public', string $returnType = ''): self
     {
-        $this->methods[] = $method;
+        $this->methods[] = new Method(...func_get_args());
 
         return $this;
     }

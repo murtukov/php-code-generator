@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator\Traits;
 
+use Murtukov\PHPCodeGenerator\DependencyAwareGenerator;
 use Murtukov\PHPCodeGenerator\GeneratorInterface;
 use Murtukov\PHPCodeGenerator\Utils;
 use function array_unshift;
@@ -42,7 +43,7 @@ trait ScopedContentTrait
         }
 
         foreach ($values as $value) {
-            if ($value instanceof GeneratorInterface) {
+            if ($value instanceof DependencyAwareGenerator) {
                 $this->dependencyAwareChildren[] = $value;
             }
         }
@@ -65,7 +66,7 @@ trait ScopedContentTrait
         }
 
         foreach ($values as $value) {
-            if ($value instanceof GeneratorInterface) {
+            if ($value instanceof DependencyAwareGenerator) {
                 $this->dependencyAwareChildren[] = $value;
             }
         }

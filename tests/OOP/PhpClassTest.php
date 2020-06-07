@@ -20,7 +20,7 @@ class PhpClassTest extends TestCase
      */
     public function fullBuild()
     {
-        $phpClass = PhpClass::new('MyException')
+        $class = PhpClass::new('MyException')
             ->addConst('KNOWN_TYPES', ['DYNAMIC', 'STATIC'], Property::PRIVATE)
             ->addProperty('errors', Property::PRIVATE, '', [])
             ->addImplements(JsonSerializable::class, ArrayAccess::class)
@@ -28,7 +28,10 @@ class PhpClassTest extends TestCase
             ->setFinal()
             ->addDocBlock('This is just a test class.');
 
-        $method = $phpClass->createMethod('getErrors', Method::PUBLIC, 'array');
+        $constructor = $class->createConstructor();
+        $constructor->append(new Literal('parent::__construct(...func_get_args())'));
+
+        $method = $class->createMethod('getErrors', Method::PUBLIC, 'array');
         $method->append(
             '// Add here your content...',
             "\n",
@@ -44,6 +47,11 @@ class PhpClassTest extends TestCase
             private const KNOWN_TYPES = ['DYNAMIC', 'STATIC'];
             private \$errors = [];
             
+            public function __construct()
+            {
+                parent::__construct(...func_get_args());
+            }
+            
             public function getErrors(): array
             {
                 // Add here your content...
@@ -52,6 +60,6 @@ class PhpClassTest extends TestCase
         }
         CODE;
 
-        $this->assertEquals($expected, (string) $phpClass);
+        $this->assertEquals($expected, (string) $class);
     }
 }

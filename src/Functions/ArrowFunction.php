@@ -6,21 +6,19 @@ namespace Murtukov\PHPCodeGenerator\Functions;
 
 use Murtukov\PHPCodeGenerator\DependencyAwareGenerator;
 use Murtukov\PHPCodeGenerator\GeneratorInterface;
-use Murtukov\PHPCodeGenerator\Traits\FunctionTrait;
+use Murtukov\PHPCodeGenerator\Modifier;
 
-class ArrowFunction extends DependencyAwareGenerator
+class ArrowFunction extends AbstractFunction
 {
-    use FunctionTrait;
-
     /** @var GeneratorInterface|string */
     private $expression;
 
     public function __construct($expression = '', string $returnType = '')
     {
+        $this->signature = new Signature('', Modifier::NONE, $returnType, 'fn');
         $this->expression = $this->manageDependency($expression);
-        $this->returnType = $returnType;
 
-        $this->dependencyAwareChildren[] = $this->args;
+        $this->dependencyAwareChildren = [$this->signature];
     }
 
     public static function new($expression = '', string $returnType = '')
@@ -30,7 +28,7 @@ class ArrowFunction extends DependencyAwareGenerator
 
     public function generate(): string
     {
-        return "fn({$this->generateArgs()}) => $this->expression";
+        return "$this->signature => $this->expression";
     }
 
     /**

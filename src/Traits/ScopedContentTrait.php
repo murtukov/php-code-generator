@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator\Traits;
 
+use Murtukov\PHPCodeGenerator\BlockInterface;
 use Murtukov\PHPCodeGenerator\DependencyAwareGenerator;
 use Murtukov\PHPCodeGenerator\GeneratorInterface;
 use Murtukov\PHPCodeGenerator\Utils;
+use function array_map;
 use function array_unshift;
-use function func_num_args;
-use function implode;
+use function join;
 
 trait ScopedContentTrait
 {
@@ -17,29 +18,14 @@ trait ScopedContentTrait
     private int $emptyLinesBuffer = 0;
 
     /**
-     * Append contents to body.
-     *
-     * @todo: use stringifier for contents
-     *
-     * @param GeneratorInterface[]|string[] $values
+     * @param GeneratorInterface|string ...$values
      */
     public function append(...$values): self
     {
-        $valNum = func_num_args() + $this->emptyLinesBuffer;
-
-        if (0 === $valNum) {
-            return $this;
-        }
-
-        if (1 === $valNum) {
-            $this->content[] = $values[0];
+        if (end($values) instanceof BlockInterface) {
+            $this->content[] = [...$values];
         } else {
-            $this->content[] = self::createBlock(
-                ...array_fill(0, $this->emptyLinesBuffer, "\n"),
-                ...$values
-            );
-            // Reset empty lines buffer
-            $this->emptyLinesBuffer = 0;
+            $this->content[] = [...$values, ';'];
         }
 
         foreach ($values as $value) {
@@ -51,18 +37,15 @@ trait ScopedContentTrait
         return $this;
     }
 
+    /**
+     * @param GeneratorInterface|string ...$values
+     */
     public function prepend(...$values): self
     {
-        $argNum = func_num_args();
-
-        if (0 === $argNum) {
-            return $this;
-        }
-
-        if (1 === $argNum) {
-            array_unshift($this->content, $values[0]);
+        if (end($values) instanceof BlockInterface) {
+            array_unshift($this->content, [...$values]);
         } else {
-            array_unshift($this->content, self::createBlock(...$values));
+            array_unshift($this->content, [...$values, ';']);
         }
 
         foreach ($values as $value) {
@@ -74,9 +57,9 @@ trait ScopedContentTrait
         return $this;
     }
 
-    public function emptyLine()
+    public function emptyLine(): self
     {
-        ++$this->emptyLinesBuffer;
+        $this->content[] = [];
 
         return $this;
     }
@@ -86,26 +69,12 @@ trait ScopedContentTrait
         $content = '';
 
         if (!empty($this->content)) {
-            $content = Utils::indent(implode(";\n", $this->content).';');
+            $content = Utils::indent(join(
+                "\n",
+                array_map(fn($line) => join($line), $this->content)
+            ));
         }
 
         return $content;
-    }
-
-    private static function createBlock(...$parts)
-    {
-        return new class(...$parts) implements GeneratorInterface {
-            public array $parts;
-
-            public function __construct(...$args)
-            {
-                $this->parts = $args;
-            }
-
-            public function __toString(): string
-            {
-                return implode($this->parts);
-            }
-        };
     }
 }

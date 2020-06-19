@@ -2,14 +2,12 @@
 
 declare(strict_types=1);
 
-namespace OOP;
-
 use ArrayAccess;
 use Exception;
 use JsonSerializable;
 use Murtukov\PHPCodeGenerator\Functions\Method;
 use Murtukov\PHPCodeGenerator\Literal;
-use Murtukov\PHPCodeGenerator\OOP\PhpClass;
+use Murtukov\PHPCodeGenerator\OOP\OOP;
 use Murtukov\PHPCodeGenerator\OOP\Property;
 use PHPUnit\Framework\TestCase;
 
@@ -20,7 +18,7 @@ class PhpClassTest extends TestCase
      */
     public function fullBuild()
     {
-        $class = PhpClass::new('MyException')
+        $class = OOP::class('MyException')
             ->addConst('KNOWN_TYPES', ['DYNAMIC', 'STATIC'], Property::PRIVATE)
             ->addProperty('errors', Property::PRIVATE, '', [])
             ->addImplements(JsonSerializable::class, ArrayAccess::class)

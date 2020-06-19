@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Murtukov\PHPCodeGenerator\ControlStructures;
 
 use Murtukov\PHPCodeGenerator\AbstractGenerator;
+use Murtukov\PHPCodeGenerator\BlockInterface;
 use Murtukov\PHPCodeGenerator\GeneratorInterface;
 use Murtukov\PHPCodeGenerator\Traits\ScopedContentTrait;
 
-class IfElse extends AbstractGenerator
+class IfElse extends AbstractGenerator implements BlockInterface
 {
     use ScopedContentTrait;
 

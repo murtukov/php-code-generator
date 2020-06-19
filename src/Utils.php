@@ -4,35 +4,42 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator;
 
+use Exception;
 use Murtukov\PHPCodeGenerator\Exception\UnrecognizedValueTypeException;
+use function get_class;
+use function is_int;
 use function json_encode;
+use function rtrim;
+use function str_replace;
+use function substr;
+use function var_export;
 
 class Utils
 {
-    const TYPE_STRING = 'string';
-    const TYPE_INT = 'integer';
-    const TYPE_BOOL = 'boolean';
-    const TYPE_DOUBLE = 'double';
-    const TYPE_OBJECT = 'object';
-    const TYPE_ARRAY = 'array';
+    const TYPE_STRING   = 'string';
+    const TYPE_INT      = 'integer';
+    const TYPE_BOOL     = 'boolean';
+    const TYPE_DOUBLE   = 'double';
+    const TYPE_OBJECT   = 'object';
+    const TYPE_ARRAY    = 'array';
 
     /**
-     * @var bool Whether arrays should be split into multiple lines
+     * @var bool Whether arrays should be split into multiple lines.
      */
     private static bool $multiline = false;
 
     /**
-     * @var bool Applies only for array values
+     * @var bool Defines whether arrays should be rendered with keys.
      */
     private static bool $withKeys = false;
 
     /**
-     * @var bool If true, null values are not rendered
+     * @var bool If true, null values are not rendered.
      */
     private static bool $skipNullValues = false;
 
     /**
-     * @var array Custom converters registered by users
+     * @var array Custom converters registered by users.
      */
     private static array $customConverters = [];
 
@@ -59,6 +66,7 @@ class Utils
      * @return false|string
      *
      * @throws UnrecognizedValueTypeException
+     * @throws Exception
      */
     private static function stringifyValue($value)
     {
@@ -90,7 +98,12 @@ class Utils
                 return self::$withKeys ? self::stringifyAssocArray($value) : self::stringifyNumericArray($value);
             case 'object':
                 if (!$value instanceof GeneratorInterface) {
-                    return json_encode($value->__toString());
+                    try {
+                        return json_encode($value->__toString());
+                    } catch(Exception $e) {
+                        $class = get_class($value);
+                        throw new Exception("Cannot stringify object of class: '$class'.");
+                    }
                 }
 
                 return $value;
@@ -101,7 +114,7 @@ class Utils
 
                 return 'null';
             default:
-                throw new UnrecognizedValueTypeException();
+                throw new UnrecognizedValueTypeException("Cannot stringify value of unrecognized type.");
         }
     }
 

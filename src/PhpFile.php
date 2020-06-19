@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator;
 
-use Murtukov\PHPCodeGenerator\OOP\PhpClass;
 use function dirname;
 use function file_put_contents;
 use function implode;
@@ -60,7 +59,7 @@ class PhpFile extends DependencyAwareGenerator
 
     public function createClass(string $name): PhpClass
     {
-        return $this->classes[] = new PhpClass($name);
+        return $this->classes[] = PhpClass::class($name);
     }
 
     public function getNamespace(): string
@@ -75,7 +74,7 @@ class PhpFile extends DependencyAwareGenerator
         return $this;
     }
 
-    public function buildUseStatements(): string
+    private function buildUseStatements(): string
     {
         $code = '';
 

@@ -55,9 +55,11 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
             }
             $code .= $this->type.' ';
         }
+
         if ($this->isByReference) {
             $code .= '&';
         }
+
         if ($this->isSpread) {
             $code .= '...';
         }

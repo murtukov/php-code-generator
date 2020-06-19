@@ -2,11 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Murtukov\PHPCodeGenerator\OOP;
-
-use Murtukov\PHPCodeGenerator\Comment;
-use Murtukov\PHPCodeGenerator\DependencyAwareGenerator;
-use Murtukov\PHPCodeGenerator\Utils;
+namespace Murtukov\PHPCodeGenerator;
 
 class Property extends DependencyAwareGenerator
 {
@@ -31,6 +27,11 @@ class Property extends DependencyAwareGenerator
         $this->type = $type;
     }
 
+    public static function new(string $name, ?string $modifier, string $type = '', $defaulValue = '')
+    {
+        return new static($name, $modifier, $type, $defaulValue);
+    }
+
     public function generate(): string
     {
         $docBlock = $this->docBlock ? "$this->docBlock\n" : '';
@@ -42,7 +43,7 @@ class Property extends DependencyAwareGenerator
             return "$docBlock$this->modifier const $this->name$value;";
         }
 
-        return "$docBlock$this->modifier $isStatic$type$$this->name$value;";
+        return "{$docBlock}{$this->modifier} {$isStatic}{$type}$$this->name{$value};";
     }
 
     public function getName(): string

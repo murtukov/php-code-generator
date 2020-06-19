@@ -2,30 +2,29 @@
 
 declare(strict_types=1);
 
-namespace Murtukov\PHPCodeGenerator\Arrays;
+namespace Murtukov\PHPCodeGenerator;
 
 use Closure;
-use Murtukov\PHPCodeGenerator\DependencyAwareGenerator;
-use Murtukov\PHPCodeGenerator\GeneratorInterface;
-use Murtukov\PHPCodeGenerator\Mock;
+use Murtukov\PHPCodeGenerator\Exception\UnrecognizedValueTypeException;
 use function count;
 use function is_bool;
 use function is_callable;
 
-abstract class AbstractArray extends DependencyAwareGenerator
+class Collection extends DependencyAwareGenerator
 {
+    protected array $items     = [];
     protected bool  $multiline = false;
-    protected array $items = [];
+    protected bool  $withKeys  = true;
 
-    public function __construct(array $items = [], bool $multiline = false)
+    public function __construct(array $items = [], bool $multiline = false, bool $withKeys = true)
     {
         $this->items = $items;
         $this->multiline = $multiline;
     }
 
-    public static function new(array $items = [], bool $multiline = false): self
+    public static function numeric(array $items = [], bool $multiline = false): self
     {
-        return new static($items, $multiline);
+        return new static($items, $multiline, false);
     }
 
     /**
@@ -33,17 +32,19 @@ abstract class AbstractArray extends DependencyAwareGenerator
      *
      * @param GeneratorInterface[]|string[] $items
      *
-     * @return AbstractArray
+     * @return Collection
      */
-    public static function multiline(array $items = []): self
+    public static function assoc(array $items = [], bool $multiline = true): self
     {
-        return new static($items, true);
+        return new static($items, $multiline);
     }
 
+    /**
+     * Creates a multiline array and adds all provided items, after applying a callback to them.
+     */
     public static function map(array $items, callable $map): self
     {
-        $array = new static();
-        $array->multiline = true;
+        $array = new static([], true);
 
         foreach ($items as $key => $value) {
             $array->addItem($key, $map($value, $key));
@@ -53,9 +54,9 @@ abstract class AbstractArray extends DependencyAwareGenerator
     }
 
     /**
-     * @param mixed $value
+     * Adds item to the array.
      *
-     * @return $this
+     * @param mixed $value
      */
     public function addItem(string $key, $value): self
     {
@@ -68,6 +69,11 @@ abstract class AbstractArray extends DependencyAwareGenerator
         return $this;
     }
 
+    /**
+     * Adds item to the array if it's not equal null.
+     *
+     * @param mixed $value
+     */
     public function addIfNotNull(string $key, $value): self
     {
         if (null === $value) {
@@ -77,7 +83,12 @@ abstract class AbstractArray extends DependencyAwareGenerator
         return $this->addItem($key, $value);
     }
 
-    public function addIfNotEmpty(string $key, $value)
+    /**
+     * Adds item to the array if it's not empty.
+     *
+     * @param mixed $value
+     */
+    public function addIfNotEmpty(string $key, $value): self
     {
         if (empty($value)) {
             return $this;
@@ -86,7 +97,12 @@ abstract class AbstractArray extends DependencyAwareGenerator
         return $this->addItem($key, $value);
     }
 
-    public function addIfNotFalse(string $key, $value)
+    /**
+     * Adds item to the array if it's not equal false.
+     *
+     * @param mixed $value
+     */
+    public function addIfNotFalse(string $key, $value): self
     {
         if (!$value) {
             return $this;
@@ -96,6 +112,8 @@ abstract class AbstractArray extends DependencyAwareGenerator
     }
 
     /**
+     * Returns self if value is not null, otherwise returns a mock object.
+     *
      * @param mixed $value
      *
      * @return self|Mock
@@ -110,6 +128,8 @@ abstract class AbstractArray extends DependencyAwareGenerator
     }
 
     /**
+     * Returns self if value is true or callback returns true, otherwise returns a mock object.
+     *
      * @param bool|Closure $value
      *
      * @return self|Mock
@@ -126,6 +146,8 @@ abstract class AbstractArray extends DependencyAwareGenerator
     }
 
     /**
+     * Returns self if value is not empty, otherwise returns a mock object.
+     *
      * @param mixed $value
      *
      * @return self|Mock
@@ -147,7 +169,7 @@ abstract class AbstractArray extends DependencyAwareGenerator
         return $this;
     }
 
-    public function unsetMultiline(): self
+    public function setInline(): self
     {
         $this->multiline = false;
 
@@ -164,6 +186,29 @@ abstract class AbstractArray extends DependencyAwareGenerator
      */
     public function getFirstItem()
     {
-        return $this->items[0] ?? null;
+        return reset($this->items) ?: null;
+    }
+
+    /**
+     * @throws UnrecognizedValueTypeException
+     */
+    public function generate(): string
+    {
+        return Utils::stringify(
+            $this->items,
+            $this->multiline,
+            $this->withKeys,
+            static::getConverters()
+        );
+    }
+
+    /**
+     * @param string|GeneratorInterface $item
+     */
+    public function push($item): self
+    {
+        $this->items[] = $item;
+
+        return $this;
     }
 }

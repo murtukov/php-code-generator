@@ -6,13 +6,27 @@ A library to generate any PHP 7.4 code
     - [`add` and `create` methods](#add-and-create-methods)
     - [Static initializers]()
 - [File](#file)
-- [Class](#class)
-- [Method](#method)
+- OOP
+    - [Class](#class)
+    - [Interface](#interface)
+    - [Trait](#trait)
+- Functions
+    - [Function](#function)
+    - [Method](#method)
+    - [Closure](#closure)
+    - [Arrow](#arrow)
 - [Object Instantiation](#object-instantiation)
 - [Array](#array)
     - Inline array
     - Multiline array
     - Map
+- Control structures
+    - IfElse
+    - Loops
+        - while
+        - for
+        - foreach
+        - do-while
 - [DocBlock](#docblock)
 - [Namespaces](#namespaces)
 
@@ -56,7 +70,7 @@ use Murtukov\PHPCodeGenerator\Arrays\AssocArray;
     ->addItem('age', 30);
 
 # You can use static helpers
-AssocArray::multiline()
+AssocArray::assoc()
     ->addItem('name', 'Alfred')
     ->addItem('age', 30);
 ```

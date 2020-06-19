@@ -6,7 +6,7 @@ namespace Murtukov\PHPCodeGenerator;
 
 use Murtukov\PHPCodeGenerator\Traits\ScopedContentTrait;
 
-class Block extends AbstractGenerator
+class Block extends AbstractGenerator implements BlockInterface
 {
     use ScopedContentTrait;
 
@@ -21,6 +21,6 @@ class Block extends AbstractGenerator
 
     public static function new()
     {
-        return new self();
+        return new static();
     }
 }

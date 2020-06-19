@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Murtukov\PHPCodeGenerator;
 
 abstract class DependencyAwareGenerator extends AbstractGenerator
 {
-    protected bool  $shortenQualifiers = true;
-    protected array $usePaths = [];
+    protected array $usePaths  = [];
     protected array $useGroups = [];
 
     /**

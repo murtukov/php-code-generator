@@ -6,14 +6,10 @@ namespace Murtukov\PHPCodeGenerator;
 
 class Property extends DependencyAwareGenerator
 {
-    public const PRIVATE = 'private';
-    public const PROTECTED = 'protected';
-    public const PUBLIC = 'public';
-
     public string $name;
     public ?Comment $docBlock = null;
 
-    private string $defaulValue = '';
+    private string $value = '';
     private bool   $isStatic = false;
     private bool   $isConst = false;
     private string $modifier;
@@ -22,28 +18,28 @@ class Property extends DependencyAwareGenerator
     public function __construct(string $name, ?string $modifier, string $type = '', $defaulValue = '')
     {
         $this->name = $name;
-        $this->modifier = $modifier ?? self::PUBLIC;
-        $this->defaulValue = Utils::stringify($defaulValue);
-        $this->type = $type;
+        $this->modifier = $modifier ?? Modifier::PUBLIC;
+        $this->value = Utils::stringify($defaulValue);
+        $this->type = $this->resolveQualifier($type);
     }
 
-    public static function new(string $name, ?string $modifier, string $type = '', $defaulValue = '')
+    public static function new(string $name, ?string $modifier, string $type = '', $value = '')
     {
-        return new static($name, $modifier, $type, $defaulValue);
+        return new static($name, $modifier, $type, $value);
     }
 
     public function generate(): string
     {
         $docBlock = $this->docBlock ? "$this->docBlock\n" : '';
-        $type = $this->type ? $this->type.' ' : '';
-        $value = $this->defaulValue ? " = $this->defaulValue" : '';
-        $isStatic = $this->isStatic ? 'static ' : '';
+        $type     = $this->type     ? "$this->type "      : '';
+        $value    = $this->value    ? " = $this->value"   : '';
+        $isStatic = $this->isStatic ? "static "           : '';
 
         if ($this->isConst) {
-            return "$docBlock$this->modifier const $this->name$value;";
+            return "$docBlock$this->modifier const $this->name$value";
         }
 
-        return "{$docBlock}{$this->modifier} {$isStatic}{$type}$$this->name{$value};";
+        return "{$docBlock}{$this->modifier} {$isStatic}{$type}$$this->name{$value}";
     }
 
     public function getName(): string
@@ -63,14 +59,14 @@ class Property extends DependencyAwareGenerator
         return $this->modifier;
     }
 
-    public function getDefaulValue(): string
+    public function getValue(): string
     {
-        return $this->defaulValue;
+        return $this->value;
     }
 
-    public function setDefaulValue($defaulValue): self
+    public function setValue($value): self
     {
-        $this->defaulValue = Utils::stringify($defaulValue);
+        $this->value = Utils::stringify($value);
 
         return $this;
     }

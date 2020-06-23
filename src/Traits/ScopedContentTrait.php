@@ -64,7 +64,7 @@ trait ScopedContentTrait
         return $this;
     }
 
-    private function generateContent(): string
+    protected function generateContent(): string
     {
         $content = '';
 

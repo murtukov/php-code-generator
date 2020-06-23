@@ -16,10 +16,14 @@ class Collection extends DependencyAwareGenerator
     protected bool  $multiline = false;
     protected bool  $withKeys  = true;
 
+    protected Utils $utils;
+
     public function __construct(array $items = [], bool $multiline = false, bool $withKeys = true)
     {
         $this->items = $items;
         $this->multiline = $multiline;
+        $this->withKeys = $withKeys;
+        $this->utils = new Utils;
     }
 
     public static function numeric(array $items = [], bool $multiline = false): self
@@ -29,8 +33,6 @@ class Collection extends DependencyAwareGenerator
 
     /**
      * Shorthand for `new AssocArray($items, true)`.
-     *
-     * @param GeneratorInterface[]|string[] $items
      *
      * @return Collection
      */
@@ -189,12 +191,9 @@ class Collection extends DependencyAwareGenerator
         return reset($this->items) ?: null;
     }
 
-    /**
-     * @throws UnrecognizedValueTypeException
-     */
     public function generate(): string
     {
-        return Utils::stringify(
+        return $this->utils->stringify(
             $this->items,
             $this->multiline,
             $this->withKeys,

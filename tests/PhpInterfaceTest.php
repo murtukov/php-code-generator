@@ -11,8 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 class PhpInterfaceTest extends TestCase
 {
-
-
     /**
      * @test
      */
@@ -21,7 +19,7 @@ class PhpInterfaceTest extends TestCase
         $code = <<<CODE
         interface StringifierInterface
         {
-            
+        
         }
         CODE;
 
@@ -40,7 +38,7 @@ class PhpInterfaceTest extends TestCase
         $code = <<<CODE
         interface StringifierInterface extends BlockInterface, ConverterInterface
         {
-            
+        
         }
         CODE;
 
@@ -93,6 +91,7 @@ class PhpInterfaceTest extends TestCase
         }
         CODE;
 
+        $interface->emptyLine();
         $interface->addSignature('parse', 'string');
 
         $stringifyMethod = $interface->createSignature('stringify', 'string');

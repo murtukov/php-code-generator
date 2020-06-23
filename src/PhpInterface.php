@@ -10,27 +10,13 @@ use function join;
 
 class PhpInterface extends OOPStructure
 {
-    protected array  $extends    = [];
-    protected array  $signatures = [];
-    protected array  $consts     = [];
+    protected array  $extends = [];
     protected string $name;
 
     protected ?Comment $docBlock = null;
 
     public function generate(): string
     {
-        $code = join("\n", $this->consts);
-
-        if (!empty($this->signatures)) {
-            if (!empty($code)) {
-                $code .= "\n\n";
-            }
-
-            $code .= join(";\n", $this->signatures) . ';';
-        }
-
-        $content = Utils::indent($code);
-
         // Extends
         $extends = '';
         if (!empty($this->extends)) {
@@ -40,28 +26,27 @@ class PhpInterface extends OOPStructure
         return <<<CODE
         {$this->buildDocBlock()}interface $this->name{$extends}
         {
-        {$content}
+        {$this->generateContent()}
         }
         CODE;
     }
 
     public function createSignature(string $name, string $returnType = ''): Signature
     {
-        return $this->signatures[] = new Signature($name, Modifier::PUBLIC, $returnType);
+        $signature = new Signature($name, Modifier::PUBLIC, $returnType);
+        $this->append($signature);
+
+        return $signature;
     }
 
     public function addSignature(string $name, string $returnType = ''): self
     {
-        $this->signatures[] = new Signature($name, Modifier::PUBLIC, $returnType);
-
-        return $this;
+        return $this->append(new Signature($name, Modifier::PUBLIC, $returnType));
     }
 
     public function addSignatureFromMethod(Method $method)
     {
-         $this->signatures[] = $method->signature;
-
-         return $this;
+         return $this->append($method->signature);
     }
 
     /**
@@ -69,9 +54,7 @@ class PhpInterface extends OOPStructure
      */
     public function addConst(string $name, $value): self
     {
-        $this->consts[] = Property::new($name, Modifier::PUBLIC, '', $value)->setConst();
-
-        return $this;
+        return $this->append(Property::new($name, Modifier::PUBLIC, '', $value)->setConst());
     }
 
     public function addExtends(string ...$extends)
@@ -81,10 +64,5 @@ class PhpInterface extends OOPStructure
         }
 
         return $this;
-    }
-
-    public function emptyLine()
-    {
-
     }
 }

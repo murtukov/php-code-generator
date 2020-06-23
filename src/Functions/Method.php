@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator\Functions;
 
+use Murtukov\PHPCodeGenerator\BlockInterface;
 use Murtukov\PHPCodeGenerator\DocBlockTrait;
 use Murtukov\PHPCodeGenerator\Modifier;
 use Murtukov\PHPCodeGenerator\Traits\ScopedContentTrait;
 
-class Method extends AbstractFunction
+class Method extends AbstractFunction implements BlockInterface
 {
     use ScopedContentTrait, DocBlockTrait;
 
@@ -26,7 +27,7 @@ class Method extends AbstractFunction
     public function generate(): string
     {
         return <<<CODE
-        {$this->buildDocBlock(true)}{$this->signature->generate(false)}
+        {$this->buildDocBlock()}{$this->signature->generate(false)}
         {
         {$this->generateContent()}
         }

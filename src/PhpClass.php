@@ -12,16 +12,7 @@ class PhpClass extends OOPStructure
     protected string $extends    = '';
     protected bool   $isAbstract = false;
     protected bool   $isFinal    = false;
-    protected array  $traits     = [];
-
-    /** @var Method[] */
-    protected array $methods = [];
-
-    /** @var string[] */
-    protected array $implements = [];
-
-    /** @var Property[] */
-    protected array $props = [];
+    protected array  $implements  = [];
 
     public function setExtends(string $fqcn): self
     {
@@ -39,24 +30,15 @@ class PhpClass extends OOPStructure
         return $this;
     }
 
-    public function addTraits(string ...$traits): self
-    {
-        foreach ($traits as $trait) {
-            $this->traits[] = $this->resolveQualifier($trait);
-        }
-
-        return $this;
-    }
-
     protected function buildImplements(): string
     {
-        return !empty($this->implements) ? 'implements '.join(', ', $this->implements) : '';
+        return !empty($this->implements) ? ' implements '.join(', ', $this->implements) : '';
     }
 
     protected function buildExtends(): string
     {
         if ($this->extends) {
-            return "extends $this->extends ";
+            return " extends $this->extends";
         }
 
         return '';
@@ -70,69 +52,34 @@ class PhpClass extends OOPStructure
     }
 
     /**
-     * @param mixed $defaultValue
-     */
-    public function createProperty(string $name, string $modifier = Property::PUBLIC, string $type = '', $defaultValue = ''): Property
-    {
-        return $this->props[] = new Property($name, $modifier, $type, $defaultValue);
-    }
-
-    public function createConst(string $name, string $value, string $modifier = 'public'): Property
-    {
-        return $this->createProperty($name, $modifier, '', $value)->setConst();
-    }
-
-    /**
      * @param mixed $value
      */
-    public function addConst(string $name, $value, string $modifier = 'public'): self
+    public function addConst(string $name, $value, string $modifier = Modifier::PUBLIC): self
     {
-        $this->createProperty($name, $modifier, '', $value)->setConst();
-
-        return $this;
+        return $this->append(Property::new($name, $modifier, '', $value)->setConst());
     }
 
-    public function addProperty(string $name, string $modifier = Property::PUBLIC, string $type = '', $defaulValue = ''): self
+    public function addProperty(string $name, string $modifier = Modifier::PUBLIC, string $type = '', $defaulValue = ''): self
     {
-        $this->props[] = new Property($name, $modifier, $type, $defaulValue);
-
-        return $this;
-    }
-
-    public function createMethod(string $name, string $modifier = Property::PUBLIC, string $returnType = ''): Method
-    {
-        return $this->methods[] = new Method($name, $modifier, $returnType);
+        return $this->append(new Property($name, $modifier, $type, $defaulValue));
     }
 
     public function addMethod(string $name, string $modifier = 'public', string $returnType = ''): self
     {
-        $this->methods[] = new Method($name, $modifier, $returnType);
-
-        return $this;
+        return $this->append(new Method($name, $modifier, $returnType));
     }
 
-    public function createConstructor(string $modifier = 'public'): Method
+    public function addConstructor(string $modifier = 'public'): self
     {
-        return $this->methods[] = new Method('__construct', $modifier, '');
+        return $this->append(new Method('__construct', $modifier, ''));
     }
 
     public function generate(): string
     {
-        $code  = 'use ' . join(", ", $this->traits);
-        $code .= join("\n", $this->props);
-
-        if (!empty($code)) {
-            $code .= "\n\n";
-        }
-
-        $code .= join("\n\n", $this->methods);
-
-        $content = Utils::indent($code);
-
         return <<<CODE
-        {$this->buildDocBlock()}{$this->buildPrefix()}class $this->name {$this->buildExtends()}{$this->buildImplements()}
+        {$this->buildDocBlock()}{$this->buildPrefix()}class $this->name{$this->buildExtends()}{$this->buildImplements()}
         {
-        {$content}
+        {$this->generateContent()}
         }
         CODE;
     }

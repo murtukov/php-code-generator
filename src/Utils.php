@@ -26,12 +26,12 @@ class Utils
     /**
      * @var bool Whether arrays should be split into multiple lines.
      */
-    private static bool $multiline = false;
+    private static ?bool $multiline = false;
 
     /**
      * @var bool Defines whether arrays should be rendered with keys.
      */
-    private static bool $withKeys = false;
+    private static ?bool $withKeys = false;
 
     /**
      * @var bool If true, null values are not rendered.
@@ -50,14 +50,14 @@ class Utils
      *
      * @throws UnrecognizedValueTypeException
      */
-    public static function stringify($value, bool $multiline = false, bool $withKeys = false, array $converters = [])
+    public static function stringify($value, ?bool $multiline = null, ?bool $withKeys = null, array $converters = [])
     {
         // Common options to avoid passing them recursively
         self::$multiline = $multiline;
         self::$withKeys = $withKeys;
         self::$customConverters = $converters;
 
-        return self::stringifyValue($value);
+        return self::stringifyValue($value, true);
     }
 
     /**
@@ -68,7 +68,7 @@ class Utils
      * @throws UnrecognizedValueTypeException
      * @throws Exception
      */
-    private static function stringifyValue($value)
+    private static function stringifyValue($value, bool $topLevel = false)
     {
         $type = gettype($value);
 
@@ -95,7 +95,14 @@ class Utils
 
                 return self::filterString($value);
             case 'array':
-                return self::$withKeys ? self::stringifyAssocArray($value) : self::stringifyNumericArray($value);
+                if (empty($value)) {
+                    return '[]';
+                }
+
+                if (null !== self::$withKeys && true === $topLevel) {
+                    return self::$withKeys ? self::stringifyAssocArray($value, self::$multiline) : self::stringifyNumericArray($value, self::$multiline);
+                }
+                return isset($value[0]) ? self::stringifyNumericArray($value) : self::stringifyAssocArray($value);
             case 'object':
                 if (!$value instanceof GeneratorInterface) {
                     try {
@@ -121,15 +128,11 @@ class Utils
     /**
      * @throws UnrecognizedValueTypeException
      */
-    private static function stringifyAssocArray(array $items): string
+    private static function stringifyAssocArray(array $items, bool $multiline = true): string
     {
-        if (empty($items)) {
-            return '[]';
-        }
-
         $code = '';
 
-        if (self::$multiline) {
+        if ($multiline) {
             $code .= "\n";
 
             foreach ($items as $key => $value) {
@@ -156,15 +159,11 @@ class Utils
     /**
      * @throws UnrecognizedValueTypeException
      */
-    private static function stringifyNumericArray(array $items): string
+    private static function stringifyNumericArray(array $items, bool $multiline = false): string
     {
-        if (empty($items)) {
-            return '[]';
-        }
-
         $code = '';
 
-        if (self::$multiline) {
+        if ($multiline) {
             $code .= "\n";
 
             foreach ($items as $value) {

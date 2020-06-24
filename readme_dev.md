@@ -64,7 +64,8 @@ final class MyClass extends BaseClass implements Traversable, JsonSerializable
 ```
 ## Class
 ```php
-use Murtukov\PHPCodeGenerator\Comment;use Murtukov\PHPCodeGenerator\Literal;
+use Murtukov\PHPCodeGenerator\Comment;
+use Murtukov\PHPCodeGenerator\Literal;
 use Murtukov\PHPCodeGenerator\Method;
 use Murtukov\PHPCodeGenerator\Modifier;
 use Murtukov\PHPCodeGenerator\PhpClass;
@@ -72,18 +73,19 @@ use Murtukov\PHPCodeGenerator\PhpClass;
 $class = PhpClass::new('Stringifier')
     ->addConst('KNOWN_TYPES', ['DYNAMIC', 'STATIC'], Modifier::PRIVATE)
     ->addProperty('errors', Modifier::PRIVATE, '', [])
-    ->emptyLine()
     ->addImplements(JsonSerializable::class, ArrayAccess::class)
     ->setExtends(Exception::class)
     ->setFinal()
     ->addDocBlock('This is just a test class.');
+
+$class->emptyLine();
 
 $class->createConstructor()
     ->append('parent::__construct(...func_get_args())');
 
 $class->emptyLine();
 
-# Create a method separatly
+# Create a method separately
 $method = Method::new('getErrors', Modifier::PUBLIC, 'array')
     ->append(Comment::slash('Add here your content...'))
     ->append('return ', new Literal('[]'))
@@ -134,9 +136,9 @@ $interface = PhpInterface::new('StringifierInterface')
 
 $interface->emptyLine();
 
-$stringifyMethod = $interface->createSignature('stringify', 'string');
-$stringifyMethod->addArgument('escapeSlashes', 'bool', false);
-$stringifyMethod->addDocBlock('Convert value to string.');
+$signature = $interface->createSignature('stringify', 'string');
+$signature->addArgument('escapeSlashes', 'bool', false);
+$signature->addDocBlock('Convert value to string.');
 
 $interface->emptyLine();
 
@@ -174,7 +176,7 @@ use Murtukov\PHPCodeGenerator\PhpTrait;
 $trait = PhpTrait::new('Stringifier')
     ->addProperty('cache', Modifier::PRIVATE, 'string', [])
     ->addProperty('heap', Modifier::PROTECTED, SplHeap::class, null)
-    ->addDocBlock('This is just a test class.')
+    ->addDocBlock('This is just a test trait.')
     ->emptyLine();
 
 $constructor = Method::new('__construct')
@@ -230,7 +232,7 @@ echo $method;
 ```
 Result:
 ```php
-private function myMethod(?SplHeap $arg1 = null, string $arg2 = '', \$arg3): void
+private function myMethod(?SplHeap $arg1 = null, string $arg2 = '', $arg3): void
 {
     $object = new stdClass();
 }

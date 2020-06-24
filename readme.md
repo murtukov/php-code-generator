@@ -1,5 +1,5 @@
 # PHPCodeGenerator
-A library to generate any PHP 7.4 code
+A library to generate PHP 7.4 code
 
 - [Installation](#installation)
 - [File](#file)

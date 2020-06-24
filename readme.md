@@ -29,6 +29,12 @@ A library to generate any PHP 7.4 code
 - [DocBlock](#docblock)
 - [Namespaces](#namespaces)
 
+## Installation
+```
+composer require murtukov/php-code-generator
+```
+
+# Components
 
 ## File
 ```php

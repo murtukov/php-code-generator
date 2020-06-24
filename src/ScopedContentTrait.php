@@ -71,6 +71,6 @@ trait ScopedContentTrait
             ));
         }
 
-        return $content;
+        return rtrim($content);
     }
 }

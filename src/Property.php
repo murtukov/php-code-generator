@@ -14,6 +14,7 @@ class Property extends DependencyAwareGenerator
     private bool   $isConst = false;
     private string $modifier;
     private string $type;
+    private bool    $isNullable = false;
 
     public function __construct(string $name, ?string $modifier, string $type = '', $defaulValue = '')
     {
@@ -21,6 +22,10 @@ class Property extends DependencyAwareGenerator
         $this->modifier = $modifier ?? Modifier::PUBLIC;
         $this->value = Utils::stringify($defaulValue);
         $this->type = $this->resolveQualifier($type);
+
+        if (null === $defaulValue) {
+            $this->isNullable = true;
+        }
     }
 
     public static function new(string $name, ?string $modifier, string $type = '', $value = '')
@@ -31,9 +36,17 @@ class Property extends DependencyAwareGenerator
     public function generate(): string
     {
         $docBlock = $this->docBlock ? "$this->docBlock\n" : '';
-        $type = $this->type ? "$this->type " : '';
         $value = $this->value ? " = $this->value" : '';
         $isStatic = $this->isStatic ? 'static ' : '';
+
+        $type = '';
+        if ($this->type) {
+            if ($this->isNullable) {
+                $type = "?";
+            }
+
+            $type .= "$this->type ";
+        }
 
         if ($this->isConst) {
             return "$docBlock$this->modifier const $this->name$value";
@@ -123,5 +136,15 @@ class Property extends DependencyAwareGenerator
         $this->type = $this->resolveQualifier($type);
 
         return $this;
+    }
+
+    public function setNullable()
+    {
+        $this->isNullable = true;
+    }
+
+    public function unsetNullable()
+    {
+        $this->isNullable = false;
     }
 }

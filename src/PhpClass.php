@@ -90,6 +90,11 @@ class PhpClass extends OOPStructure
         return $constructor;
     }
 
+    public function addConstructor(string $modifier = 'public'): self
+    {
+        return $this->append(new Method('__construct', $modifier, ''))->emptyLine();
+    }
+
     public function generate(): string
     {
         return <<<CODE

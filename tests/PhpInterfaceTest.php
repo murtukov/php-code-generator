@@ -83,10 +83,12 @@ class PhpInterfaceTest extends TestCase
             public const TYPE = 'Component';
             
             public function parse(): string;
+            
             /**
              * Convert value to string.
              */
             public function stringify(bool \$escapeSlashes = false): string;
+            
             public function dump(): string;
         }
         CODE;
@@ -94,9 +96,13 @@ class PhpInterfaceTest extends TestCase
         $interface->emptyLine();
         $interface->addSignature('parse', 'string');
 
+        $interface->emptyLine();
+
         $stringifyMethod = $interface->createSignature('stringify', 'string');
         $stringifyMethod->addArgument('escapeSlashes', 'bool', false);
         $stringifyMethod->addDocBlock('Convert value to string.');
+
+        $interface->emptyLine();
 
         $dumpMethod = Method::new('dump', Modifier::PUBLIC, 'string');
         $interface->addSignatureFromMethod($dumpMethod);

@@ -79,7 +79,7 @@ class PhpClassTest extends TestCase
             public const TYPE = 'ObjectStringifier';
             
             private string \$cache = [];
-            protected SplHeap \$heap = null;
+            protected ?SplHeap \$heap = null;
         }
         CODE;
 

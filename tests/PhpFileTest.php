@@ -88,7 +88,6 @@ class PhpFileTest extends TestCase
             {
                 return new PhpFile();
             }
-            
         }
         CODE);
 

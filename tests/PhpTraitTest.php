@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Murtukov\PHPCodeGenerator\Comment;
 use Murtukov\PHPCodeGenerator\Method;
 use Murtukov\PHPCodeGenerator\Literal;
 use Murtukov\PHPCodeGenerator\Modifier;
@@ -39,7 +40,7 @@ class PhpTraitTest extends TestCase
         trait Stringifier
         {
             private string \$cache = [];
-            protected SplHeap \$heap = null;
+            protected ?SplHeap \$heap = null;
         }
         CODE);
 
@@ -64,11 +65,8 @@ class PhpTraitTest extends TestCase
             ->append('parent::__construct(...func_get_args())');
 
         $method = Method::new('getErrors', Modifier::PUBLIC, 'array')
-            ->append(
-                '// Add here your content...',
-                "\n",
-                'return ', new Literal('[]')
-            );
+            ->append(Comment::slash('Add here your content...'))
+            ->append('return ', new Literal('[]'));
 
         $trait->append($constructor);
         $trait->emptyLine();
@@ -81,7 +79,7 @@ class PhpTraitTest extends TestCase
         trait Stringifier
         {
             private string \$cache = [];
-            protected SplHeap \$heap = null;
+            protected ?SplHeap \$heap = null;
             
             public function __construct()
             {

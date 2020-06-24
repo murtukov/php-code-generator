@@ -9,7 +9,7 @@ class ArrowFunction extends AbstractFunction
     /** @var GeneratorInterface|string */
     private $expression;
 
-    public function __construct($expression = '', string $returnType = '')
+    public function __construct($expression = null, string $returnType = '')
     {
         $this->signature = new Signature('', Modifier::NONE, $returnType, 'fn');
         $this->expression = $this->manageExprDependency($expression);
@@ -17,14 +17,16 @@ class ArrowFunction extends AbstractFunction
         $this->dependencyAwareChildren[] = $this->signature;
     }
 
-    public static function new($expression = '', string $returnType = '')
+    public static function new($expression = null, string $returnType = '')
     {
         return new self($expression, $returnType);
     }
 
     public function generate(): string
     {
-        return "$this->signature => $this->expression";
+        $expression = Utils::stringify($this->expression);
+
+        return "$this->signature => $expression";
     }
 
     /**
@@ -36,7 +38,7 @@ class ArrowFunction extends AbstractFunction
     }
 
     /**
-     * @param GeneratorInterface|string $expression
+     * @param mixed $expression
      */
     public function setExpression($expression): self
     {
@@ -49,7 +51,7 @@ class ArrowFunction extends AbstractFunction
     {
         if ($value instanceof DependencyAwareGenerator) {
             $this->dependencyAwareChildren['expr'] = $value;
-        } elseif (is_string($value)) {
+        } else {
             unset($this->dependencyAwareChildren['expr']);
         }
 

@@ -207,6 +207,10 @@ class Collection extends DependencyAwareGenerator
     {
         $this->items[] = $item;
 
+        if ($item instanceof DependencyAwareGenerator) {
+            $this->dependencyAwareChildren[] = $item;
+        }
+
         return $this;
     }
 }

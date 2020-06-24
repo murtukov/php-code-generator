@@ -2,11 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Murtukov\PHPCodeGenerator\ControlStructures;
-
-use Murtukov\PHPCodeGenerator\BlockInterface;
-use Murtukov\PHPCodeGenerator\DependencyAwareGenerator;
-use Murtukov\PHPCodeGenerator\ScopedContentTrait;
+namespace Murtukov\PHPCodeGenerator;
 
 class Loop extends DependencyAwareGenerator implements BlockInterface
 {

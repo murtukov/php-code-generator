@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Murtukov\PHPCodeGenerator\Comment;
-use Murtukov\PHPCodeGenerator\ControlStructures\Loop;
+use Murtukov\PHPCodeGenerator\Loop;
 use Murtukov\PHPCodeGenerator\Method;
 use Murtukov\PHPCodeGenerator\Instance;
 use Murtukov\PHPCodeGenerator\Modifier;

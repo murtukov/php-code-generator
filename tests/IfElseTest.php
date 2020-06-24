@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Murtukov\PHPCodeGenerator\ControlStructures\IfElse;
+use Murtukov\PHPCodeGenerator\IfElse;
 use Murtukov\PHPCodeGenerator\Text;
 use PHPUnit\Framework\TestCase;
 
@@ -11,7 +11,7 @@ class IfElseTest extends TestCase
     /** @test */
     public function withoutElseEmptyContent()
     {
-        $ifElse = IfElse::create('"name" === 15');
+        $ifElse = IfElse::new('"name" === 15');
 
         $expected = <<<CODE
         if ("name" === 15) {
@@ -25,7 +25,7 @@ class IfElseTest extends TestCase
     /** @test */
     public function withElseEmptyContent()
     {
-        $ifElse = IfElse::create('true');
+        $ifElse = IfElse::new('true');
         $ifElse->createElse();
 
         $expected = <<<CODE
@@ -42,7 +42,7 @@ class IfElseTest extends TestCase
     /** @test */
     public function withElseElseIfEmptyContent()
     {
-        $ifElse = IfElse::create('true');
+        $ifElse = IfElse::new('true');
         $ifElse->createElse();
         $ifElse->createElseIf('false');
 
@@ -62,7 +62,7 @@ class IfElseTest extends TestCase
     /** @test */
     public function allPartsWithContent()
     {
-        $ifElse = IfElse::create('$name === 15');
+        $ifElse = IfElse::new('$name === 15');
         $ifElse->append('$names = ', "['name' => 'Timur']")
             ->createElseIf(new Text('$name === 95'))
                 ->append('return null')

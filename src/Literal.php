@@ -13,6 +13,11 @@ class Literal extends AbstractGenerator
         $this->value = $value;
     }
 
+    public static function new(string $value)
+    {
+        return new static($value);
+    }
+
     public function generate(): string
     {
         return $this->value;

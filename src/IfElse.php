@@ -2,13 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Murtukov\PHPCodeGenerator\ControlStructures;
-
-use Murtukov\PHPCodeGenerator\AbstractGenerator;
-use Murtukov\PHPCodeGenerator\BlockInterface;
-use Murtukov\PHPCodeGenerator\DependencyAwareGenerator;
-use Murtukov\PHPCodeGenerator\GeneratorInterface;
-use Murtukov\PHPCodeGenerator\ScopedContentTrait;
+namespace Murtukov\PHPCodeGenerator;
 
 class IfElse extends AbstractGenerator implements BlockInterface
 {
@@ -30,7 +24,7 @@ class IfElse extends AbstractGenerator implements BlockInterface
         $this->expression = $ifExpression;
     }
 
-    public static function create($ifExpression = ''): self
+    public static function new($ifExpression = ''): self
     {
         return new self($ifExpression);
     }

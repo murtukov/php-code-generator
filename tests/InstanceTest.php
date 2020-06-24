@@ -110,19 +110,6 @@ class InstanceTest extends TestCase
         new Test(null, [], new DateTime(), false)
         CODE);
 
-//        echo $instance;
-
-        $file = \Murtukov\PHPCodeGenerator\PhpFile::new()->addUseGroup();
-
-        $class = $file->createClass('MyClass');
-        $construct = $class->createConstructor();
-
-        $array = \Murtukov\PHPCodeGenerator\Collection::numeric()
-            ->push(Instance::new('App\Service\Converter'))
-            ->push(Instance::new('App\Service\Normalizer'));
-
-        $construct->append('return ', $array);
-
-        echo $file->generate();
+        echo $instance;
     }
 }

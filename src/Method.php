@@ -2,16 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Murtukov\PHPCodeGenerator\Functions;
-
-use Murtukov\PHPCodeGenerator\BlockInterface;
-use Murtukov\PHPCodeGenerator\DocBlockTrait;
-use Murtukov\PHPCodeGenerator\Modifier;
-use Murtukov\PHPCodeGenerator\Traits\ScopedContentTrait;
+namespace Murtukov\PHPCodeGenerator;
 
 class Method extends AbstractFunction implements BlockInterface
 {
-    use ScopedContentTrait, DocBlockTrait;
+    use ScopedContentTrait;
+    use DocBlockTrait;
 
     public function __construct(string $name, string $modifier = Modifier::PUBLIC, string $returnType = '')
     {

@@ -6,16 +6,17 @@ namespace Murtukov\PHPCodeGenerator;
 
 use ArrayAccess;
 use Exception;
+use function rtrim;
 
-class Call extends DependencyAwareGenerator implements ArrayAccess
+class Mocker extends DependencyAwareGenerator implements ArrayAccess
 {
     private const TYPE_VARIABLE = 0;
     private const TYPE_CLASS = 1;
 
-    private static ?object $lastObject;
+    private static ?self $lastObject;
 
     private ?string $identifier;
-    private int    $type;
+    private int     $type;
 
     /** @var GeneratorInterface[] */
     private array $chainParts = [];
@@ -27,14 +28,14 @@ class Call extends DependencyAwareGenerator implements ArrayAccess
 
     public function __call($name, $arguments)
     {
-        self::$lastObject->chainParts[] = self::createChainPart($name, $arguments);
+        self::$lastObject->chainParts[] = self::createChainPart($name, $arguments, self::$lastObject);
 
         return self::$lastObject;
     }
 
     public static function __callStatic(string $name, array $arguments)
     {
-        self::$lastObject->chainParts[] = self::createChainPart($name, $arguments, true);
+        self::$lastObject->chainParts[] = self::createChainPart($name, $arguments, self::$lastObject, true);
 
         return self::$lastObject;
     }
@@ -87,25 +88,35 @@ class Call extends DependencyAwareGenerator implements ArrayAccess
         throw new Exception('Setting chain parts manually is not allowed.');
     }
 
-    private static function createChainPart(string $name, array $arguments, bool $isStatic = false, bool $isProperty = false): GeneratorInterface
+    private static function createChainPart(string $name, array $arguments, ?self $lastObject, bool $isStatic = false, bool $isProperty = false): GeneratorInterface
     {
-        return new class($name, $arguments, $isStatic, $isProperty) implements GeneratorInterface {
+        return new class($name, $arguments, $lastObject, $isStatic, $isProperty) extends DependencyAwareGenerator {
             private string $name;
-            private array $arguments;
+            private array $args;
             private bool $isStatic;
             private bool $isProperty;
+            private ?Mocker $lastObject;
 
-            public function __construct(string $name, array $arguments, bool $isStatic, bool $isProperty)
+            public function __construct($name, $arguments, $lastObject, $isStatic, $isProperty)
             {
                 $this->name = $name;
-                $this->arguments = $arguments;
+                $this->args = $arguments;
                 $this->isStatic = $isStatic;
                 $this->isProperty = $isProperty;
+                $this->lastObject = $lastObject;
+
+                $this->dependencyAwareChildren = [&$this->args];
             }
 
-            public function __toString(): string
+            public function generate(): string
             {
-                $args = empty($this->arguments) ? '' : implode(', ', $this->arguments);
+                $args = '';
+
+                foreach ($this->args as $arg) {
+                    $args .= Utils::stringify($arg) . ', ';
+                }
+
+                $args = rtrim($args, ', ');
 
                 if ($this->isStatic) {
                     return "::$this->name($args)";
@@ -114,14 +125,14 @@ class Call extends DependencyAwareGenerator implements ArrayAccess
                 }
             }
 
-            public function setArguments(array $arguments): void
+            public function setArgs(array $args): void
             {
-                $this->arguments = $arguments;
+                $this->args = $args;
             }
 
             public function addArgument($argument): void
             {
-                $this->arguments[] = $argument;
+                $this->args[] = $argument;
             }
         };
     }

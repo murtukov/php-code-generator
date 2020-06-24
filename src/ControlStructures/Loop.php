@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator\ControlStructures;
 
-use Murtukov\PHPCodeGenerator\AbstractGenerator;
 use Murtukov\PHPCodeGenerator\BlockInterface;
-use Murtukov\PHPCodeGenerator\Traits\ScopedContentTrait;
+use Murtukov\PHPCodeGenerator\DependencyAwareGenerator;
+use Murtukov\PHPCodeGenerator\ScopedContentTrait;
 
-class Loop extends AbstractGenerator implements BlockInterface
+class Loop extends DependencyAwareGenerator implements BlockInterface
 {
     use ScopedContentTrait;
 
-    public const TYPE_WHILE     = 'while';
-    public const TYPE_FOR       = 'for';
-    public const TYPE_FOREACH   = 'foreach';
-    public const TYPE_DO_WHILE  = 'doWhile';
+    public const TYPE_WHILE = 'while';
+    public const TYPE_FOR = 'for';
+    public const TYPE_FOREACH = 'foreach';
+    public const TYPE_DO_WHILE = 'doWhile';
 
     private string $condition;
     private string $type;

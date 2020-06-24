@@ -59,7 +59,7 @@ class PhpFile extends DependencyAwareGenerator
 
     public function createClass(string $name): PhpClass
     {
-        return $this->classes[] = PhpClass::class($name);
+        return $this->classes[] = PhpClass::new($name);
     }
 
     public function getNamespace(): string

@@ -2,10 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Murtukov\PHPCodeGenerator\Functions;
-
-use Murtukov\PHPCodeGenerator\Modifier;
-use Murtukov\PHPCodeGenerator\Traits\ScopedContentTrait;
+namespace Murtukov\PHPCodeGenerator;
 
 class Closure extends AbstractFunction
 {

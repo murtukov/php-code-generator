@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator;
 
-use Murtukov\PHPCodeGenerator\Traits\ScopedContentTrait;
-
 abstract class OOPStructure extends DependencyAwareGenerator
 {
-    use ScopedContentTrait, DocBlockTrait;
+    use ScopedContentTrait;
+    use DocBlockTrait;
 
-    protected string $name;
+    public string $name;
 
     public function __construct(string $name)
     {

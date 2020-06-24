@@ -2,11 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Functions;
-
-use Murtukov\PHPCodeGenerator\Functions\Argument;
+use Murtukov\PHPCodeGenerator\Argument;
 use PHPUnit\Framework\TestCase;
-use SplHeap;
 
 class ArgumentTest extends TestCase
 {

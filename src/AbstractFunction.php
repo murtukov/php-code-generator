@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Murtukov\PHPCodeGenerator\Functions;
-
-use Murtukov\PHPCodeGenerator\DependencyAwareGenerator;
+namespace Murtukov\PHPCodeGenerator;
 
 abstract class AbstractFunction extends DependencyAwareGenerator
 {

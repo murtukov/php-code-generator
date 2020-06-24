@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Murtukov\PHPCodeGenerator\Functions\ArrowFunction;
-use Murtukov\PHPCodeGenerator\Functions\Method;
+use Murtukov\PHPCodeGenerator\Argument;
+use Murtukov\PHPCodeGenerator\Method;
 use Murtukov\PHPCodeGenerator\Instance;
 use Murtukov\PHPCodeGenerator\Modifier;
 use PHPUnit\Framework\TestCase;
@@ -13,22 +13,61 @@ class MethodTest extends TestCase
     /**
      * @test
      */
-    public function methodType()
+    public function emptyBase()
     {
-        $method = Method::new('malaka', Modifier::PRIVATE, 'void');
-        $method->append('$object = ', Instance::new(stdClass::class));
-        $result = (string) $method;
+        $method = Method::new('myMethod', Modifier::PRIVATE, 'void');
+
+        $this->expectOutputString(<<<CODE
+        private function myMethod(): void
+        {
+        
+        }
+        CODE);
+
+        echo $method;
+
+        return $method;
     }
 
     /**
      * @test
+     * @depends emptyBase
      */
-    public function arrowType()
+    public function addContent(Method $method)
     {
-        $arrow = ArrowFunction::new();
-        $arrow->setExpression(Instance::new(stdClass::class));
-        $arrow->setStatic();
-        $arrow->unsetStatic();
-        $result = (string) $arrow;
+        $method->append('$object = ', Instance::new(stdClass::class));
+
+        $this->expectOutputString(<<<CODE
+        private function myMethod(): void
+        {
+            \$object = new stdClass();
+        }
+        CODE);
+
+        echo $method;
+
+        return $method;
+    }
+
+    /**
+     * @test
+     * @depends addContent
+     */
+    public function addArguments(Method $method)
+    {
+        $method->createArgument('arg1', SplHeap::class, null)->setNullable();
+        $method->createArgument('arg2', 'string', '');
+        $method->add(Argument::new('arg3'));
+
+        $this->expectOutputString(<<<CODE
+        private function myMethod(?SplHeap \$arg1 = null, string \$arg2 = '', \$arg3): void
+        {
+            \$object = new stdClass();
+        }
+        CODE);
+
+        echo $method;
+
+        return $method;
     }
 }

@@ -6,8 +6,9 @@ namespace Murtukov\PHPCodeGenerator\ControlStructures;
 
 use Murtukov\PHPCodeGenerator\AbstractGenerator;
 use Murtukov\PHPCodeGenerator\BlockInterface;
+use Murtukov\PHPCodeGenerator\DependencyAwareGenerator;
 use Murtukov\PHPCodeGenerator\GeneratorInterface;
-use Murtukov\PHPCodeGenerator\Traits\ScopedContentTrait;
+use Murtukov\PHPCodeGenerator\ScopedContentTrait;
 
 class IfElse extends AbstractGenerator implements BlockInterface
 {
@@ -73,7 +74,8 @@ class IfElse extends AbstractGenerator implements BlockInterface
      */
     public function createElseIf($expression): object
     {
-        return $this->elseIfBlocks[] = new class($expression, $this) implements GeneratorInterface {
+        return $this->elseIfBlocks[] = new class($expression, $this) extends DependencyAwareGenerator
+        {
             use ScopedContentTrait;
 
             /** @var GeneratorInterface|string */
@@ -87,7 +89,7 @@ class IfElse extends AbstractGenerator implements BlockInterface
                 $this->parent = $parent;
             }
 
-            public function __toString(): string
+            public function generate(): string
             {
                 if (empty($this->expression)) {
                     return '';
@@ -108,7 +110,8 @@ class IfElse extends AbstractGenerator implements BlockInterface
      */
     public function createElse(): object
     {
-        return $this->elseBlock = new class($this) implements GeneratorInterface {
+        return $this->elseBlock = new class($this) extends DependencyAwareGenerator
+        {
             use ScopedContentTrait;
 
             public IfElse $parent;
@@ -118,14 +121,14 @@ class IfElse extends AbstractGenerator implements BlockInterface
                 $this->parent = $parent;
             }
 
-            public function __toString(): string
-            {
-                return " else {\n{$this->generateContent()}\n}";
-            }
-
             public function end()
             {
                 return $this->parent;
+            }
+
+            public function generate(): string
+            {
+                return " else {\n{$this->generateContent()}\n}";
             }
         };
     }

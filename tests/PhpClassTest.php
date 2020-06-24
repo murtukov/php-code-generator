@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Murtukov\PHPCodeGenerator\Functions\Method;
+use Murtukov\PHPCodeGenerator\Method;
 use Murtukov\PHPCodeGenerator\Literal;
 use Murtukov\PHPCodeGenerator\Modifier;
 use Murtukov\PHPCodeGenerator\PhpClass;
@@ -94,11 +94,6 @@ class PhpClassTest extends TestCase
         return $class;
     }
 
-    public function addMethod(PhpClass $class, Method $method)
-    {
-        $class->append($method);
-    }
-
     /**
      * @test
      */
@@ -131,7 +126,7 @@ class PhpClassTest extends TestCase
         /**
          * This is just a test class.
          */
-        final class MyException extends Exception implements JsonSerializable, ArrayAccess
+        final class Stringifier extends Exception implements JsonSerializable, ArrayAccess
         {
             private const KNOWN_TYPES = ['DYNAMIC', 'STATIC'];
             private \$errors = [];

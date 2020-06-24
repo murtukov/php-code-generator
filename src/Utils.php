@@ -16,30 +16,30 @@ use function var_export;
 
 class Utils
 {
-    const TYPE_STRING   = 'string';
-    const TYPE_INT      = 'integer';
-    const TYPE_BOOL     = 'boolean';
-    const TYPE_DOUBLE   = 'double';
-    const TYPE_OBJECT   = 'object';
-    const TYPE_ARRAY    = 'array';
+    const TYPE_STRING = 'string';
+    const TYPE_INT = 'integer';
+    const TYPE_BOOL = 'boolean';
+    const TYPE_DOUBLE = 'double';
+    const TYPE_OBJECT = 'object';
+    const TYPE_ARRAY = 'array';
 
     /**
-     * @var bool Whether arrays should be split into multiple lines.
+     * @var bool whether arrays should be split into multiple lines
      */
     private static ?bool $multiline = false;
 
     /**
-     * @var bool Defines whether arrays should be rendered with keys.
+     * @var bool defines whether arrays should be rendered with keys
      */
     private static ?bool $withKeys = false;
 
     /**
-     * @var bool If true, null values are not rendered.
+     * @var bool if true, null values are not rendered
      */
     private static bool $skipNullValues = false;
 
     /**
-     * @var array Custom converters registered by users.
+     * @var array custom converters registered by users
      */
     private static array $customConverters = [];
 
@@ -100,14 +100,20 @@ class Utils
                 }
 
                 if (null !== self::$withKeys && true === $topLevel) {
-                    return self::$withKeys ? self::stringifyAssocArray($value, self::$multiline) : self::stringifyNumericArray($value, self::$multiline);
+                    return self::$withKeys
+                        ? self::stringifyAssocArray($value, self::$multiline)
+                        : self::stringifyNumericArray($value, self::$multiline);
                 }
-                return isset($value[0]) ? self::stringifyNumericArray($value) : self::stringifyAssocArray($value);
+
+                return isset($value[0])
+                    ? self::stringifyNumericArray($value)
+                    : self::stringifyAssocArray($value);
+
             case 'object':
                 if (!$value instanceof GeneratorInterface) {
                     try {
                         return json_encode($value->__toString());
-                    } catch(Exception $e) {
+                    } catch (Exception $e) {
                         $class = get_class($value);
                         throw new Exception("Cannot stringify object of class: '$class'.");
                     }
@@ -121,7 +127,7 @@ class Utils
 
                 return 'null';
             default:
-                throw new UnrecognizedValueTypeException("Cannot stringify value of unrecognized type.");
+                throw new UnrecognizedValueTypeException('Cannot stringify value of unrecognized type.');
         }
     }
 
@@ -141,7 +147,7 @@ class Utils
                 $code .= "$key => $value,\n";
             }
 
-            $code = Utils::indent($code);
+            $code = Utils::indent($code, false);
         } else {
             foreach ($items as $key => $value) {
                 $key = is_int($key) ? $key : "'$key'";
@@ -171,7 +177,7 @@ class Utils
                 $code .= "$value,\n";
             }
 
-            $code = Utils::indent($code);
+            $code = Utils::indent($code, false);
         } else {
             foreach ($items as $value) {
                 $value = self::stringifyValue($value);
@@ -179,7 +185,7 @@ class Utils
             }
         }
 
-        // Remove last comma
+        // Remove last comma and space
         $code = rtrim($code, ', ');
 
         return "[$code]";
@@ -197,10 +203,24 @@ class Utils
         }
     }
 
-    public static function indent(string $code): string
+    public static function indent(string $code, bool $leadingIndent = true): string
     {
         $indent = Config::$indent;
+        $code = str_replace("\n", "\n$indent", $code);
 
-        return $indent.str_replace("\n", "\n$indent", $code);
+        if (true === $leadingIndent) {
+            $code = $indent.$code;
+        }
+
+        return $code;
+    }
+
+    public static function resolveQualifier(string $path)
+    {
+        if ($portion = strrchr($path, '\\')) {
+            return substr($portion, 1);
+        }
+
+        return false;
     }
 }

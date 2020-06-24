@@ -31,9 +31,9 @@ class Property extends DependencyAwareGenerator
     public function generate(): string
     {
         $docBlock = $this->docBlock ? "$this->docBlock\n" : '';
-        $type     = $this->type     ? "$this->type "      : '';
-        $value    = $this->value    ? " = $this->value"   : '';
-        $isStatic = $this->isStatic ? "static "           : '';
+        $type = $this->type ? "$this->type " : '';
+        $value = $this->value ? " = $this->value" : '';
+        $isStatic = $this->isStatic ? 'static ' : '';
 
         if ($this->isConst) {
             return "$docBlock$this->modifier const $this->name$value";

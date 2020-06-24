@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator;
 
-class Comment extends AbstractGenerator
+class Comment extends AbstractGenerator implements BlockInterface
 {
     public const TYPE_STAR = 'Star';
     public const TYPE_DOCBLOCK = 'DocBlock';

@@ -13,6 +13,11 @@ class Qualifier extends DependencyAwareGenerator
         $this->name = $this->resolveQualifier($className);
     }
 
+    public static function new(string $className)
+    {
+        return new static($className);
+    }
+
     public function generate(): string
     {
         return $this->name;

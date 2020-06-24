@@ -2,11 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Murtukov\PHPCodeGenerator\Functions;
-
-use Murtukov\PHPCodeGenerator\DependencyAwareGenerator;
-use Murtukov\PHPCodeGenerator\GeneratorInterface;
-use Murtukov\PHPCodeGenerator\Modifier;
+namespace Murtukov\PHPCodeGenerator;
 
 class ArrowFunction extends AbstractFunction
 {

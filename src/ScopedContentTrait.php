@@ -2,12 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Murtukov\PHPCodeGenerator\Traits;
+namespace Murtukov\PHPCodeGenerator;
 
-use Murtukov\PHPCodeGenerator\BlockInterface;
-use Murtukov\PHPCodeGenerator\DependencyAwareGenerator;
-use Murtukov\PHPCodeGenerator\GeneratorInterface;
-use Murtukov\PHPCodeGenerator\Utils;
 use function array_map;
 use function array_unshift;
 use function join;

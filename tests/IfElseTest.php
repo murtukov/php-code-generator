@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace ControlStructures;
-
 use Murtukov\PHPCodeGenerator\ControlStructures\IfElse;
 use Murtukov\PHPCodeGenerator\Text;
 use PHPUnit\Framework\TestCase;

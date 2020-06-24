@@ -6,7 +6,7 @@ namespace Murtukov\PHPCodeGenerator;
 
 abstract class DependencyAwareGenerator extends AbstractGenerator
 {
-    protected array $usePaths  = [];
+    protected array $usePaths = [];
     protected array $useGroups = [];
 
     /**
@@ -27,9 +27,9 @@ abstract class DependencyAwareGenerator extends AbstractGenerator
             return substr($path, 1);
         }
 
-        if ($portion = strrchr($path, '\\')) {
+        if ($qualifier = Utils::resolveQualifier($path)) {
             $this->usePaths[$path] = $alias;
-            $path = substr($portion, 1);
+            $path = $qualifier;
         }
 
         return $path;
@@ -45,6 +45,10 @@ abstract class DependencyAwareGenerator extends AbstractGenerator
     public function addUseGroup(string $fqcn, string ...$classNames)
     {
         foreach ($classNames as $name) {
+            if ($qualifier = Utils::resolveQualifier($name)) {
+                $name = $qualifier;
+            }
+
             if (empty($this->useGroups[$fqcn]) || !in_array($name, $this->useGroups[$fqcn])) {
                 $this->useGroups[$fqcn][] = $name;
             }
@@ -77,10 +81,9 @@ abstract class DependencyAwareGenerator extends AbstractGenerator
         foreach ($this->dependencyAwareChildren as $child) {
             if (is_array($child)) {
                 foreach ($child as $subchild) {
-                    if (!$subchild instanceof self) {
-                        continue;
+                    if ($subchild instanceof self) {
+                        $mergedPaths = $mergedPaths + $subchild->getUsePaths();
                     }
-                    $mergedPaths = $mergedPaths + $subchild->getUsePaths();
                 }
             } else {
                 $mergedPaths = $mergedPaths + $child->getUsePaths();

@@ -2,11 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Murtukov\PHPCodeGenerator\Functions;
+namespace Murtukov\PHPCodeGenerator;
 
-use Murtukov\PHPCodeGenerator\DependencyAwareGenerator;
-use Murtukov\PHPCodeGenerator\DocBlockTrait;
-use Murtukov\PHPCodeGenerator\Modifier;
 use function implode;
 
 class Signature extends DependencyAwareGenerator
@@ -18,15 +15,15 @@ class Signature extends DependencyAwareGenerator
     public string $modifier;
 
     protected string $returnType = '';
-    protected array  $args       = [];
-    protected array  $uses       = []; // variables of parent scope
+    protected array  $args = [];
+    protected array  $uses = []; // variables of parent scope
     protected string $qualifier;
 
     public function __construct(
-        string $name        = '',
-        string $modifier    = Modifier::NONE,
-        string $returnType  = '',
-        string $qualifier   = 'function '
+        string $name = '',
+        string $modifier = Modifier::NONE,
+        string $returnType = '',
+        string $qualifier = 'function '
     ) {
         $this->name = $name;
         $this->modifier = $modifier;

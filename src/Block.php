@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator;
 
-use Murtukov\PHPCodeGenerator\Traits\ScopedContentTrait;
-
 class Block extends AbstractGenerator implements BlockInterface
 {
     use ScopedContentTrait;

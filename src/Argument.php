@@ -2,10 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Murtukov\PHPCodeGenerator\Functions;
-
-use Murtukov\PHPCodeGenerator\DependencyAwareGenerator;
-use Murtukov\PHPCodeGenerator\Utils;
+namespace Murtukov\PHPCodeGenerator;
 
 class Argument extends DependencyAwareGenerator implements FunctionMemberInterface
 {

@@ -5,16 +5,15 @@ declare(strict_types=1);
 namespace Murtukov\PHPCodeGenerator;
 
 use Closure;
-use Murtukov\PHPCodeGenerator\Exception\UnrecognizedValueTypeException;
 use function count;
 use function is_bool;
 use function is_callable;
 
 class Collection extends DependencyAwareGenerator
 {
-    protected array $items     = [];
+    protected array $items = [];
     protected bool  $multiline = false;
-    protected bool  $withKeys  = true;
+    protected bool  $withKeys = true;
 
     protected Utils $utils;
 
@@ -23,7 +22,7 @@ class Collection extends DependencyAwareGenerator
         $this->items = $items;
         $this->multiline = $multiline;
         $this->withKeys = $withKeys;
-        $this->utils = new Utils;
+        $this->utils = new Utils();
     }
 
     public static function numeric(array $items = [], bool $multiline = false): self

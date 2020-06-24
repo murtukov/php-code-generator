@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Murtukov\PHPCodeGenerator\Collection;
-use Murtukov\PHPCodeGenerator\Utils;
 use PHPUnit\Framework\TestCase;
 
 class CollectionTest extends TestCase
@@ -27,26 +26,6 @@ class CollectionTest extends TestCase
      */
     public function addItemsAssoc(Collection $collection)
     {
-        $arr = Utils::stringify([
-            'name' => 'Frank',
-            'age' => 35,
-            'height' => 177.6,
-            'alive' => true,
-            'money' => null,
-            'friends' => Collection::numeric(['Alex', 'Mary', 'Paul']),
-            'colleagues' => [
-                'Jane' => [
-                    'position' => 'designer',
-                    'age' => 30
-                ],
-                'Justin' => [
-                    'position' => 'manager',
-                    'age' => 25
-                ],
-            ],
-        ]);
-
-
         $collection
             ->addItem('name', 'Frank')
             ->addItem('age', 35)
@@ -54,14 +33,17 @@ class CollectionTest extends TestCase
             ->addItem('alive', true)
             ->addItem('money', null)
             ->addItem('friends', ['Alex', 'Mary', 'Paul'])
-            ->addItem('colleаgues', Collection::assoc(['Jane' => Collection::assoc([
+            ->addItem('foes', Collection::numeric(['Max', 'Joel', 'Bryan'], true))
+            ->addItem('colleаgues', Collection::assoc([
+                'Jane' => [
                     'position' => 'designer',
-                    'age' => 30
-                ])->setInline(), 'Justin' => [
+                    'age' => 30,
+                ], 'Justin' => [
                     'position' => 'manager',
-                    'age' => 25
+                    'age' => 25,
                 ],
-            ]))->generate()
+            ]))
+            ->addItem('parents', Collection::assoc(['mother' => 'Anjela', 'father' => 'Rodrigo'], false))
         ;
 
         $this->expectOutputString(<<<CODE
@@ -72,16 +54,22 @@ class CollectionTest extends TestCase
             'alive' => true,
             'money' => null,
             'friends' => ['Alex', 'Mary', 'Paul'],
-            'colleagues' => [
+            'foes' => [
+                'Max',
+                'Joel',
+                'Bryan',
+            ],
+            'colleаgues' => [
                 'Jane' => [
-                    'position' => 'designer', 
-                    'age' => 30
+                    'position' => 'designer',
+                    'age' => 30,
                 ],
                 'Justin' => [
-                    'position' => 'manager', 
-                    'age' => 25
+                    'position' => 'manager',
+                    'age' => 25,
                 ],
             ],
+            'parents' => ['mother' => 'Anjela', 'father' => 'Rodrigo'],
         ]
         CODE);
 

@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator;
 
-use Murtukov\PHPCodeGenerator\Functions\Method;
 use function join;
 
 class PhpClass extends OOPStructure
 {
-    protected string $extends    = '';
+    protected string $extends = '';
     protected bool   $isAbstract = false;
-    protected bool   $isFinal    = false;
-    protected array  $implements  = [];
+    protected bool   $isFinal = false;
+    protected array  $implements = [];
 
     public function setExtends(string $fqcn): self
     {
@@ -56,7 +55,8 @@ class PhpClass extends OOPStructure
      */
     public function addConst(string $name, $value, string $modifier = Modifier::PUBLIC): self
     {
-        return $this->append(Property::new($name, $modifier, '', $value)->setConst());
+        return $this
+            ->append(Property::new($name, $modifier, '', $value)->setConst());
     }
 
     public function addProperty(string $name, string $modifier = Modifier::PUBLIC, string $type = '', $defaulValue = ''): self
@@ -66,12 +66,28 @@ class PhpClass extends OOPStructure
 
     public function addMethod(string $name, string $modifier = 'public', string $returnType = ''): self
     {
-        return $this->append(new Method($name, $modifier, $returnType));
+        return $this
+            ->append(new Method($name, $modifier, $returnType))
+            ->emptyLine()
+        ;
     }
 
-    public function addConstructor(string $modifier = 'public'): self
+    public function createMethod(string $name, string $modifier = 'public', string $returnType = ''): Method
     {
-        return $this->append(new Method('__construct', $modifier, ''));
+        $method = new Method($name, $modifier, $returnType);
+
+        $this->append($method)->emptyLine();
+
+        return $method;
+    }
+
+    public function createConstructor(string $modifier = 'public'): Method
+    {
+        $constructor = new Method('__construct', $modifier, '');
+
+        $this->append($constructor)->emptyLine();
+
+        return $constructor;
     }
 
     public function generate(): string

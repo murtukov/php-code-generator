@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Murtukov\PHPCodeGenerator\BlockInterface;
 use Murtukov\PHPCodeGenerator\ConverterInterface;
-use Murtukov\PHPCodeGenerator\Functions\Method;
+use Murtukov\PHPCodeGenerator\Method;
 use Murtukov\PHPCodeGenerator\Modifier;
 use Murtukov\PHPCodeGenerator\PhpInterface;
 use PHPUnit\Framework\TestCase;

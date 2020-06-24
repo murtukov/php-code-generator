@@ -15,90 +15,101 @@ class InstanceTest extends TestCase
     {
         $instance = Instance::new(DateTime::class);
 
-        $expected = <<<CODE
+        $this->expectOutputString(<<<CODE
         new DateTime()
-        CODE;
+        CODE);
 
-        $this->assertEquals($expected, (string) $instance);
+        echo $instance;
     }
 
     /**
      * @test
      */
-    public function withOneArgs()
+    public function withOneArg()
     {
-        $instance = Instance::new(DateTime::class, 'today');
+        $instance = Instance::new('User', 'Andrew');
 
-        $expected = <<<CODE
-        new DateTime('today')
-        CODE;
+        $this->expectOutputString(<<<CODE
+        new User('Andrew')
+        CODE);
 
-        $this->assertEquals($expected, (string) $instance);
+        echo $instance;
+
+        return $instance;
     }
 
     /**
      * @test
+     * @depends withOneArg
      */
-    public function withMultipleArgs()
+    public function addSecondArgument(Instance $instance)
     {
-        $instance = Instance::new('User', 'Andrew', 'Jameson');
+        $instance->addArgument('Jameson');
 
-        $expected = <<<CODE
+        $this->expectOutputString(<<<CODE
         new User('Andrew', 'Jameson')
-        CODE;
+        CODE);
 
-        $this->assertEquals($expected, (string) $instance);
+        echo $instance;
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function shortenNamespace()
     {
         $instance = Instance::new('App\Entity\User');
 
-        $expected = <<<CODE
+        $this->expectOutputString(<<<CODE
         new User()
-        CODE;
+        CODE);
 
-        $this->assertEquals($expected, (string) $instance);
+        echo $instance;
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function suppressShorteningWithCustomSymbol()
     {
         Config::$suppressSymbol = '~';
         $instance = Instance::new('~App\Entity\User');
 
-        $expected = <<<CODE
+        $this->expectOutputString(<<<CODE
         new App\Entity\User()
-        CODE;
+        CODE);
 
-        $this->assertEquals($expected, (string) $instance);
+        echo $instance;
 
         // Reset config
         Config::$suppressSymbol = '@';
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function suppressShortening()
     {
         $instance = Instance::new('@App\Entity\User');
 
-        $expected = <<<CODE
+        $this->expectOutputString(<<<CODE
         new App\Entity\User()
-        CODE;
+        CODE);
 
-        $this->assertEquals($expected, (string) $instance);
+        echo $instance;
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function differentArgTypes()
     {
         $instance = Instance::new('Test', null, [], new Instance('DateTime'), false);
 
-        $expected = <<<CODE
+        $this->expectOutputString(<<<CODE
         new Test(null, [], new DateTime(), false)
-        CODE;
+        CODE);
 
-        $this->assertEquals($expected, (string) $instance);
+        echo $instance;
     }
 }

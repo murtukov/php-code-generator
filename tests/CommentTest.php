@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 class CommentTest extends TestCase
 {
     private string $oneLineText = 'Hi! My name is Vasilis Kehagias!';
-    private string $multilineText = "I am from Greece.\nI'm learning German.";
 
     /**
      * @test

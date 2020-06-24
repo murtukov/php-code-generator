@@ -4,15 +4,11 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator;
 
-use Murtukov\PHPCodeGenerator\Functions\Method;
-use Murtukov\PHPCodeGenerator\Functions\Signature;
 use function join;
 
 class PhpInterface extends OOPStructure
 {
-    protected array  $extends = [];
-    protected string $name;
-
+    protected array $extends = [];
     protected ?Comment $docBlock = null;
 
     public function generate(): string
@@ -20,7 +16,7 @@ class PhpInterface extends OOPStructure
         // Extends
         $extends = '';
         if (!empty($this->extends)) {
-            $extends = ' extends ' . join(', ', $this->extends);
+            $extends = ' extends '.join(', ', $this->extends);
         }
 
         return <<<CODE
@@ -46,7 +42,7 @@ class PhpInterface extends OOPStructure
 
     public function addSignatureFromMethod(Method $method)
     {
-         return $this->append($method->signature);
+        return $this->append($method->signature);
     }
 
     /**

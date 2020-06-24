@@ -1,5 +1,3 @@
-> Documentation is still being written
-
 # PHPCodeGenerator
 A library to generate any PHP 7.4 code
 

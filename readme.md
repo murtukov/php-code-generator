@@ -1,6 +1,6 @@
 > Documentation is still being written
 
-# PHPCodeGenerator (dev)
+# PHPCodeGenerator
 A library to generate any PHP 7.4 code
 
 - [Installation](#installation)

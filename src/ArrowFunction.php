@@ -14,7 +14,7 @@ class ArrowFunction extends AbstractFunction
         $this->signature = new Signature('', Modifier::NONE, $returnType, 'fn');
         $this->expression = $this->manageDependency($expression);
 
-        $this->dependencyAwareChildren = [$this->signature];
+        $this->dependencyAwareChildren[] = $this->signature;
     }
 
     public static function new($expression = '', string $returnType = '')

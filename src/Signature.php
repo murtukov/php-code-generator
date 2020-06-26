@@ -106,6 +106,8 @@ class Signature extends DependencyAwareGenerator
 
     public function bindVar(string $name, bool $isByReference = false): self
     {
+        $name = ltrim($name, '$');
+
         $this->uses[] = $isByReference ? "&$$name" : "$$name";
 
         return $this;

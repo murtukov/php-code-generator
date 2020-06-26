@@ -95,6 +95,15 @@ class Signature extends DependencyAwareGenerator
         return $this;
     }
 
+    public function addArguments(string ...$names)
+    {
+        foreach ($names as $name) {
+            $this->addArgument($name);
+        }
+
+        return $this;
+    }
+
     public function add(FunctionMemberInterface $member): self
     {
         if ($member instanceof Argument) {

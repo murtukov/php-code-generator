@@ -113,6 +113,15 @@ class Signature extends DependencyAwareGenerator
         return $this;
     }
 
+    public function bindVars(string ...$names)
+    {
+        foreach ($names as $name) {
+            $this->bindVar($name);
+        }
+
+        return $this;
+    }
+
     public function generate(bool $withDocBlock = true): string
     {
         $args = join(', ', $this->args);

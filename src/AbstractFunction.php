@@ -44,6 +44,13 @@ abstract class AbstractFunction extends DependencyAwareGenerator
         return $this;
     }
 
+    public function addArguments(string ...$names): self
+    {
+        $this->signature->addArguments(...$names);
+
+        return $this;
+    }
+
     public function add(FunctionMemberInterface $member): self
     {
         $this->signature->add($member);

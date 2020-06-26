@@ -65,6 +65,15 @@ abstract class AbstractFunction extends DependencyAwareGenerator
         return $this;
     }
 
+    public function bindVars(string ...$names): self
+    {
+        foreach ($names as $name) {
+            $this->signature->bindVar($name);
+        }
+
+        return $this;
+    }
+
     public function removeUses()
     {
         $this->signature->removeUses();

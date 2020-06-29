@@ -89,7 +89,7 @@ class Utils
             case 'double':
                 return json_encode($value);
             case 'string':
-                if (empty($value)) {
+                if ('' === $value) {
                     return "''";
                 }
 

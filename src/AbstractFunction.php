@@ -20,7 +20,7 @@ abstract class AbstractFunction extends DependencyAwareGenerator
         return $this;
     }
 
-    public function getArgument(int $index): ?Argument
+    public function getArgument(int $index = 1): ?Argument
     {
         return $this->signature->getArgument($index);
     }
@@ -28,6 +28,13 @@ abstract class AbstractFunction extends DependencyAwareGenerator
     public function removeArgument(int $index): self
     {
         $this->signature->removeArgument($index);
+
+        return $this;
+    }
+
+    public function removeArguments(): self
+    {
+        $this->signature->removeArguments();
 
         return $this;
     }
@@ -40,6 +47,13 @@ abstract class AbstractFunction extends DependencyAwareGenerator
     public function addArgument(string $name, string $type = '', $defaultValue = Argument::NO_PARAM): self
     {
         $this->signature->addArgument($name, $type, $defaultValue);
+
+        return $this;
+    }
+
+    public function addArguments(string ...$names): self
+    {
+        $this->signature->addArguments(...$names);
 
         return $this;
     }
@@ -58,9 +72,16 @@ abstract class AbstractFunction extends DependencyAwareGenerator
         return $this;
     }
 
-    public function removeUses()
+    public function bindVars(string ...$names): self
     {
-        $this->signature->removeUses();
+        $this->signature->bindVars(...$names);
+
+        return $this;
+    }
+
+    public function removeBindVars()
+    {
+        $this->signature->removeBindVars();
 
         return $this;
     }

@@ -72,14 +72,14 @@ class PhpClassTest extends TestCase
      */
     public function addProperties(PhpClass $class)
     {
-        $code = <<<CODE
+        $code = <<<'CODE'
         class Stringifier extends SplStack implements JsonSerializable, ArrayAccessible
         {
             public const NAME = 'MyStringifier';
             public const TYPE = 'ObjectStringifier';
             
-            private string \$cache = [];
-            protected ?SplHeap \$heap = null;
+            private string $cache = [];
+            protected ?SplHeap $heap = null;
         }
         CODE;
 
@@ -99,14 +99,16 @@ class PhpClassTest extends TestCase
      */
     public function fullBuild()
     {
-        $class = PhpClass::new('Stringifier')
+        $class = PhpClass::new('MyClass')
             ->addConst('KNOWN_TYPES', ['DYNAMIC', 'STATIC'], Modifier::PRIVATE)
             ->addProperty('errors', Modifier::PRIVATE, '', [])
             ->emptyLine()
             ->addImplements(JsonSerializable::class, ArrayAccess::class)
             ->setExtends(Exception::class)
             ->setFinal()
-            ->addDocBlock('This is just a test class.');
+            ->setDocBlock('This is just a test class.');
+
+        $class->setName('Stringifier');
 
         $constructor = Method::new('__construct')
             ->append('parent::__construct(...func_get_args())');
@@ -122,14 +124,27 @@ class PhpClassTest extends TestCase
         $class->emptyLine();
         $class->append($method);
 
-        $expected = <<<CODE
+        $docBlock = $class->getDocBlock();
+
+        $this->assertEquals(
+            <<<CODE
+            /**
+             * This is just a test class.
+             */
+            CODE,
+            $docBlock->generate()
+        );
+
+        $this->assertTrue($class->isFinal());
+
+        $expected = <<<'CODE'
         /**
          * This is just a test class.
          */
         final class Stringifier extends Exception implements JsonSerializable, ArrayAccess
         {
             private const KNOWN_TYPES = ['DYNAMIC', 'STATIC'];
-            private \$errors = [];
+            private $errors = [];
             
             public function __construct()
             {
@@ -145,5 +160,67 @@ class PhpClassTest extends TestCase
         CODE;
 
         $this->assertEquals($expected, (string) $class);
+
+        return $class;
+    }
+
+    /**
+     * @test
+     * @depends fullBuild
+     */
+    public function removeParts(PhpClass $class)
+    {
+        $class
+            ->unsetFinal()
+            ->removeDocBlock()
+            ->setExtends('')
+            ->removeImplements()
+            ->clearContent();
+
+        $this->expectOutputString(<<<CODE
+        class Stringifier
+        {
+        
+        }
+        CODE);
+
+        echo $class;
+
+        return $class;
+    }
+
+    /**
+     * @test
+     * @depends removeParts
+     */
+    public function addAnotherParts(PhpClass $class)
+    {
+        $class->setAbstract();
+        $class->createDocBlock()
+            ->addLine('This is a new class!')
+            ->addEmptyLine()
+            ->addLine('Endline...');
+
+        $class->addMethod('myCustomMethod');
+
+        $this->assertTrue($class->isAbstract());
+        $class->unsetAbstract();
+
+        $this->expectOutputString(<<<CODE
+        /**
+         * This is a new class!
+         * 
+         * Endline...
+         */
+        class Stringifier
+        {
+            public function myCustomMethod()
+            {
+            
+            }
+        }
+        CODE);
+
+        echo $class;
     }
 }

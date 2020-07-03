@@ -93,6 +93,10 @@ class Comment extends AbstractGenerator implements BlockInterface
 
     public function addText(string $text): self
     {
+        if ('' === $text) {
+            return $this;
+        }
+
         $parts = explode("\n", $text);
         $this->lines = [...$this->lines, ...$parts];
 

@@ -33,11 +33,6 @@ class Signature extends DependencyAwareGenerator
         $this->dependencyAwareChildren = [&$this->args];
     }
 
-    protected function generateArgs(): string
-    {
-        return implode(', ', $this->args);
-    }
-
     public function getReturnType(): string
     {
         return $this->returnType;
@@ -57,8 +52,12 @@ class Signature extends DependencyAwareGenerator
      *
      * @return Argument
      */
-    public function getArgument(int $index): ?Argument
+    public function getArgument(int $index = 1): ?Argument
     {
+        if ($index-- < 1) {
+            return null;
+        }
+
         if (isset($this->args[$index])) {
             $arg = $this->args[$index];
 
@@ -74,7 +73,14 @@ class Signature extends DependencyAwareGenerator
 
     public function removeArgument(int $index): self
     {
-        unset($this->args[$index]);
+        unset($this->args[--$index]);
+
+        return $this;
+    }
+
+    public function removeArguments()
+    {
+        $this->args = [];
 
         return $this;
     }
@@ -95,6 +101,15 @@ class Signature extends DependencyAwareGenerator
         return $this;
     }
 
+    public function addArguments(string ...$names)
+    {
+        foreach ($names as $name) {
+            $this->addArgument($name);
+        }
+
+        return $this;
+    }
+
     public function add(FunctionMemberInterface $member): self
     {
         if ($member instanceof Argument) {
@@ -106,7 +121,18 @@ class Signature extends DependencyAwareGenerator
 
     public function bindVar(string $name, bool $isByReference = false): self
     {
+        $name = ltrim($name, '$');
+
         $this->uses[] = $isByReference ? "&$$name" : "$$name";
+
+        return $this;
+    }
+
+    public function bindVars(string ...$names)
+    {
+        foreach ($names as $name) {
+            $this->bindVar($name);
+        }
 
         return $this;
     }
@@ -135,7 +161,7 @@ class Signature extends DependencyAwareGenerator
         return "{$docBlock}{$modifier}{$isStatic}{$this->qualifier}{$this->name}($args){$uses}{$returnType}";
     }
 
-    public function removeUses()
+    public function removeBindVars()
     {
         $this->uses = [];
     }

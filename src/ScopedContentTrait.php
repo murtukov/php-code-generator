@@ -60,6 +60,13 @@ trait ScopedContentTrait
         return $this;
     }
 
+    public function clearContent(): self
+    {
+        $this->content = [];
+
+        return $this;
+    }
+
     protected function generateContent(): string
     {
         $content = '';

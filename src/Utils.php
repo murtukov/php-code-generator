@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator;
 
+use Error;
 use Exception;
 use Murtukov\PHPCodeGenerator\Exception\UnrecognizedValueTypeException;
 use function get_class;
@@ -36,7 +37,7 @@ class Utils
     /**
      * @var bool if true, null values are not rendered
      */
-    private static bool $skipNullValues = false;
+    public static bool $skipNullValues = false;
 
     /**
      * @var array custom converters registered by users
@@ -76,7 +77,7 @@ class Utils
         if (!empty(self::$customConverters)) {
             foreach (Config::getConverterClasses($type) as $fqcn) {
                 $converter = Config::getConverter($fqcn);
-                if ($converter->check($value)) {
+                if ($converter && $converter->check($value)) {
                     return $converter->convert($value);
                 }
             }
@@ -89,11 +90,11 @@ class Utils
             case 'double':
                 return json_encode($value);
             case 'string':
-                if (empty($value)) {
+                if ('' === $value) {
                     return "''";
                 }
 
-                return self::filterString($value);
+                return var_export($value, true);
             case 'array':
                 if (empty($value)) {
                     return '[]';
@@ -113,7 +114,7 @@ class Utils
                 if (!$value instanceof GeneratorInterface) {
                     try {
                         return json_encode($value->__toString());
-                    } catch (Exception $e) {
+                    } catch (Error $e) {
                         $class = get_class($value);
                         throw new Exception("Cannot stringify object of class: '$class'.");
                     }
@@ -189,18 +190,6 @@ class Utils
         $code = rtrim($code, ', ');
 
         return "[$code]";
-    }
-
-    private static function filterString(string $string): string
-    {
-        switch ($string[0]) {
-            case Config::$suppressSymbol:
-                return substr($string, 1);
-            case '$':
-                return $string;
-            default:
-                return var_export($string, true);
-        }
     }
 
     public static function indent(string $code, bool $leadingIndent = true): string

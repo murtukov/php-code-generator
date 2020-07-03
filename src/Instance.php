@@ -38,7 +38,7 @@ class Instance extends DependencyAwareGenerator
         }
 
         if ($this->multiline) {
-            $args = Utils::indent($args);
+            $args = Utils::indent($args, false);
         }
 
         $args = rtrim($args, ', ');
@@ -69,6 +69,13 @@ class Instance extends DependencyAwareGenerator
     public function setMultiline(): self
     {
         $this->multiline = true;
+
+        return $this;
+    }
+
+    public function setInline()
+    {
+        $this->multiline = false;
 
         return $this;
     }

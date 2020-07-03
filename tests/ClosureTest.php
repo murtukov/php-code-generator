@@ -43,8 +43,8 @@ class ClosureTest extends TestCase
 
         $closure->add($arg);
 
-        $this->expectOutputString(<<<CODE
-        function (\$value, array \$options = [], bool \$filter = false): array {
+        $this->expectOutputString(<<<'CODE'
+        function ($value, array $options = [], bool $filter = false): array {
         
         }
         CODE);
@@ -60,11 +60,11 @@ class ClosureTest extends TestCase
      */
     public function bindVars(Closure $closure)
     {
-        $closure->bindVar('this');
+        $closure->bindVars('this', 'name');
         $closure->bindVar('global', true);
 
-        $this->expectOutputString(<<<CODE
-        function (\$value, array \$options = [], bool \$filter = false) use (\$this, &\$global): array {
+        $this->expectOutputString(<<<'CODE'
+        function ($value, array $options = [], bool $filter = false) use ($this, $name, &$global): array {
         
         }
         CODE);
@@ -85,32 +85,37 @@ class ClosureTest extends TestCase
 
         $closure->append($foreach);
 
-        $template = <<<CODE
-        function (\$value, array \$options = [], bool \$filter = false) use (\$this, &\$global): array {
-            foreach (\$options as &\$option) {
-                unset(\$option);
+        $this->expectOutputString(<<<'CODE'
+        function ($value, array $options = [], bool $filter = false) use ($this, $name, &$global): array {
+            foreach ($options as &$option) {
+                unset($option);
             }
         }
-        CODE;
-
-        $this->expectOutputString($template);
+        CODE);
 
         echo $closure;
 
-        return [$closure, $template];
+        return $closure;
     }
 
     /**
      * @test
      * @depends addContent
      */
-    public function setStatic($vals)
+    public function modifyParts(Closure $closure)
     {
-        [$closure, $template] = $vals;
-
         $closure->setStatic();
+        $closure->removeArguments();
+        $closure->removeBindVars();
+        $closure->setReturnType('');
 
-        $this->expectOutputString('static '.$template);
+        $this->expectOutputString(<<<'CODE'
+        static function () {
+            foreach ($options as &$option) {
+                unset($option);
+            }
+        }
+        CODE);
 
         echo $closure;
     }

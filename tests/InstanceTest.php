@@ -104,25 +104,21 @@ class InstanceTest extends TestCase
      */
     public function differentArgTypes()
     {
-        $instance = Instance::new('Test', null, [], new Instance('DateTime'), false);
+        $instance = Instance::multiline('Test', null, [], new Instance('DateTime'), false);
 
-        $this->expectOutputString(<<<CODE
-        new Test(null, [], new DateTime(), false)
-        CODE);
+        $result = <<<CODE
+        new Test(
+            null,
+            [],
+            new DateTime(),
+            false,
+        )
+        CODE;
 
-//        echo $instance;
+        $this->assertEquals($result, $instance->generate());
+        $this->assertEquals('new Test(null, [], new DateTime(), false)', $instance->setInline()->generate());
+        $this->assertEquals($result, $instance->setMultiline()->generate());
 
-        $file = \Murtukov\PHPCodeGenerator\PhpFile::new()->addUseGroup();
-
-        $class = $file->createClass('MyClass');
-        $construct = $class->createConstructor();
-
-        $array = \Murtukov\PHPCodeGenerator\Collection::numeric()
-            ->push(Instance::new('App\Service\Converter'))
-            ->push(Instance::new('App\Service\Normalizer'));
-
-        $construct->append('return ', $array);
-
-        echo $file->generate();
+        return $instance;
     }
 }

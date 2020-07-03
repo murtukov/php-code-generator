@@ -36,11 +36,11 @@ class PhpTraitTest extends TestCase
      */
     public function addProperties(PhpTrait $trait)
     {
-        $this->expectOutputString(<<<CODE
+        $this->expectOutputString(<<<'CODE'
         trait Stringifier
         {
-            private string \$cache = [];
-            protected ?SplHeap \$heap = null;
+            private string $cache = [];
+            protected ?SplHeap $heap = null;
         }
         CODE);
 
@@ -58,7 +58,7 @@ class PhpTraitTest extends TestCase
      */
     public function addMethodsAndDocBlock(PhpTrait $trait)
     {
-        $trait->addDocBlock('This is just a test class.');
+        $trait->setDocBlock('This is just a test class.');
         $trait->emptyLine();
 
         $constructor = Method::new('__construct')
@@ -66,20 +66,20 @@ class PhpTraitTest extends TestCase
 
         $method = Method::new('getErrors', Modifier::PUBLIC, 'array')
             ->append(Comment::slash('Add here your content...'))
-            ->append('return ', new Literal('[]'));
+            ->append('return ', Literal::new('[]'));
 
         $trait->append($constructor);
         $trait->emptyLine();
         $trait->append($method);
 
-        $expected = <<<CODE
+        $expected = <<<'CODE'
         /**
          * This is just a test class.
          */
         trait Stringifier
         {
-            private string \$cache = [];
-            protected ?SplHeap \$heap = null;
+            private string $cache = [];
+            protected ?SplHeap $heap = null;
             
             public function __construct()
             {
@@ -94,6 +94,49 @@ class PhpTraitTest extends TestCase
         }
         CODE;
 
-        $this->assertEquals($expected, (string) $trait);
+        $this->assertEquals($expected, $trait->generate());
+
+        return $trait;
+    }
+
+    /**
+     * @test
+     * @depends addMethodsAndDocBlock
+     */
+    public function modifyTrait(PhpTrait $trait)
+    {
+        $trait->clearContent();
+        $trait->createProperty('anotherProperty');
+        $trait->emptyLine();
+        $trait->createConstructor();
+        $trait->addMethod('anotherMethod');
+        $trait->createMethod('createdMethod');
+
+        $this->expectOutputString(<<<'CODE'
+        /**
+         * This is just a test class.
+         */
+        trait Stringifier
+        {
+            public $anotherProperty;
+            
+            public function __construct()
+            {
+            
+            }
+            
+            public function anotherMethod()
+            {
+            
+            }
+            
+            public function createdMethod()
+            {
+            
+            }
+        }
+        CODE);
+
+        echo $trait;
     }
 }

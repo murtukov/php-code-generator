@@ -31,11 +31,11 @@ class Config
     /**
      * Registers user defined stringifiers.
      */
-    public static function registerConverter(ConverterInterface $stringifierInstance, string $type)
+    public static function registerConverter(ConverterInterface $converter, string $type)
     {
-        $fqcn = get_class($stringifierInstance);
+        $fqcn = get_class($converter);
 
-        self::$customStringifiers[$fqcn] = $stringifierInstance;
+        self::$customStringifiers[$fqcn] = $converter;
         self::$customStringifiersTypeMap[$type][] = $fqcn;
     }
 
@@ -44,7 +44,7 @@ class Config
      *
      * @param string $fqcn - Fully qualified class name
      */
-    public static function unregisterStringifier(string $fqcn)
+    public static function unregisterConverter(string $fqcn)
     {
         // Remove instance
         unset(self::$customStringifiers[$fqcn]);

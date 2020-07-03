@@ -41,14 +41,6 @@ class IfElse extends AbstractGenerator implements BlockInterface
         return $this;
     }
 
-    /**
-     * Just a mock to be consistent with 'else' blocks.
-     */
-    public function end()
-    {
-        return $this;
-    }
-
     // TODO: use stringifier for expressions
     public function generate(): string
     {
@@ -66,7 +58,7 @@ class IfElse extends AbstractGenerator implements BlockInterface
      *
      * @return IfElse
      */
-    public function createElseIf($expression): object
+    public function createElseIf($expression = ''): object
     {
         return $this->elseIfBlocks[] = new class($expression, $this) extends DependencyAwareGenerator
         {
@@ -85,10 +77,6 @@ class IfElse extends AbstractGenerator implements BlockInterface
 
             public function generate(): string
             {
-                if (empty($this->expression)) {
-                    return '';
-                }
-
                 return " elseif ($this->expression) {\n{$this->generateContent()}\n}";
             }
 

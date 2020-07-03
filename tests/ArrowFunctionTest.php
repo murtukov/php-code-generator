@@ -36,6 +36,8 @@ class ArrowFunctionTest extends TestCase
 
         $arrow->setExpression($innerArrow);
 
+        $this->assertEquals($innerArrow, $arrow->getExpression());
+
         $template = <<<CODE
         fn() => fn() => [
             'name' => 'Alrik',

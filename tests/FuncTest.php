@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Murtukov\PHPCodeGenerator\Argument;
+use Murtukov\PHPCodeGenerator\Block;
 use Murtukov\PHPCodeGenerator\Func;
 use Murtukov\PHPCodeGenerator\Instance;
 use PHPUnit\Framework\TestCase;
@@ -34,12 +35,14 @@ class FuncTest extends TestCase
      */
     public function addContent(Func $func)
     {
-        $func->append('$object = ', Instance::new(stdClass::class));
+        $func->append('foreach ($users as $user) ', Block::new());
 
-        $this->expectOutputString(<<<CODE
+        $this->expectOutputString(<<<'CODE'
         function myMethod(): void
         {
-            \$object = new stdClass();
+            foreach ($users as $user) {
+            
+            }
         }
         CODE);
 
@@ -58,14 +61,19 @@ class FuncTest extends TestCase
         $func->createArgument('arg2', 'string', '');
         $func->add(Argument::new('arg3'));
 
-        $this->expectOutputString(<<<CODE
-        function myMethod(?SplHeap \$arg1 = null, string \$arg2 = '', \$arg3): void
+        $this->expectOutputString(<<<'CODE'
+        function myMethod(?SplHeap $arg1 = null, string $arg2 = '', $arg3): void
         {
-            \$object = new stdClass();
+            foreach ($users as $user) {
+            
+            }
         }
         CODE);
 
         echo $func;
+
+        $this->assertNull($func->getArgument(-10));
+        $this->assertNull($func->getArgument(10));
 
         return $func;
     }

@@ -13,21 +13,21 @@ trait DocBlockTrait
         return $this->docBlock;
     }
 
-    public function setDocBlock(Comment $docBlock): self
+    public function setDocBlock(string $text): self
     {
-        $this->docBlock = $docBlock;
+        $this->docBlock = Comment::docBlock($text);
 
         return $this;
     }
 
-    public function createDocBlock(string $text): Comment
+    public function createDocBlock(string $text = ''): Comment
     {
         return $this->docBlock = Comment::docBlock($text);
     }
 
-    public function addDocBlock(string $text): self
+    public function removeDocBlock(): self
     {
-        $this->docBlock = Comment::docBlock($text);
+        $this->docBlock = null;
 
         return $this;
     }

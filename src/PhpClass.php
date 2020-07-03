@@ -29,6 +29,13 @@ class PhpClass extends OOPStructure
         return $this;
     }
 
+    public function removeImplements(): self
+    {
+        $this->implements = [];
+
+        return $this;
+    }
+
     protected function buildImplements(): string
     {
         return !empty($this->implements) ? ' implements '.join(', ', $this->implements) : '';
@@ -88,11 +95,6 @@ class PhpClass extends OOPStructure
         $this->append($constructor)->emptyLine();
 
         return $constructor;
-    }
-
-    public function addConstructor(string $modifier = 'public'): self
-    {
-        return $this->append(new Method('__construct', $modifier, ''))->emptyLine();
     }
 
     public function generate(): string

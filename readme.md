@@ -1,3 +1,5 @@
+[![Coverage Status](https://coveralls.io/repos/github/murtukov/PHPCodeGenerator/badge.svg?branch=master)](https://coveralls.io/github/murtukov/PHPCodeGenerator?branch=master)
+
 # PHPCodeGenerator
 A library to generate PHP 7.4 code
 

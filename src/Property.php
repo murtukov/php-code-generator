@@ -6,31 +6,43 @@ namespace Murtukov\PHPCodeGenerator;
 
 class Property extends DependencyAwareGenerator
 {
-    public string $name;
+    /**
+     * Special value to represent that there is no argument passed.
+     */
+    public const NO_PARAM = INF;
+
+    public string   $name;
     public ?Comment $docBlock = null;
+    public bool     $isNullable = false;
+    public bool     $isStatic = false;
+    public bool     $isConst = false;
 
     private string $value = '';
-    private bool   $isStatic = false;
-    private bool   $isConst = false;
     private string $modifier;
-    private string $type;
-    private bool    $isNullable = false;
+    private string $typeHint;
 
-    public function __construct(string $name, ?string $modifier, string $type = '', $defaulValue = '')
+    public function __construct(string $name, ?string $modifier, string $typeHint = '', $defaultValue = self::NO_PARAM)
     {
         $this->name = $name;
         $this->modifier = $modifier ?? Modifier::PUBLIC;
-        $this->value = Utils::stringify($defaulValue);
-        $this->type = $this->resolveQualifier($type);
+        $this->typeHint = $this->resolveQualifier($typeHint);
 
-        if (null === $defaulValue) {
-            $this->isNullable = true;
+        if (INF !== $defaultValue) {
+            $this->value = Utils::stringify($defaultValue);
+
+            if (null === $defaultValue) {
+                $this->isNullable = true;
+            }
         }
     }
 
-    public static function new(string $name, ?string $modifier, string $type = '', $value = '')
-    {
-        return new static($name, $modifier, $type, $value);
+    public static function new(
+        string $name,
+        ?string $modifier = Modifier::PUBLIC,
+        string $typeHint = '',
+        $value = self::NO_PARAM
+    ) {
+        return new static($name, $modifier, $typeHint, $value);
     }
 
     public function generate(): string
@@ -39,20 +51,20 @@ class Property extends DependencyAwareGenerator
         $value = $this->value ? " = $this->value" : '';
         $isStatic = $this->isStatic ? 'static ' : '';
 
-        $type = '';
-        if ($this->type) {
+        $typeHint = '';
+        if ($this->typeHint) {
             if ($this->isNullable) {
-                $type = "?";
+                $typeHint = "?";
             }
 
-            $type .= "$this->type ";
+            $typeHint .= "$this->typeHint ";
         }
 
         if ($this->isConst) {
             return "$docBlock$this->modifier const $this->name$value";
         }
 
-        return "{$docBlock}{$this->modifier} {$isStatic}{$type}$$this->name{$value}";
+        return "{$docBlock}{$this->modifier} {$isStatic}{$typeHint}$$this->name{$value}";
     }
 
     public function getName(): string
@@ -72,21 +84,16 @@ class Property extends DependencyAwareGenerator
         return $this->modifier;
     }
 
-    public function getValue(): string
+    public function getDefaultValue(): string
     {
         return $this->value;
     }
 
-    public function setValue($value): self
+    public function setDefaultValue($value): self
     {
         $this->value = Utils::stringify($value);
 
         return $this;
-    }
-
-    public function isStatic(): bool
-    {
-        return $this->isStatic;
     }
 
     public function setStatic(): self
@@ -97,10 +104,24 @@ class Property extends DependencyAwareGenerator
         return $this;
     }
 
+    public function unsetStatic(): self
+    {
+        $this->isStatic = false;
+
+        return $this;
+    }
+
     public function setConst(): self
     {
         $this->isConst = true;
         $this->isStatic = false;
+
+        return $this;
+    }
+
+    public function unsetConst()
+    {
+        $this->isConst = false;
 
         return $this;
     }
@@ -126,14 +147,14 @@ class Property extends DependencyAwareGenerator
         return $this;
     }
 
-    public function getType(): string
+    public function getTypeHint(): string
     {
-        return $this->type;
+        return $this->typeHint;
     }
 
-    public function setType(string $type): self
+    public function setTypeHint(string $typeHint): self
     {
-        $this->type = $this->resolveQualifier($type);
+        $this->typeHint = $this->resolveQualifier($typeHint);
 
         return $this;
     }

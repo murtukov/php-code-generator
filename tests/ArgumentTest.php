@@ -12,9 +12,23 @@ class ArgumentTest extends TestCase
      */
     public function emptyBase()
     {
-        $argument = Argument::new('arg1', SplHeap::class, null)->setNullable();
+        $argument = Argument::new('arg1', SplHeap::class, null)
+            ->setNullable()
+            ->setSpread()
+            ->setByReference()
+        ;
 
-        $this->assertEquals('?SplHeap $arg1 = null', $argument->generate());
+        $this->assertEquals(true, $argument->isSpread());
+        $this->assertEquals(true, $argument->isByReference());
+        $this->assertEquals('?SplHeap &...$arg1 = null', $argument->generate());
+
+        $argument->unsetNullable();
+        $argument->unsetByReference();
+        $argument->unsetSpread();
+        $argument->setDefaultValue(Argument::NO_PARAM);
+        $argument->setType('');
+
+        $this->assertEquals('$arg1', $argument->generate());
 
         return $argument;
     }

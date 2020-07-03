@@ -57,6 +57,14 @@ abstract class DependencyAwareGenerator extends AbstractGenerator
         return $this;
     }
 
+    public function removeUse(string $fqcn): self
+    {
+        unset($this->usePaths[$fqcn]);
+        unset($this->useGroups[$fqcn]);
+
+        return $this;
+    }
+
     public function useGroupsToArray()
     {
         $result = [];

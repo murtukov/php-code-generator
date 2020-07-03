@@ -62,13 +62,14 @@ class IfElseTest extends TestCase
     /** @test */
     public function allPartsWithContent()
     {
-        $ifElse = IfElse::new('$name === 15');
+        $ifElse = IfElse::new();
+        $ifElse->setExpression('$name === 15');
         $ifElse->append('$names = ', "['name' => 'Timur']")
-            ->createElseIf(new Text('$name === 95'))
+            ->createElseIf(Text::new('$name === 95'))
                 ->append('return null')
             ->end()
             ->createElseIf('$name === 95')
-                ->append('return null')
+                ->append('return ', Text::new('false', true))
             ->end()
             ->createElse()
                 ->append('$x = 95')
@@ -81,7 +82,7 @@ class IfElseTest extends TestCase
         } elseif ('\$name === 95') {
             return null;
         } elseif (\$name === 95) {
-            return null;
+            return "false";
         } else {
             \$x = 95;
             return false;

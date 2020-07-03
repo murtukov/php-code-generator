@@ -62,6 +62,28 @@ class PhpFile extends DependencyAwareGenerator
         return $this->classes[] = PhpClass::new($name);
     }
 
+    public function removeClass(string $name): self
+    {
+        foreach ($this->classes as $key => $class) {
+            if ($class->name === $name) {
+                unset($this->classes[$key]);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getClass(string $name): ?PhpClass
+    {
+        foreach ($this->classes as $key => $class) {
+            if ($class->name === $name) {
+                return $this->classes[$key];
+            }
+        }
+
+        return null;
+    }
+
     public function getNamespace(): string
     {
         return $this->namespace;
@@ -106,21 +128,21 @@ class PhpFile extends DependencyAwareGenerator
         return $this->comment;
     }
 
-    public function setComment(Comment $comment): self
-    {
-        $this->comment = $comment;
-
-        return $this;
-    }
-
     public function createComment(string $text): Comment
     {
         return $this->comment = Comment::block($text);
     }
 
-    public function addComment(string $text): self
+    public function setComment(string $text): self
     {
         $this->comment = Comment::block($text);
+
+        return $this;
+    }
+
+    public function removeComment(): self
+    {
+        $this->comment = null;
 
         return $this;
     }
@@ -128,7 +150,7 @@ class PhpFile extends DependencyAwareGenerator
     /**
      * @return false|int
      */
-    public function save(string $path, int $mask = 0777)
+    public function save(string $path, int $mask = 0775)
     {
         $dir = dirname($path);
 

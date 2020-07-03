@@ -5,7 +5,8 @@ use PHPUnit\Framework\TestCase;
 
 class CommentTest extends TestCase
 {
-    private string $oneLineText = 'Hi! My name is Vasilis Kehagias!';
+    private string $firstLine = 'Hi! My name is Vasilis Kehagias!';
+    private string $lastLine = 'Bye!';
 
     /**
      * @test
@@ -14,13 +15,13 @@ class CommentTest extends TestCase
     {
         $expected = <<<CODE
         /*
-         * $this->oneLineText
+         * $this->firstLine
          */
         CODE;
 
         $this->assertEquals(
             $expected,
-            (string) Comment::block($this->oneLineText)
+            Comment::block($this->firstLine)->generate()
         );
     }
 
@@ -30,8 +31,8 @@ class CommentTest extends TestCase
     public function hashComment()
     {
         $this->assertEquals(
-            "# $this->oneLineText",
-            (string) Comment::hash($this->oneLineText)
+            "# $this->firstLine",
+            Comment::hash($this->firstLine)->generate()
         );
     }
 
@@ -40,9 +41,16 @@ class CommentTest extends TestCase
      */
     public function hashCommentMultiline()
     {
-        $this->assertEquals(
-            "# $this->oneLineText",
-            (string) Comment::hash($this->oneLineText)
-        );
+        $comment = Comment::hash($this->firstLine);
+        $comment->addEmptyLine();
+        $comment->addLine($this->lastLine);
+
+        $this->expectOutputString(<<<CODE
+        # $this->firstLine
+        # 
+        # $this->lastLine
+        CODE);
+
+        echo $comment->generate();
     }
 }

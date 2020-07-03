@@ -14,6 +14,7 @@ class Collection extends DependencyAwareGenerator
     protected array $items = [];
     protected bool  $multiline = false;
     protected bool  $withKeys = true;
+    protected array $converters = [];
 
     protected Utils $utils;
 
@@ -105,27 +106,11 @@ class Collection extends DependencyAwareGenerator
      */
     public function addIfNotFalse(string $key, $value): self
     {
-        if (!$value) {
+        if (false === $value) {
             return $this;
         }
 
         return $this->addItem($key, $value);
-    }
-
-    /**
-     * Returns self if value is not null, otherwise returns a mock object.
-     *
-     * @param mixed $value
-     *
-     * @return self|Mock
-     */
-    public function ifNotNull($value)
-    {
-        if (null !== $value) {
-            return $this;
-        }
-
-        return Mock::getInstance($this);
     }
 
     /**
@@ -146,21 +131,16 @@ class Collection extends DependencyAwareGenerator
         return Mock::getInstance($this);
     }
 
-    /**
-     * Returns self if value is not empty, otherwise returns a mock object.
-     *
-     * @param mixed $value
-     *
-     * @return self|Mock
-     */
-    public function ifNotEmpty($value)
+    public function getConverters()
     {
-        return !empty($value) ? $this : Mock::getInstance($this);
+        return $this->converters;
     }
 
-    public static function getConverters()
+    public function addConverter(ConverterInterface $converter): self
     {
-        return [];
+        $this->converters[] = $converter;
+
+        return $this;
     }
 
     public function setMultiline(): self
@@ -173,6 +153,13 @@ class Collection extends DependencyAwareGenerator
     public function setInline(): self
     {
         $this->multiline = false;
+
+        return $this;
+    }
+
+    public function setWithKeys(bool $val = true): self
+    {
+        $this->withKeys = $val;
 
         return $this;
     }
@@ -196,7 +183,7 @@ class Collection extends DependencyAwareGenerator
             $this->items,
             $this->multiline,
             $this->withKeys,
-            static::getConverters()
+            $this->getConverters()
         );
     }
 

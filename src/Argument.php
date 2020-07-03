@@ -61,7 +61,7 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
             $code .= '...';
         }
 
-        $code .= '$'.$this->name;
+        $code .= ('$' === $this->name[0]) ? $this->name : "$$this->name";
 
         if ($this->defaultValue) {
             $code .= " = $this->defaultValue";
@@ -80,9 +80,16 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
         return $this->isSpread;
     }
 
-    public function setIsSpread(bool $isSpread): self
+    public function setSpread(): self
     {
-        $this->isSpread = $isSpread;
+        $this->isSpread = true;
+
+        return $this;
+    }
+
+    public function unsetSpread(): self
+    {
+        $this->isSpread = false;
 
         return $this;
     }
@@ -92,9 +99,16 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
         return $this->isByReference;
     }
 
-    public function setIsByReference(bool $isByReference): self
+    public function setByReference(): self
     {
-        $this->isByReference = $isByReference;
+        $this->isByReference = true;
+
+        return $this;
+    }
+
+    public function unsetByReference(): self
+    {
+        $this->isByReference = false;
 
         return $this;
     }

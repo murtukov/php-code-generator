@@ -15,7 +15,7 @@ class Text extends AbstractGenerator
         $this->doubleQuotes = $doubleQuotes;
     }
 
-    public static function create(string $value, bool $doubleQuotes = false): self
+    public static function new(string $value, bool $doubleQuotes = false): self
     {
         return new self($value, $doubleQuotes);
     }

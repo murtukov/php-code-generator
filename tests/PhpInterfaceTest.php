@@ -100,7 +100,7 @@ class PhpInterfaceTest extends TestCase
 
         $stringifyMethod = $interface->createSignature('stringify', 'string');
         $stringifyMethod->addArgument('escapeSlashes', 'bool', false);
-        $stringifyMethod->addDocBlock('Convert value to string.');
+        $stringifyMethod->setDocBlock('Convert value to string.');
 
         $interface->emptyLine();
 

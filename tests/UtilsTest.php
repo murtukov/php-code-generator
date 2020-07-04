@@ -12,10 +12,10 @@ class UtilsTest extends TestCase
      */
     public function stringifyObject()
     {
-        $object = new class {
+        $object = new class() {
             public function __toString(): string
             {
-                return "SomeSortOfString";
+                return 'SomeSortOfString';
             }
         };
 

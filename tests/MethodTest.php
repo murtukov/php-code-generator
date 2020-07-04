@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 use Murtukov\PHPCodeGenerator\Argument;
 use Murtukov\PHPCodeGenerator\Collection;
-use Murtukov\PHPCodeGenerator\Comment;
-use Murtukov\PHPCodeGenerator\Method;
 use Murtukov\PHPCodeGenerator\Instance;
+use Murtukov\PHPCodeGenerator\Method;
 use Murtukov\PHPCodeGenerator\Modifier;
 use PHPUnit\Framework\TestCase;
 

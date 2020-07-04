@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Murtukov\PHPCodeGenerator\Method;
 use Murtukov\PHPCodeGenerator\Literal;
+use Murtukov\PHPCodeGenerator\Method;
 use Murtukov\PHPCodeGenerator\Modifier;
 use Murtukov\PHPCodeGenerator\PhpClass;
 use PHPUnit\Framework\TestCase;

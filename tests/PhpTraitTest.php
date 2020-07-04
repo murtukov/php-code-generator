@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use Murtukov\PHPCodeGenerator\Comment;
-use Murtukov\PHPCodeGenerator\Method;
 use Murtukov\PHPCodeGenerator\Literal;
+use Murtukov\PHPCodeGenerator\Method;
 use Murtukov\PHPCodeGenerator\Modifier;
 use Murtukov\PHPCodeGenerator\PhpTrait;
 use PHPUnit\Framework\TestCase;

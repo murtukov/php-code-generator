@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator;
 
+use Closure;
 use function count;
 use function is_bool;
 use function is_callable;
 
 class Collection extends DependencyAwareGenerator
 {
-    protected array $items = [];
-    protected bool  $multiline = false;
-    protected bool  $withKeys = true;
-    protected array $converters = [];
+    protected array  $items = [];
+    protected bool   $multiline = false;
+    protected bool   $withKeys = true;
+    protected array  $converters = [];
+    protected string $orderBy = 'none';
 
     protected Utils $utils;
 
@@ -43,9 +45,9 @@ class Collection extends DependencyAwareGenerator
     /**
      * Creates a multiline array and adds all provided items, after applying a callback to them.
      */
-    public static function map(array $items, callable $map): self
+    public static function map(array $items, callable $map, bool $withKeys = true): self
     {
-        $array = new static([], true);
+        $array = new static([], true, $withKeys);
 
         foreach ($items as $key => $value) {
             $array->addItem($key, $map($value, $key));
@@ -115,7 +117,7 @@ class Collection extends DependencyAwareGenerator
     /**
      * Returns self if value is true or callback returns true, otherwise returns a mock object.
      *
-     * @param bool|\Closure $value
+     * @param bool|Closure $value
      *
      * @return self|Mock
      */
@@ -178,6 +180,14 @@ class Collection extends DependencyAwareGenerator
 
     public function generate(): string
     {
+        if ('none' !== $this->orderBy) {
+            if ('asc' === $this->orderBy) {
+                ksort($this->items);
+            } elseif ('desc' === $this->orderBy) {
+                krsort($this->items);
+            }
+        }
+
         return $this->utils->stringify(
             $this->items,
             $this->multiline,
@@ -195,6 +205,17 @@ class Collection extends DependencyAwareGenerator
 
         if ($item instanceof DependencyAwareGenerator) {
             $this->dependencyAwareChildren[] = $item;
+        }
+
+        return $this;
+    }
+
+    public function setKeyOrder(string $orderBy): self
+    {
+        $orderBy = strtolower($orderBy);
+
+        if (in_array($orderBy, ['none', 'asc', 'desc'])) {
+            $this->orderBy = $orderBy;
         }
 
         return $this;

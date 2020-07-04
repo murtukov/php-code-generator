@@ -98,11 +98,11 @@ class CollectionTest extends TestCase
             ->addIfNotFalse('number', 1)
             ->addIfNotNull('type', null)
             ->addIfNotNull('test', 'Test')
-            ->ifTrue(fn() => true)
+            ->ifTrue(fn () => true)
                 ->addItem('test2', 'value2')
             ->ifTrue(true)
                 ->addItem('test3', 'value3')
-            ->ifTrue(fn() => false)
+            ->ifTrue(fn () => false)
                 ->addItem('test4', 'value4')
             ->ifTrue(false)
                 ->addItem('test5', 'value5')
@@ -143,16 +143,16 @@ class CollectionTest extends TestCase
             'args' => [
                 [
                     'name' => 'default',
-                    'type' => 'string'
+                    'type' => 'string',
                 ],
                 [
                     'name' => 'explicit',
-                    'type' => 'int'
+                    'type' => 'int',
                 ],
-            ]
+            ],
         ];
 
-        $collection = Collection::map($array, function($val, $key) {
+        $collection = Collection::map($array, function ($val, $key) {
             if ('constraints' === $key) {
                 $collection = Collection::numeric()->setMultiline();
 
@@ -203,8 +203,7 @@ class CollectionTest extends TestCase
      */
     public function stringifyWithCustomConverter()
     {
-        $converter = new class implements ConverterInterface
-        {
+        $converter = new class() implements ConverterInterface {
             public function convert($value)
             {
                 return new Text(ltrim($value, 'pre_'));
@@ -212,7 +211,7 @@ class CollectionTest extends TestCase
 
             public function check($string): bool
             {
-                if (\is_string($string) && substr($string, 0, 4) === 'pre_') {
+                if (\is_string($string) && 'pre_' === substr($string, 0, 4)) {
                     return true;
                 }
 
@@ -248,5 +247,42 @@ class CollectionTest extends TestCase
             CODE,
             Collection::assoc($array)->addConverter($converter)->generate()
         );
+    }
+
+    /**
+     * @test
+     */
+    public function orderBy()
+    {
+        $collection = Collection::assoc();
+
+        $collection
+            ->addItem('name', 'Timur')
+            ->addItem('age', 30)
+            ->addItem('type', 'human')
+            ->addItem('friends', [])
+        ;
+
+        $collection->setKeyOrder('asc');
+
+        $this->assertEquals(<<<CODE
+        [
+            'age' => 30,
+            'friends' => [],
+            'name' => 'Timur',
+            'type' => 'human',
+        ]
+        CODE, $collection->generate());
+
+        $collection->setKeyOrder('DESC');
+
+        $this->assertEquals(<<<CODE
+        [
+            'type' => 'human',
+            'name' => 'Timur',
+            'friends' => [],
+            'age' => 30,
+        ]
+        CODE, $collection->generate());
     }
 }

@@ -75,7 +75,7 @@ trait ScopedContentTrait
         if (!empty($this->content)) {
             $content = Utils::indent(join(
                 "\n",
-                array_map(fn($line) => join('', $line), $this->content)
+                array_map(fn ($line) => join('', $line), $this->content)
             ));
         }
 

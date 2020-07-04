@@ -1,10 +1,11 @@
+# PHPCodeGenerator
+A library to generate PHP 7.4 code
+
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/murtukov/PHPCodeGenerator/badges/quality-score.png?b=0.1)](https://scrutinizer-ci.com/g/murtukov/PHPCodeGenerator/?branch=0.1)
 [![Code Coverage](https://scrutinizer-ci.com/g/murtukov/PHPCodeGenerator/badges/coverage.png?b=0.1)](https://scrutinizer-ci.com/g/murtukov/PHPCodeGenerator/?branch=0.1)
 [![Build Status](https://scrutinizer-ci.com/g/murtukov/PHPCodeGenerator/badges/build.png?b=0.1)](https://scrutinizer-ci.com/g/murtukov/PHPCodeGenerator/build-status/0.1)
 [![Code Intelligence Status](https://scrutinizer-ci.com/g/murtukov/PHPCodeGenerator/badges/code-intelligence.svg?b=0.1)](https://scrutinizer-ci.com/code-intelligence)
-
-# PHPCodeGenerator
-A library to generate PHP 7.4 code
+[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)]()
 
 - [Installation](#installation)
 - [File](#file)
@@ -590,7 +591,7 @@ class MyClass
 }
 ```
 
-However class qualifiers are NOT resolved from scalaras and arrays, unless unwrapped in special objects:
+However class qualifiers are NOT resolved from scalaras and arrays, unless wrapped in special objects:
 ```php
 use Murtukov\PHPCodeGenerator\Collection;
 use Murtukov\PHPCodeGenerator\Literal;
@@ -649,7 +650,7 @@ $method->append('return ', Instance::new('App\MyClass'));
 ```
 
 ## Global Configs
-All global configs are stored as static properties of the `Config` class.
+All global configs are stored as static properties in the `Config` class.
 
 #### Indent
 Default indent contains 4 spaces. You can change it by rewriting the `$indent` property:

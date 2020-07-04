@@ -54,7 +54,7 @@ class Property extends DependencyAwareGenerator
         $typeHint = '';
         if ($this->typeHint) {
             if ($this->isNullable) {
-                $typeHint = "?";
+                $typeHint = '?';
             }
 
             $typeHint .= "$this->typeHint ";

@@ -6,7 +6,8 @@ namespace Murtukov\PHPCodeGenerator;
 
 class Func extends AbstractFunction implements BlockInterface
 {
-    use ScopedContentTrait, DocBlockTrait;
+    use ScopedContentTrait;
+    use DocBlockTrait;
 
     public function __construct(string $name, string $returnType = '')
     {

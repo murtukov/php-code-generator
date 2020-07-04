@@ -5,7 +5,6 @@ declare(strict_types=1);
 use Murtukov\PHPCodeGenerator\Argument;
 use Murtukov\PHPCodeGenerator\Block;
 use Murtukov\PHPCodeGenerator\Func;
-use Murtukov\PHPCodeGenerator\Instance;
 use PHPUnit\Framework\TestCase;
 
 class FuncTest extends TestCase

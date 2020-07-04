@@ -13,7 +13,7 @@ class PrefixConverter implements ConverterInterface
 
     public function check($string): bool
     {
-        if (\is_string($string) && substr($string, 0, 4) === 'pre_') {
+        if (\is_string($string) && 'pre_' === substr($string, 0, 4)) {
             return true;
         }
 

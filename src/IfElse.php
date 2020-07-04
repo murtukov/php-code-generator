@@ -56,8 +56,7 @@ class IfElse extends AbstractGenerator implements BlockInterface
      */
     public function createElseIf($expression = ''): object
     {
-        return $this->elseIfBlocks[] = new class($expression, $this) extends DependencyAwareGenerator
-        {
+        return $this->elseIfBlocks[] = new class($expression, $this) extends DependencyAwareGenerator {
             use ScopedContentTrait;
 
             /** @var GeneratorInterface|string */
@@ -85,8 +84,7 @@ class IfElse extends AbstractGenerator implements BlockInterface
 
     public function createElse(): object
     {
-        return $this->elseBlock = new class($this) extends DependencyAwareGenerator
-        {
+        return $this->elseBlock = new class($this) extends DependencyAwareGenerator {
             use ScopedContentTrait;
 
             public IfElse $parent;

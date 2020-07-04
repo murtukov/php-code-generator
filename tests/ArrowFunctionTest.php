@@ -22,7 +22,7 @@ class ArrowFunctionTest extends TestCase
 
         return $arrow;
     }
-    
+
     /**
      * @test
      * @depends emptyBody
@@ -31,7 +31,7 @@ class ArrowFunctionTest extends TestCase
     {
         $innerArrow = ArrowFunction::new([
             'name' => 'Alrik',
-            'age' => 30
+            'age' => 30,
         ]);
 
         $arrow->setExpression($innerArrow);

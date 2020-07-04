@@ -90,7 +90,7 @@ class Utils
                     return "''";
                 }
 
-                return var_export($value, true);
+                return self::filterString($value);
             case 'array':
                 if (empty($value)) {
                     return '[]';
@@ -188,6 +188,18 @@ class Utils
         $code = rtrim($code, ', ');
 
         return "[$code]";
+    }
+
+    private static function filterString(string $string): string
+    {
+        switch ($string[0]) {
+            case Config::$suppressSymbol:
+                return substr($string, 1);
+            case '$':
+                return $string;
+            default:
+                return var_export($string, true);
+        }
     }
 
     public static function indent(string $code, bool $leadingIndent = true): string

@@ -123,7 +123,7 @@ class PhpFile extends DependencyAwareGenerator
         return $code;
     }
 
-    public function getComment(): Comment
+    public function getComment(): ?Comment
     {
         return $this->comment;
     }

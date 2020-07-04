@@ -33,7 +33,7 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
         $this->type = $this->resolveQualifier($type);
 
         if (INF !== $defaultValue) {
-            $this->setDefaultValue($defaultValue);
+            $this->defaultValue = Utils::stringify($defaultValue);
         }
     }
 
@@ -122,7 +122,11 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
 
     public function setDefaultValue($value): self
     {
-        $this->defaultValue = Utils::stringify($value);
+        if (INF !== $value) {
+            $this->defaultValue = Utils::stringify($value);
+        } else {
+            $this->defaultValue = '';
+        }
 
         return $this;
     }

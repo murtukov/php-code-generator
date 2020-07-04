@@ -5,7 +5,7 @@ A library to generate PHP 7.4 code
 [![Code Coverage](https://scrutinizer-ci.com/g/murtukov/PHPCodeGenerator/badges/coverage.png?b=0.1)](https://scrutinizer-ci.com/g/murtukov/PHPCodeGenerator/?branch=0.1)
 [![Build Status](https://scrutinizer-ci.com/g/murtukov/PHPCodeGenerator/badges/build.png?b=0.1)](https://scrutinizer-ci.com/g/murtukov/PHPCodeGenerator/build-status/0.1)
 [![Code Intelligence Status](https://scrutinizer-ci.com/g/murtukov/PHPCodeGenerator/badges/code-intelligence.svg?b=0.1)](https://scrutinizer-ci.com/code-intelligence)
-[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)]()
+[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](/LICENSE)
 
 - [Installation](#installation)
 - [File](#file)

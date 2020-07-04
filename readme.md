@@ -1,4 +1,7 @@
-[![Coverage Status](https://coveralls.io/repos/github/murtukov/PHPCodeGenerator/badge.svg?branch=master)](https://coveralls.io/github/murtukov/PHPCodeGenerator?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/murtukov/PHPCodeGenerator/badges/quality-score.png?b=0.1)](https://scrutinizer-ci.com/g/murtukov/PHPCodeGenerator/?branch=0.1)
+[![Code Coverage](https://scrutinizer-ci.com/g/murtukov/PHPCodeGenerator/badges/coverage.png?b=0.1)](https://scrutinizer-ci.com/g/murtukov/PHPCodeGenerator/?branch=0.1)
+[![Build Status](https://scrutinizer-ci.com/g/murtukov/PHPCodeGenerator/badges/build.png?b=0.1)](https://scrutinizer-ci.com/g/murtukov/PHPCodeGenerator/build-status/0.1)
+[![Code Intelligence Status](https://scrutinizer-ci.com/g/murtukov/PHPCodeGenerator/badges/code-intelligence.svg?b=0.1)](https://scrutinizer-ci.com/code-intelligence)
 
 # PHPCodeGenerator
 A library to generate PHP 7.4 code

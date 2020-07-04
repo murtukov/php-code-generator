@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator;
 
-use Closure;
 use function count;
 use function is_bool;
 use function is_callable;
@@ -116,7 +115,7 @@ class Collection extends DependencyAwareGenerator
     /**
      * Returns self if value is true or callback returns true, otherwise returns a mock object.
      *
-     * @param bool|Closure $value
+     * @param bool|\Closure $value
      *
      * @return self|Mock
      */

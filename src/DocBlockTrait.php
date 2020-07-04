@@ -8,7 +8,7 @@ trait DocBlockTrait
 {
     protected ?Comment $docBlock = null;
 
-    public function getDocBlock(): Comment
+    public function getDocBlock(): ?Comment
     {
         return $this->docBlock;
     }

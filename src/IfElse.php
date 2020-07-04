@@ -31,8 +31,6 @@ class IfElse extends AbstractGenerator implements BlockInterface
 
     /**
      * @param GeneratorInterface|string $expression
-     *
-     * @return IfElse
      */
     public function setExpression($expression): self
     {
@@ -55,8 +53,6 @@ class IfElse extends AbstractGenerator implements BlockInterface
 
     /**
      * @param GeneratorInterface|string $expression
-     *
-     * @return IfElse
      */
     public function createElseIf($expression = ''): object
     {
@@ -87,9 +83,6 @@ class IfElse extends AbstractGenerator implements BlockInterface
         };
     }
 
-    /**
-     * @return $this
-     */
     public function createElse(): object
     {
         return $this->elseBlock = new class($this) extends DependencyAwareGenerator

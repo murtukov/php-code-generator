@@ -47,11 +47,9 @@ class Utils
     /**
      * @param mixed $value
      *
-     * @return false|string
-     *
      * @throws UnrecognizedValueTypeException
      */
-    public static function stringify($value, ?bool $multiline = null, ?bool $withKeys = null, array $converters = [])
+    public static function stringify($value, ?bool $multiline = null, ?bool $withKeys = null, array $converters = []): string
     {
         // Common options to avoid passing them recursively
         self::$multiline = $multiline;
@@ -64,12 +62,10 @@ class Utils
     /**
      * @param mixed $value
      *
-     * @return false|string
-     *
      * @throws UnrecognizedValueTypeException
      * @throws Exception
      */
-    private static function stringifyValue($value, bool $topLevel = false)
+    private static function stringifyValue($value, bool $topLevel = false): string
     {
         $type = gettype($value);
 
@@ -78,7 +74,7 @@ class Utils
             foreach (Config::getConverterClasses($type) as $fqcn) {
                 $converter = Config::getConverter($fqcn);
                 if ($converter && $converter->check($value)) {
-                    return $converter->convert($value);
+                    return (string) $converter->convert($value);
                 }
             }
         }
@@ -113,14 +109,16 @@ class Utils
             case 'object':
                 if (!$value instanceof GeneratorInterface) {
                     try {
-                        return json_encode($value->__toString());
+                        $result = json_encode($value->__toString());
+
+                        return false !== $result ? $result : '[object]';
                     } catch (Error $e) {
                         $class = get_class($value);
                         throw new Exception("Cannot stringify object of class: '$class'.");
                     }
                 }
 
-                return $value;
+                return (string) $value;
             case 'NULL':
                 if (self::$skipNullValues) {
                     return '';
@@ -135,7 +133,7 @@ class Utils
     /**
      * @throws UnrecognizedValueTypeException
      */
-    private static function stringifyAssocArray(array $items, bool $multiline = true): string
+    private static function stringifyAssocArray(array $items, ?bool $multiline = true): string
     {
         $code = '';
 
@@ -166,7 +164,7 @@ class Utils
     /**
      * @throws UnrecognizedValueTypeException
      */
-    private static function stringifyNumericArray(array $items, bool $multiline = false): string
+    private static function stringifyNumericArray(array $items, ?bool $multiline = false): string
     {
         $code = '';
 

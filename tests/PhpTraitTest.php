@@ -6,6 +6,7 @@ use Murtukov\PHPCodeGenerator\Comment;
 use Murtukov\PHPCodeGenerator\Literal;
 use Murtukov\PHPCodeGenerator\Method;
 use Murtukov\PHPCodeGenerator\Modifier;
+use Murtukov\PHPCodeGenerator\OOPStructure;
 use Murtukov\PHPCodeGenerator\PhpTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -14,7 +15,7 @@ class PhpTraitTest extends TestCase
     /**
      * @test
      */
-    public function emptyBase()
+    public function emptyBase(): OOPStructure
     {
         $this->expectOutputString(<<<CODE
         trait Stringifier
@@ -34,7 +35,7 @@ class PhpTraitTest extends TestCase
      * @test
      * @depends emptyBase
      */
-    public function addProperties(PhpTrait $trait)
+    public function addProperties(PhpTrait $trait): PhpTrait
     {
         $this->expectOutputString(<<<'CODE'
         trait Stringifier
@@ -56,7 +57,7 @@ class PhpTraitTest extends TestCase
      * @test
      * @depends addProperties
      */
-    public function addMethodsAndDocBlock(PhpTrait $trait)
+    public function addMethodsAndDocBlock(PhpTrait $trait): PhpTrait
     {
         $trait->setDocBlock('This is just a test class.');
         $trait->emptyLine();
@@ -103,7 +104,7 @@ class PhpTraitTest extends TestCase
      * @test
      * @depends addMethodsAndDocBlock
      */
-    public function modifyTrait(PhpTrait $trait)
+    public function modifyTrait(PhpTrait $trait): void
     {
         $trait->clearContent();
         $trait->createProperty('anotherProperty');

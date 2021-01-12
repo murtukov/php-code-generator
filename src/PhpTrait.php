@@ -6,12 +6,20 @@ namespace Murtukov\PHPCodeGenerator;
 
 class PhpTrait extends OOPStructure
 {
+    /**
+     * @param mixed $defaulValue
+     *
+     * @return $this
+     */
     public function addProperty(string $name, string $modifier = Modifier::PUBLIC, string $type = '', $defaulValue = Property::NO_PARAM): self
     {
         return $this->append(new Property($name, $modifier, $type, $defaulValue));
     }
 
-    public function createProperty(string $name, string $modifier = Modifier::PUBLIC, string $type = '', $defaulValue = Property::NO_PARAM)
+    /**
+     * @param mixed $defaulValue
+     */
+    public function createProperty(string $name, string $modifier = Modifier::PUBLIC, string $type = '', $defaulValue = Property::NO_PARAM): Property
     {
         $property = new Property($name, $modifier, $type, $defaulValue);
 

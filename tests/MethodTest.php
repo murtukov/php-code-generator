@@ -14,7 +14,7 @@ class MethodTest extends TestCase
     /**
      * @test
      */
-    public function emptyBase()
+    public function emptyBase(): Method
     {
         $method = Method::new('myMethod', Modifier::PRIVATE, 'void');
 
@@ -34,7 +34,7 @@ class MethodTest extends TestCase
      * @test
      * @depends emptyBase
      */
-    public function addContent(Method $method)
+    public function addContent(Method $method): Method
     {
         $method->append('$object = ', Instance::new(stdClass::class));
 
@@ -54,12 +54,12 @@ class MethodTest extends TestCase
      * @test
      * @depends addContent
      */
-    public function addArguments(Method $method)
+    public function addArguments(Method $method): Method
     {
         $arg1 = $method->createArgument('arg1', SplHeap::class, null)->setNullable();
 
         $arg2 = $method->createArgument('arg2', 'string', '');
-        $arg2->setByReference(true);
+        $arg2->setByReference();
 
         $method->add(Argument::new('arg3'));
         $method->addArguments('arg4', 'arg5');
@@ -83,7 +83,7 @@ class MethodTest extends TestCase
      * @test
      * @depends addArguments
      */
-    public function modifyParts(Method $method)
+    public function modifyParts(Method $method): Method
     {
         $method->setStatic();
         $method->setReturnType(Collection::class);
@@ -95,7 +95,9 @@ class MethodTest extends TestCase
         @param mixed        $arg3
         DOCBLOCK);
 
-        $method->getArgument(5)->setSpread(true);
+        /** @var Argument $arg */
+        $arg = $method->getArgument(5);
+        $arg->setSpread();
 
         $this->assertEquals(true, $method->isStatic());
         $this->assertEquals('Collection', $method->getReturnType());
@@ -123,7 +125,7 @@ class MethodTest extends TestCase
      * @test
      * @depends modifyParts
      */
-    public function removeParts(Method $method)
+    public function removeParts(Method $method): void
     {
         $method->removeArgument(1);
         $method->removeArgument(2);

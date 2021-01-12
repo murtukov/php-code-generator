@@ -35,24 +35,35 @@ class PhpInterface extends OOPStructure
         return $signature;
     }
 
+    /**
+     * @return $this
+     */
     public function addSignature(string $name, string $returnType = ''): self
     {
         return $this->append(new Signature($name, Modifier::PUBLIC, $returnType));
     }
 
-    public function addSignatureFromMethod(Method $method)
+    /**
+     * @return $this
+     */
+    public function addSignatureFromMethod(Method $method): self
     {
         return $this->append($method->signature);
     }
 
     /**
      * @param mixed $value
+     *
+     * @return $this
      */
     public function addConst(string $name, $value): self
     {
         return $this->append(Property::new($name, Modifier::PUBLIC, '', $value)->setConst());
     }
 
+    /**
+     * @return $this
+     */
     public function addExtends(string ...$extends)
     {
         foreach ($extends as $extend) {

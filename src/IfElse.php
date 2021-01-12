@@ -11,22 +11,26 @@ class IfElse extends AbstractGenerator implements BlockInterface
     /** @var GeneratorInterface|string */
     private $expression;
 
-    /** @var GeneratorInterface[] */
+    /** @var ElseIfBlock[] */
     private array $elseIfBlocks = [];
 
-    private ?GeneratorInterface $elseBlock = null;
+    private ?ElseBlock $elseBlock = null;
 
     /**
      * @param GeneratorInterface|string $ifExpression
      */
-    public function __construct($ifExpression = '')
+    public final function __construct($ifExpression = '')
     {
         $this->expression = $ifExpression;
     }
 
+    /**
+     * @param string $ifExpression
+     * @return static
+     */
     public static function new($ifExpression = ''): self
     {
-        return new self($ifExpression);
+        return new static($ifExpression);
     }
 
     /**
@@ -54,55 +58,13 @@ class IfElse extends AbstractGenerator implements BlockInterface
     /**
      * @param GeneratorInterface|string $expression
      */
-    public function createElseIf($expression = ''): object
+    public function createElseIf($expression = ''): ElseIfBlock
     {
-        return $this->elseIfBlocks[] = new class($expression, $this) extends DependencyAwareGenerator {
-            use ScopedContentTrait;
-
-            /** @var GeneratorInterface|string */
-            public $expression;
-
-            public IfElse $parent;
-
-            public function __construct($expression, $parent)
-            {
-                $this->expression = $expression;
-                $this->parent = $parent;
-            }
-
-            public function generate(): string
-            {
-                return " elseif ($this->expression) {\n{$this->generateContent()}\n}";
-            }
-
-            public function end()
-            {
-                return $this->parent;
-            }
-        };
+        return $this->elseIfBlocks[] = new ElseIfBlock($expression, $this);
     }
 
-    public function createElse(): object
+    public function createElse(): ElseBlock
     {
-        return $this->elseBlock = new class($this) extends DependencyAwareGenerator {
-            use ScopedContentTrait;
-
-            public IfElse $parent;
-
-            public function __construct($parent)
-            {
-                $this->parent = $parent;
-            }
-
-            public function end()
-            {
-                return $this->parent;
-            }
-
-            public function generate(): string
-            {
-                return " else {\n{$this->generateContent()}\n}";
-            }
-        };
+        return $this->elseBlock = new ElseBlock($this);
     }
 }

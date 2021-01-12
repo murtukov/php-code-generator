@@ -13,6 +13,9 @@ abstract class AbstractFunction extends DependencyAwareGenerator
         return $this->signature->getReturnType();
     }
 
+    /**
+     * @return $this
+     */
     public function setReturnType(string $returnType): self
     {
         $this->signature->setReturnType($returnType);
@@ -25,6 +28,9 @@ abstract class AbstractFunction extends DependencyAwareGenerator
         return $this->signature->getArgument($index);
     }
 
+    /**
+     * @return $this
+     */
     public function removeArgument(int $index): self
     {
         $this->signature->removeArgument($index);
@@ -32,6 +38,9 @@ abstract class AbstractFunction extends DependencyAwareGenerator
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function removeArguments(): self
     {
         $this->signature->removeArguments();
@@ -39,11 +48,19 @@ abstract class AbstractFunction extends DependencyAwareGenerator
         return $this;
     }
 
+    /**
+     * @param mixed $defaultValue
+     */
     public function createArgument(string $name, string $type = '', $defaultValue = Argument::NO_PARAM): Argument
     {
         return $this->signature->createArgument($name, $type, $defaultValue);
     }
 
+    /**
+     * @param mixed $defaultValue
+     *
+     * @return $this
+     */
     public function addArgument(string $name, string $type = '', $defaultValue = Argument::NO_PARAM): self
     {
         $this->signature->addArgument($name, $type, $defaultValue);
@@ -51,6 +68,9 @@ abstract class AbstractFunction extends DependencyAwareGenerator
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function addArguments(string ...$names): self
     {
         $this->signature->addArguments(...$names);
@@ -58,6 +78,9 @@ abstract class AbstractFunction extends DependencyAwareGenerator
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function add(FunctionMemberInterface $member): self
     {
         $this->signature->add($member);
@@ -65,6 +88,9 @@ abstract class AbstractFunction extends DependencyAwareGenerator
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function bindVar(string $name, bool $isByReference = false): self
     {
         $this->signature->bindVar($name, $isByReference);
@@ -72,6 +98,9 @@ abstract class AbstractFunction extends DependencyAwareGenerator
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function bindVars(string ...$names): self
     {
         $this->signature->bindVars(...$names);
@@ -79,7 +108,10 @@ abstract class AbstractFunction extends DependencyAwareGenerator
         return $this;
     }
 
-    public function removeBindVars()
+    /**
+     * @return $this
+     */
+    public function removeBindVars(): self
     {
         $this->signature->removeBindVars();
 
@@ -91,6 +123,9 @@ abstract class AbstractFunction extends DependencyAwareGenerator
         return $this->signature->isStatic;
     }
 
+    /**
+     * @return $this
+     */
     public function setStatic(): self
     {
         $this->signature->isStatic = true;
@@ -98,6 +133,9 @@ abstract class AbstractFunction extends DependencyAwareGenerator
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function unsetStatic()
     {
         $this->signature->isStatic = false;

@@ -10,7 +10,7 @@ class ArgumentTest extends TestCase
     /**
      * @test
      */
-    public function emptyBase()
+    public function emptyBase(): Argument
     {
         $argument = Argument::new('arg1', SplHeap::class, null)
             ->setNullable()

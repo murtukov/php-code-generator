@@ -16,6 +16,8 @@ trait ScopedContentTrait
 
     /**
      * @param GeneratorInterface|string ...$values
+     *
+     * @return $this
      */
     public function append(...$values): self
     {
@@ -36,6 +38,8 @@ trait ScopedContentTrait
 
     /**
      * @param GeneratorInterface|string ...$values
+     *
+     * @return $this
      */
     public function prepend(...$values): self
     {
@@ -54,6 +58,9 @@ trait ScopedContentTrait
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function emptyLine(): self
     {
         $this->content[] = [];
@@ -61,6 +68,9 @@ trait ScopedContentTrait
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function clearContent(): self
     {
         $this->content = [];

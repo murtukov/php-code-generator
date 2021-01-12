@@ -14,30 +14,42 @@ class Comment extends AbstractGenerator implements BlockInterface
     protected string $type;
     protected array  $lines = [];
 
-    private function __construct(string $text = '', string $type = self::TYPE_STAR)
+    private final function __construct(string $text = '', string $type = self::TYPE_STAR)
     {
         $this->addText($text);
         $this->type = $type;
     }
 
+    /**
+     * @return static
+     */
     public static function block(string $text = ''): self
     {
-        return new self($text, self::TYPE_STAR);
+        return new static($text, self::TYPE_STAR);
     }
 
+    /**
+     * @return static
+     */
     public static function hash(string $text = ''): self
     {
-        return new self($text, self::TYPE_HASH);
+        return new static($text, self::TYPE_HASH);
     }
 
+    /**
+     * @return static
+     */
     public static function docBlock(string $text = ''): self
     {
-        return new self($text, self::TYPE_DOCBLOCK);
+        return new static($text, self::TYPE_DOCBLOCK);
     }
 
+    /**
+     * @return static
+     */
     public static function slash(string $text = ''): self
     {
-        return new self($text, self::TYPE_SLASH);
+        return new static($text, self::TYPE_SLASH);
     }
 
     public function generate(): string
@@ -45,7 +57,7 @@ class Comment extends AbstractGenerator implements BlockInterface
         return $this->{"build$this->type"}();
     }
 
-    private function buildStar()
+    private function buildStar(): string
     {
         $lines = implode("\n * ", $this->lines);
 
@@ -56,7 +68,7 @@ class Comment extends AbstractGenerator implements BlockInterface
         CODE;
     }
 
-    private function buildDocBlock()
+    private function buildDocBlock(): string
     {
         $lines = implode("\n * ", $this->lines);
 
@@ -67,16 +79,19 @@ class Comment extends AbstractGenerator implements BlockInterface
         CODE;
     }
 
-    private function buildHash()
+    private function buildHash(): string
     {
         return '# '.implode("\n# ", $this->lines);
     }
 
-    private function buildSlash()
+    private function buildSlash(): string
     {
         return '// '.implode("\n// ", $this->lines);
     }
 
+    /**
+     * @return $this
+     */
     public function addLine(string $text): self
     {
         $this->lines[] = $text;
@@ -84,6 +99,9 @@ class Comment extends AbstractGenerator implements BlockInterface
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function addEmptyLine(): self
     {
         $this->lines[] = '';
@@ -91,6 +109,9 @@ class Comment extends AbstractGenerator implements BlockInterface
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function addText(string $text): self
     {
         if ('' === $text) {

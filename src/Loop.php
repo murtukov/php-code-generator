@@ -16,7 +16,7 @@ class Loop extends DependencyAwareGenerator implements BlockInterface
     private string $condition;
     private string $type;
 
-    public function __construct(string $condition = '', $type = self::TYPE_WHILE)
+    public final function __construct(string $condition = '', string $type = self::TYPE_WHILE)
     {
         $this->condition = $condition;
         $this->type = $type;
@@ -41,23 +41,26 @@ class Loop extends DependencyAwareGenerator implements BlockInterface
         CODE;
     }
 
-    public static function while(string $condition)
+    public static function while(string $condition): self
     {
-        return new self($condition);
+        return new static($condition);
     }
 
-    public static function for(string $condition)
+    public static function for(string $condition): self
     {
-        return new self($condition, self::TYPE_FOR);
+        return new static($condition, self::TYPE_FOR);
     }
 
-    public static function foreach(string $condition)
+    public static function foreach(string $condition): self
     {
-        return new self($condition, self::TYPE_FOREACH);
+        return new static($condition, self::TYPE_FOREACH);
     }
 
-    public static function doWhile(string $condition)
+    /**
+     * @return static
+     */
+    public static function doWhile(string $condition): self
     {
-        return new self($condition, self::TYPE_DO_WHILE);
+        return new static($condition, self::TYPE_DO_WHILE);
     }
 }

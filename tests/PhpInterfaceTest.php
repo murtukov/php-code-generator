@@ -6,6 +6,7 @@ use Murtukov\PHPCodeGenerator\BlockInterface;
 use Murtukov\PHPCodeGenerator\ConverterInterface;
 use Murtukov\PHPCodeGenerator\Method;
 use Murtukov\PHPCodeGenerator\Modifier;
+use Murtukov\PHPCodeGenerator\OOPStructure;
 use Murtukov\PHPCodeGenerator\PhpInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -14,7 +15,7 @@ class PhpInterfaceTest extends TestCase
     /**
      * @test
      */
-    public function emptyBase()
+    public function emptyBase(): OOPStructure
     {
         $code = <<<CODE
         interface StringifierInterface
@@ -33,7 +34,7 @@ class PhpInterfaceTest extends TestCase
      * @test
      * @depends emptyBase
      */
-    public function addExtends(PhpInterface $interface)
+    public function addExtends(PhpInterface $interface): PhpInterface
     {
         $code = <<<CODE
         interface StringifierInterface extends BlockInterface, ConverterInterface
@@ -52,7 +53,7 @@ class PhpInterfaceTest extends TestCase
      * @test
      * @depends addExtends
      */
-    public function addConsts(PhpInterface $interface)
+    public function addConsts(PhpInterface $interface): PhpInterface
     {
         $code = <<<CODE
         interface StringifierInterface extends BlockInterface, ConverterInterface
@@ -74,7 +75,7 @@ class PhpInterfaceTest extends TestCase
      * @test
      * @depends addConsts
      */
-    public function addSignatures(PhpInterface $interface)
+    public function addSignatures(PhpInterface $interface): void
     {
         $code = <<<CODE
         interface StringifierInterface extends BlockInterface, ConverterInterface

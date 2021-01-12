@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 class IfElseTest extends TestCase
 {
     /** @test */
-    public function withoutElseEmptyContent()
+    public function withoutElseEmptyContent(): void
     {
         $ifElse = IfElse::new('"name" === 15');
 
@@ -23,7 +23,7 @@ class IfElseTest extends TestCase
     }
 
     /** @test */
-    public function withElseEmptyContent()
+    public function withElseEmptyContent(): void
     {
         $ifElse = IfElse::new('true');
         $ifElse->createElse();
@@ -40,7 +40,7 @@ class IfElseTest extends TestCase
     }
 
     /** @test */
-    public function withElseElseIfEmptyContent()
+    public function withElseElseIfEmptyContent(): void
     {
         $ifElse = IfElse::new('true');
         $ifElse->createElse();
@@ -60,7 +60,7 @@ class IfElseTest extends TestCase
     }
 
     /** @test */
-    public function allPartsWithContent()
+    public function allPartsWithContent(): void
     {
         $ifElse = IfElse::new();
         $ifElse->setExpression('$name === 15');
@@ -76,15 +76,15 @@ class IfElseTest extends TestCase
                 ->append('return false')
             ->end();
 
-        $expected = <<<CODE
-        if (\$name === 15) {
-            \$names = ['name' => 'Timur'];  
-        } elseif ('\$name === 95') {
+        $expected = <<<'CODE'
+        if ($name === 15) {
+            $names = ['name' => 'Timur'];  
+        } elseif ('$name === 95') {
             return null;
-        } elseif (\$name === 95) {
+        } elseif ($name === 95) {
             return "false";
         } else {
-            \$x = 95;
+            $x = 95;
             return false;
         }
         CODE;

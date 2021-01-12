@@ -11,7 +11,7 @@ class PropertyTest extends TestCase
     /**
      * @test
      */
-    public function createProperty()
+    public function createProperty(): void
     {
         $property = Property::new($name = 'customProperty');
 

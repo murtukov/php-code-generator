@@ -14,7 +14,7 @@ interface ConverterInterface
     const TYPE_ARRAY = 'array';
 
     /**
-     * @param $value
+     * @param mixed $value
      *
      * @return mixed
      */
@@ -23,7 +23,7 @@ interface ConverterInterface
     /**
      * Checks, whether the value should be converted.
      *
-     * @param $value
+     * @param mixed $value
      */
     public function check($value): bool;
 }

@@ -84,13 +84,9 @@ class Utils
             case 'boolean':
             case 'integer':
             case 'double':
-                return json_encode($value);
+                return (string) json_encode($value);
             case 'string':
-                if ('' === $value) {
-                    return "''";
-                }
-
-                return self::filterString($value);
+                return ('' === $value) ? "''" : self::filterString($value);
             case 'array':
                 if (empty($value)) {
                     return '[]';
@@ -110,7 +106,6 @@ class Utils
                 if (!$value instanceof GeneratorInterface) {
                     try {
                         $result = json_encode($value->__toString());
-
                         return false !== $result ? $result : '[object]';
                     } catch (Error $e) {
                         $class = get_class($value);
@@ -120,11 +115,7 @@ class Utils
 
                 return (string) $value;
             case 'NULL':
-                if (self::$skipNullValues) {
-                    return '';
-                }
-
-                return 'null';
+                return self::$skipNullValues ? '' : 'null';
             default:
                 throw new UnrecognizedValueTypeException('Cannot stringify value of unrecognized type.');
         }
@@ -214,6 +205,9 @@ class Utils
         return $code;
     }
 
+    /**
+     * @return false|string
+     */
     public static function resolveQualifier(string $path)
     {
         if ($portion = strrchr($path, '\\')) {

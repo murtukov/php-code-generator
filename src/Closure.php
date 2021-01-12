@@ -8,15 +8,18 @@ class Closure extends AbstractFunction
 {
     use ScopedContentTrait;
 
-    public function __construct(string $returnType = '')
+    public final function __construct(string $returnType = '')
     {
         $this->signature = new Signature('', Modifier::NONE, $returnType);
         $this->dependencyAwareChildren = [$this->signature];
     }
 
-    public static function new(string $returnType = '')
+    /**
+     * @return static
+     */
+    public static function new(string $returnType = ''): self
     {
-        return new self($returnType);
+        return new static($returnType);
     }
 
     public function generate(): string

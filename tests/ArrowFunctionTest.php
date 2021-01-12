@@ -10,7 +10,7 @@ class ArrowFunctionTest extends TestCase
     /**
      * @test
      */
-    public function emptyBody()
+    public function emptyBody(): ArrowFunction
     {
         $arrow = ArrowFunction::new();
 
@@ -27,7 +27,7 @@ class ArrowFunctionTest extends TestCase
      * @test
      * @depends emptyBody
      */
-    public function setExpression(ArrowFunction $arrow)
+    public function setExpression(ArrowFunction $arrow): array
     {
         $innerArrow = ArrowFunction::new([
             'name' => 'Alrik',
@@ -56,7 +56,7 @@ class ArrowFunctionTest extends TestCase
      * @test
      * @depends setExpression
      */
-    public function setStatic(array $values)
+    public function setStatic(array $values): void
     {
         [$arrow, $template] = $values;
 

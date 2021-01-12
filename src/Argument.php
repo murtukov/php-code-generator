@@ -11,11 +11,11 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
      */
     public const NO_PARAM = INF;
 
-    private string  $type;
-    private string  $name;
-    private bool    $isSpread = false;
-    private bool    $isByReference = false;
-    private bool    $isNullable = false;
+    private string $type;
+    private string $name;
+    private bool   $isSpread = false;
+    private bool   $isByReference = false;
+    private bool   $isNullable = false;
 
     /**
      * @var mixed
@@ -26,8 +26,10 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
      * Argument constructor.
      *
      * @param mixed $defaultValue
+     *
+     * @throws Exception\UnrecognizedValueTypeException
      */
-    public function __construct(string $name, string $type = '', $defaultValue = self::NO_PARAM)
+    public final function __construct(string $name, string $type = '', $defaultValue = self::NO_PARAM)
     {
         $this->name = $name;
         $this->type = $this->resolveQualifier($type);
@@ -37,9 +39,15 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
         }
     }
 
+    /**
+     * @param mixed $defaultValue
+     *
+     * @return static
+     * @throws Exception\UnrecognizedValueTypeException
+     */
     public static function new(string $name, string $type = '', $defaultValue = self::NO_PARAM): self
     {
-        return new self($name, $type, $defaultValue);
+        return new static($name, $type, $defaultValue);
     }
 
     public function generate(): string
@@ -80,6 +88,9 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
         return $this->isSpread;
     }
 
+    /**
+     * @return $this
+     */
     public function setSpread(): self
     {
         $this->isSpread = true;
@@ -87,6 +98,9 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function unsetSpread(): self
     {
         $this->isSpread = false;
@@ -99,6 +113,9 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
         return $this->isByReference;
     }
 
+    /**
+     * @return $this
+     */
     public function setByReference(): self
     {
         $this->isByReference = true;
@@ -106,6 +123,9 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function unsetByReference(): self
     {
         $this->isByReference = false;
@@ -113,6 +133,9 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function setType(string $type): self
     {
         $this->type = $type;
@@ -120,6 +143,13 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
         return $this;
     }
 
+    /**
+     * @param mixed $value
+     *
+     * @return $this
+     *
+     * @throws Exception\UnrecognizedValueTypeException
+     */
     public function setDefaultValue($value): self
     {
         if (INF !== $value) {
@@ -131,6 +161,9 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function unsetNullable(): self
     {
         $this->isNullable = false;
@@ -138,6 +171,9 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function setNullable(): self
     {
         $this->isNullable = true;

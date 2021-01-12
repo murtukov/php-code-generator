@@ -21,7 +21,12 @@ class Property extends DependencyAwareGenerator
     private string $modifier;
     private string $typeHint;
 
-    public function __construct(string $name, ?string $modifier, string $typeHint = '', $defaultValue = self::NO_PARAM)
+    /**
+     * @param mixed $defaultValue
+     *
+     * @throws Exception\UnrecognizedValueTypeException
+     */
+    public final function __construct(string $name, ?string $modifier, string $typeHint = '', $defaultValue = self::NO_PARAM)
     {
         $this->name = $name;
         $this->modifier = $modifier ?? Modifier::PUBLIC;
@@ -36,12 +41,19 @@ class Property extends DependencyAwareGenerator
         }
     }
 
+    /**
+     * @param mixed $value
+     *
+     * @return static
+     *
+     * @throws Exception\UnrecognizedValueTypeException
+     */
     public static function new(
         string $name,
         ?string $modifier = Modifier::PUBLIC,
         string $typeHint = '',
         $value = self::NO_PARAM
-    ) {
+    ): self {
         return new static($name, $modifier, $typeHint, $value);
     }
 
@@ -89,6 +101,13 @@ class Property extends DependencyAwareGenerator
         return $this->value;
     }
 
+    /**
+     * @param mixed $value
+     *
+     * @return $this
+     *
+     * @throws Exception\UnrecognizedValueTypeException
+     */
     public function setDefaultValue($value): self
     {
         $this->value = Utils::stringify($value);
@@ -119,7 +138,7 @@ class Property extends DependencyAwareGenerator
         return $this;
     }
 
-    public function unsetConst()
+    public function unsetConst(): self
     {
         $this->isConst = false;
 
@@ -159,12 +178,12 @@ class Property extends DependencyAwareGenerator
         return $this;
     }
 
-    public function setNullable()
+    public function setNullable(): void
     {
         $this->isNullable = true;
     }
 
-    public function unsetNullable()
+    public function unsetNullable(): void
     {
         $this->isNullable = false;
     }

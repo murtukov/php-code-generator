@@ -11,7 +11,7 @@ class InstanceTest extends TestCase
     /**
      * @test
      */
-    public function withoutArgs()
+    public function withoutArgs(): void
     {
         $instance = Instance::new(DateTime::class);
 
@@ -25,7 +25,7 @@ class InstanceTest extends TestCase
     /**
      * @test
      */
-    public function withOneArg()
+    public function withOneArg(): Instance
     {
         $instance = Instance::new('User', 'Andrew');
 
@@ -42,7 +42,7 @@ class InstanceTest extends TestCase
      * @test
      * @depends withOneArg
      */
-    public function addSecondArgument(Instance $instance)
+    public function addSecondArgument(Instance $instance): void
     {
         $instance->addArgument('Jameson');
 
@@ -56,7 +56,7 @@ class InstanceTest extends TestCase
     /**
      * @test
      */
-    public function shortenNamespace()
+    public function shortenNamespace(): void
     {
         $instance = Instance::new('App\Entity\User');
 
@@ -70,7 +70,7 @@ class InstanceTest extends TestCase
     /**
      * @test
      */
-    public function suppressShorteningWithCustomSymbol()
+    public function suppressShorteningWithCustomSymbol(): void
     {
         Config::$suppressSymbol = '~';
         $instance = Instance::new('~App\Entity\User');
@@ -88,7 +88,7 @@ class InstanceTest extends TestCase
     /**
      * @test
      */
-    public function suppressShortening()
+    public function suppressShortening(): void
     {
         $instance = Instance::new('@App\Entity\User');
 
@@ -102,7 +102,7 @@ class InstanceTest extends TestCase
     /**
      * @test
      */
-    public function differentArgTypes()
+    public function differentArgTypes(): Instance
     {
         $instance = Instance::multiline('Test', null, [], new Instance('DateTime'), false);
 

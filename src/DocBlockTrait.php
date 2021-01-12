@@ -13,6 +13,9 @@ trait DocBlockTrait
         return $this->docBlock;
     }
 
+    /**
+     * @return $this
+     */
     public function setDocBlock(string $text): self
     {
         $this->docBlock = Comment::docBlock($text);
@@ -25,6 +28,9 @@ trait DocBlockTrait
         return $this->docBlock = Comment::docBlock($text);
     }
 
+    /**
+     * @return $this
+     */
     public function removeDocBlock(): self
     {
         $this->docBlock = null;
@@ -32,7 +38,7 @@ trait DocBlockTrait
         return $this;
     }
 
-    protected function buildDocBlock()
+    protected function buildDocBlock(): string
     {
         $code = '';
 

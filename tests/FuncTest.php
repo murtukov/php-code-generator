@@ -12,7 +12,7 @@ class FuncTest extends TestCase
     /**
      * @test
      */
-    public function emptyBase()
+    public function emptyBase(): Func
     {
         $func = Func::new('myMethod', 'void');
 
@@ -32,7 +32,7 @@ class FuncTest extends TestCase
      * @test
      * @depends emptyBase
      */
-    public function addContent(Func $func)
+    public function addContent(Func $func): Func
     {
         $func->append('foreach ($users as $user) ', Block::new());
 
@@ -54,7 +54,7 @@ class FuncTest extends TestCase
      * @test
      * @depends addContent
      */
-    public function addArguments(Func $func)
+    public function addArguments(Func $func): Func
     {
         $func->createArgument('arg1', SplHeap::class, null)->setNullable();
         $func->createArgument('arg2', 'string', '');

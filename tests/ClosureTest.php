@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Murtukov\PHPCodeGenerator\Argument;
 use Murtukov\PHPCodeGenerator\Closure;
+use Murtukov\PHPCodeGenerator\Exception\UnrecognizedValueTypeException;
 use Murtukov\PHPCodeGenerator\Loop;
 use PHPUnit\Framework\TestCase;
 
@@ -12,7 +13,7 @@ class ClosureTest extends TestCase
     /**
      * @test
      */
-    public function emptyBase()
+    public function emptyBase(): Closure
     {
         $closure = Closure::new('array');
 
@@ -30,8 +31,9 @@ class ClosureTest extends TestCase
     /**
      * @test
      * @depends emptyBase
+     * @throws UnrecognizedValueTypeException
      */
-    public function addArguments(CLosure $closure)
+    public function addArguments(CLosure $closure): Closure
     {
         $closure->addArgument('value');
 
@@ -58,7 +60,7 @@ class ClosureTest extends TestCase
      * @test
      * @depends addArguments
      */
-    public function bindVars(Closure $closure)
+    public function bindVars(Closure $closure): Closure
     {
         $closure->bindVars('this', 'name');
         $closure->bindVar('global', true);
@@ -78,7 +80,7 @@ class ClosureTest extends TestCase
      * @test
      * @depends bindVars
      */
-    public function addContent(Closure $closure)
+    public function addContent(Closure $closure): Closure
     {
         $foreach = Loop::foreach('$options as &$option')
             ->append('unset($option)');
@@ -102,7 +104,7 @@ class ClosureTest extends TestCase
      * @test
      * @depends addContent
      */
-    public function modifyParts(Closure $closure)
+    public function modifyParts(Closure $closure): void
     {
         $closure->setStatic();
         $closure->removeArguments();

@@ -11,7 +11,7 @@ class CommentTest extends TestCase
     /**
      * @test
      */
-    public function starCommentMultiline()
+    public function starCommentMultiline(): void
     {
         $expected = <<<CODE
         /*
@@ -28,7 +28,7 @@ class CommentTest extends TestCase
     /**
      * @test
      */
-    public function hashComment()
+    public function hashComment(): void
     {
         $this->assertEquals(
             "# $this->firstLine",
@@ -39,7 +39,7 @@ class CommentTest extends TestCase
     /**
      * @test
      */
-    public function hashCommentMultiline()
+    public function hashCommentMultiline(): void
     {
         $comment = Comment::hash($this->firstLine);
         $comment->addEmptyLine();

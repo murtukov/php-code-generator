@@ -11,7 +11,7 @@ class LoopTest extends TestCase
     /**
      * @test
      */
-    public function allLoops()
+    public function allLoops(): void
     {
         $for = Loop::for('$i = 1; $i < 1000; ++$i')
             ->append('$x = $i')

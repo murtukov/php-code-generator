@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Murtukov\PHPCodeGenerator\Comment;
 use Murtukov\PHPCodeGenerator\Literal;
 use Murtukov\PHPCodeGenerator\Method;
 use Murtukov\PHPCodeGenerator\Modifier;
@@ -13,7 +14,7 @@ class PhpClassTest extends TestCase
     /**
      * @test
      */
-    public function emptyBase()
+    public function emptyBase(): PhpClass
     {
         $code = <<<CODE
         class Stringifier
@@ -32,7 +33,7 @@ class PhpClassTest extends TestCase
      * @test
      * @depends emptyBase
      */
-    public function addExtend(PhpClass $class)
+    public function addExtend(PhpClass $class): PhpClass
     {
         $code = <<<CODE
         class Stringifier extends SplStack
@@ -51,16 +52,16 @@ class PhpClassTest extends TestCase
      * @test
      * @depends addExtend
      */
-    public function addImplements(PhpClass $class)
+    public function addImplements(PhpClass $class): PhpClass
     {
         $code = <<<CODE
-        class Stringifier extends SplStack implements JsonSerializable, ArrayAccessible
+        class Stringifier extends SplStack implements JsonSerializable, ArrayAccess
         {
         
         }
         CODE;
 
-        $class->addImplements(JsonSerializable::class, ArrayAccessible::class);
+        $class->addImplements(JsonSerializable::class, ArrayAccess::class);
         $this->assertEquals($code, $class->generate());
 
         return $class;
@@ -70,10 +71,10 @@ class PhpClassTest extends TestCase
      * @test
      * @depends addImplements
      */
-    public function addProperties(PhpClass $class)
+    public function addProperties(PhpClass $class): PhpClass
     {
         $code = <<<'CODE'
-        class Stringifier extends SplStack implements JsonSerializable, ArrayAccessible
+        class Stringifier extends SplStack implements JsonSerializable, ArrayAccess
         {
             public const NAME = 'MyStringifier';
             public const TYPE = 'ObjectStringifier';
@@ -97,7 +98,7 @@ class PhpClassTest extends TestCase
     /**
      * @test
      */
-    public function fullBuild()
+    public function fullBuild(): PhpClass
     {
         $class = PhpClass::new('MyClass')
             ->addConst('KNOWN_TYPES', ['DYNAMIC', 'STATIC'], Modifier::PRIVATE)
@@ -124,6 +125,7 @@ class PhpClassTest extends TestCase
         $class->emptyLine();
         $class->append($method);
 
+        /** @var Comment $docBlock */
         $docBlock = $class->getDocBlock();
 
         $this->assertEquals(
@@ -168,7 +170,7 @@ class PhpClassTest extends TestCase
      * @test
      * @depends fullBuild
      */
-    public function removeParts(PhpClass $class)
+    public function removeParts(PhpClass $class): PhpClass
     {
         $class
             ->unsetFinal()
@@ -193,7 +195,7 @@ class PhpClassTest extends TestCase
      * @test
      * @depends removeParts
      */
-    public function addAnotherParts(PhpClass $class)
+    public function addAnotherParts(PhpClass $class): void
     {
         $class->setAbstract();
         $class->createDocBlock()

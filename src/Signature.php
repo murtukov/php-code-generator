@@ -38,6 +38,9 @@ class Signature extends DependencyAwareGenerator
         return $this->returnType;
     }
 
+    /**
+     * @return $this
+     */
     public function setReturnType(string $returnType): self
     {
         $this->returnType = $this->resolveQualifier($returnType);
@@ -49,6 +52,8 @@ class Signature extends DependencyAwareGenerator
      * Some arguments are stored as simple strings for better performance.
      * If they are requested, they are first converted into objects then
      * returned back.
+     *
+     * @throws Exception\UnrecognizedValueTypeException
      *
      * @return Argument
      */
@@ -78,18 +83,33 @@ class Signature extends DependencyAwareGenerator
         return $this;
     }
 
-    public function removeArguments()
+    /**
+     * @return $this
+     */
+    public function removeArguments(): self
     {
         $this->args = [];
 
         return $this;
     }
 
+    /**
+     * @param mixed $defaultValue
+     *
+     * @throws Exception\UnrecognizedValueTypeException
+     */
     public function createArgument(string $name, string $type = '', $defaultValue = Argument::NO_PARAM): Argument
     {
         return $this->args[] = new Argument($name, $type, $defaultValue);
     }
 
+    /**
+     * @param mixed$defaultValue
+     *
+     * @throws Exception\UnrecognizedValueTypeException
+     *
+     * @return $this
+     */
     public function addArgument(string $name, string $type = '', $defaultValue = Argument::NO_PARAM): self
     {
         if (1 === func_num_args()) {
@@ -101,7 +121,11 @@ class Signature extends DependencyAwareGenerator
         return $this;
     }
 
-    public function addArguments(string ...$names)
+    /**
+     * @return $this
+     * @throws Exception\UnrecognizedValueTypeException
+     */
+    public function addArguments(string ...$names): self
     {
         foreach ($names as $name) {
             $this->addArgument($name);
@@ -110,6 +134,9 @@ class Signature extends DependencyAwareGenerator
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function add(FunctionMemberInterface $member): self
     {
         if ($member instanceof Argument) {
@@ -119,6 +146,9 @@ class Signature extends DependencyAwareGenerator
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function bindVar(string $name, bool $isByReference = false): self
     {
         $name = ltrim($name, '$');
@@ -128,7 +158,10 @@ class Signature extends DependencyAwareGenerator
         return $this;
     }
 
-    public function bindVars(string ...$names)
+    /**
+     * @return $this
+     */
+    public function bindVars(string ...$names): self
     {
         foreach ($names as $name) {
             $this->bindVar($name);
@@ -161,7 +194,7 @@ class Signature extends DependencyAwareGenerator
         return "{$docBlock}{$modifier}{$isStatic}{$this->qualifier}{$this->name}($args){$uses}{$returnType}";
     }
 
-    public function removeBindVars()
+    public function removeBindVars(): void
     {
         $this->uses = [];
     }

@@ -8,9 +8,12 @@ class Instance extends DependencyAwareGenerator
 {
     private array  $args;
     private string $qualifier;
-    public bool   $multiline = false;
+    public  bool   $multiline = false;
 
-    public function __construct(string $qualifier, ...$args)
+    /**
+     * @param mixed ...$args
+     */
+    public final function __construct(string $qualifier, ...$args)
     {
         $this->qualifier = $this->resolveQualifier($qualifier);
         $this->args = $args;
@@ -46,6 +49,11 @@ class Instance extends DependencyAwareGenerator
         return "new $this->qualifier($args)";
     }
 
+    /**
+     * @param mixed $arg
+     *
+     * @return $this
+     */
     public function addArgument($arg): self
     {
         $this->args[] = $arg;
@@ -53,19 +61,32 @@ class Instance extends DependencyAwareGenerator
         return $this;
     }
 
-    public static function multiline(string $qualifier, ...$args)
+    /**
+     * @param mixed ...$args
+     *
+     * @return static
+     */
+    public static function multiline(string $qualifier, ...$args): self
     {
-        $instance = new self($qualifier, ...$args);
+        $instance = new static($qualifier, ...$args);
         $instance->multiline = true;
 
         return $instance;
     }
 
-    public static function new(string $qualifier, ...$args)
+    /**
+     * @param mixed ...$args
+     *
+     * @return static
+     */
+    public static function new(string $qualifier, ...$args): self
     {
-        return new self($qualifier, ...$args);
+        return new static($qualifier, ...$args);
     }
 
+    /**
+     * @return $this
+     */
     public function setMultiline(): self
     {
         $this->multiline = true;
@@ -73,7 +94,10 @@ class Instance extends DependencyAwareGenerator
         return $this;
     }
 
-    public function setInline()
+    /**
+     * @return $this
+     */
+    public function setInline(): self
     {
         $this->multiline = false;
 

@@ -17,7 +17,7 @@ abstract class DependencyAwareGenerator extends AbstractGenerator
      */
     protected array $dependencyAwareChildren = [];
 
-    public function resolveQualifier(string $path, $alias = ''): string
+    public function resolveQualifier(string $path, string $alias = ''): string
     {
         if (empty($path) || false === Config::$shortenQualifiers || '\\' === $path[0]) {
             return $path;
@@ -35,6 +35,9 @@ abstract class DependencyAwareGenerator extends AbstractGenerator
         return $path;
     }
 
+    /**
+     * @return $this
+     */
     public function addUse(string $fqcn, string ...$aliases): self
     {
         $this->usePaths[$fqcn] = implode(', ', $aliases);
@@ -42,6 +45,9 @@ abstract class DependencyAwareGenerator extends AbstractGenerator
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function addUseGroup(string $fqcn, string ...$classNames)
     {
         foreach ($classNames as $name) {
@@ -57,6 +63,9 @@ abstract class DependencyAwareGenerator extends AbstractGenerator
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function removeUse(string $fqcn): self
     {
         unset($this->usePaths[$fqcn]);
@@ -65,7 +74,7 @@ abstract class DependencyAwareGenerator extends AbstractGenerator
         return $this;
     }
 
-    public function useGroupsToArray()
+    public function useGroupsToArray(): array
     {
         $result = [];
 

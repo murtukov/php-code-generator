@@ -10,7 +10,7 @@ class UtilsTest extends TestCase
     /**
      * @test
      */
-    public function stringifyObject()
+    public function stringifyObject(): void
     {
         $object = new class() {
             public function __toString(): string
@@ -29,7 +29,7 @@ class UtilsTest extends TestCase
     /**
      * @test
      */
-    public function skipNullValues()
+    public function skipNullValues(): void
     {
         Utils::$skipNullValues = true;
 

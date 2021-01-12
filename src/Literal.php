@@ -8,12 +8,15 @@ class Literal extends AbstractGenerator
 {
     private string $value;
 
-    public function __construct(string $value)
+    public final function __construct(string $value)
     {
         $this->value = $value;
     }
 
-    public static function new(string $value)
+    /**
+     * @return static
+     */
+    public static function new(string $value): self
     {
         return new static($value);
     }

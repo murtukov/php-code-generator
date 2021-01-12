@@ -19,7 +19,7 @@ class Collection extends DependencyAwareGenerator
 
     protected Utils $utils;
 
-    public function __construct(array $items = [], bool $multiline = false, bool $withKeys = true)
+    private final function __construct(array $items = [], bool $multiline = false, bool $withKeys = true)
     {
         $this->items = $items;
         $this->multiline = $multiline;
@@ -27,6 +27,9 @@ class Collection extends DependencyAwareGenerator
         $this->utils = new Utils();
     }
 
+    /**
+     * @return static
+     */
     public static function numeric(array $items = [], bool $multiline = false): self
     {
         return new static($items, $multiline, false);
@@ -35,7 +38,7 @@ class Collection extends DependencyAwareGenerator
     /**
      * Shorthand for `new AssocArray($items, true)`.
      *
-     * @return Collection
+     * @return static
      */
     public static function assoc(array $items = [], bool $multiline = true): self
     {
@@ -44,6 +47,8 @@ class Collection extends DependencyAwareGenerator
 
     /**
      * Creates a multiline array and adds all provided items, after applying a callback to them.
+     *
+     * @return static
      */
     public static function map(array $items, callable $map, bool $withKeys = true): self
     {
@@ -60,6 +65,8 @@ class Collection extends DependencyAwareGenerator
      * Adds item to the array.
      *
      * @param mixed $value
+     *
+     * @return $this
      */
     public function addItem(string $key, $value): self
     {
@@ -90,6 +97,8 @@ class Collection extends DependencyAwareGenerator
      * Adds item to the array if it's not empty.
      *
      * @param mixed $value
+     *
+     * @return $this
      */
     public function addIfNotEmpty(string $key, $value): self
     {
@@ -104,6 +113,8 @@ class Collection extends DependencyAwareGenerator
      * Adds item to the array if it's not equal false.
      *
      * @param mixed $value
+     *
+     * @return $this
      */
     public function addIfNotFalse(string $key, $value): self
     {
@@ -132,7 +143,7 @@ class Collection extends DependencyAwareGenerator
         return Mock::getInstance($this);
     }
 
-    public function getConverters()
+    public function getConverters(): array
     {
         return $this->converters;
     }
@@ -165,7 +176,7 @@ class Collection extends DependencyAwareGenerator
         return $this;
     }
 
-    public function count()
+    public function count(): int
     {
         return count($this->items);
     }

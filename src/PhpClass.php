@@ -59,13 +59,18 @@ class PhpClass extends OOPStructure
 
     /**
      * @param mixed $value
+     *
+     * @return $this
      */
     public function addConst(string $name, $value, string $modifier = Modifier::PUBLIC): self
     {
-        return $this
-            ->append(Property::new($name, $modifier, '', $value)->setConst());
+        return $this->append(Property::new($name, $modifier, '', $value)->setConst());
     }
 
+    /**
+     * @param mixed $defaulValue
+     * @return $this
+     */
     public function addProperty(string $name, string $modifier = Modifier::PUBLIC, string $type = '', $defaulValue = ''): self
     {
         return $this->append(new Property($name, $modifier, $type, $defaulValue));
@@ -135,6 +140,9 @@ class PhpClass extends OOPStructure
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function unsetFinal(): self
     {
         $this->isFinal = false;
@@ -147,6 +155,9 @@ class PhpClass extends OOPStructure
         return $this->isAbstract;
     }
 
+    /**
+     * @return $this
+     */
     public function setAbstract(): self
     {
         $this->isAbstract = true;

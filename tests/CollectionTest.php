@@ -28,7 +28,7 @@ class CollectionTest extends TestCase
      * @test
      * @depends emptyAssoc
      */
-    public function addItemsAssoc(Collection $collection)
+    public function addItemsAssoc(Collection $collection): void
     {
         $collection
             ->push('pushedValue')
@@ -87,7 +87,7 @@ class CollectionTest extends TestCase
     /**
      * @test
      */
-    public function conditionalAdd()
+    public function conditionalAdd(): void
     {
         $collection = Collection::assoc();
 
@@ -135,7 +135,7 @@ class CollectionTest extends TestCase
     /**
      * @test
      */
-    public function mapCollection()
+    public function mapCollection(): void
     {
         $array = [
             'constraints' => ['NotNull', 'Length', 'Range'],
@@ -201,7 +201,7 @@ class CollectionTest extends TestCase
     /**
      * @test
      */
-    public function stringifyWithCustomConverter()
+    public function stringifyWithCustomConverter(): void
     {
         $converter = new class() implements ConverterInterface {
             public function convert($value)
@@ -252,7 +252,7 @@ class CollectionTest extends TestCase
     /**
      * @test
      */
-    public function orderBy()
+    public function orderBy(): void
     {
         $collection = Collection::assoc();
 

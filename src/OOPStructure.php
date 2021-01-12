@@ -11,11 +11,14 @@ abstract class OOPStructure extends DependencyAwareGenerator
 
     public string $name;
 
-    public function __construct(string $name)
+    public final function __construct(string $name)
     {
         $this->name = $name;
     }
 
+    /**
+     * @return static
+     */
     public static function new(string $name): self
     {
         return new static($name);

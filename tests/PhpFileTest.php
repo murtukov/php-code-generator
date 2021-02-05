@@ -59,9 +59,9 @@ class PhpFileTest extends TestCase
 
         $this->expectOutputString(<<<'CODE'
         <?php
-
+        
         namespace App\Converter;
-
+        
         use Murtukov\PHPCodeGenerator\Instance as MyInstance;
         use Murtukov\PHPCodeGenerator\Method;
         use Murtukov\PHPCodeGenerator\PhpFile;
@@ -122,12 +122,12 @@ class PhpFileTest extends TestCase
 
         $this->expectOutputString(<<<'CODE'
         <?php
-
+        
         namespace App\Converter;
-
+        
         class YetAnotherClass
         {
-
+        
         }
         CODE);
 

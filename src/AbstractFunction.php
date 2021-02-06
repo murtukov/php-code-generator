@@ -59,6 +59,7 @@ abstract class AbstractFunction extends DependencyAwareGenerator
     /**
      * @param mixed $defaultValue
      *
+     * @throws Exception\UnrecognizedValueTypeException
      * @return $this
      */
     public function addArgument(string $name, string $type = '', $defaultValue = Argument::NO_PARAM): self
@@ -69,6 +70,8 @@ abstract class AbstractFunction extends DependencyAwareGenerator
     }
 
     /**
+     * @throws Exception\UnrecognizedValueTypeException
+     *
      * @return $this
      */
     public function addArguments(string ...$names): self
@@ -136,7 +139,7 @@ abstract class AbstractFunction extends DependencyAwareGenerator
     /**
      * @return $this
      */
-    public function unsetStatic()
+    public function unsetStatic(): self
     {
         $this->signature->isStatic = false;
 

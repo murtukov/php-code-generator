@@ -170,6 +170,11 @@ class Signature extends DependencyAwareGenerator
         return $this;
     }
 
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
     public function generate(bool $withDocBlock = true): string
     {
         $args = join(', ', $this->args);

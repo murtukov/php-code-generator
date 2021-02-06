@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Murtukov\PHPCodeGenerator\Comment;
+use Murtukov\PHPCodeGenerator\Exception\AlreadyExistsException;
 use Murtukov\PHPCodeGenerator\Literal;
 use Murtukov\PHPCodeGenerator\Method;
 use Murtukov\PHPCodeGenerator\Modifier;
@@ -194,8 +195,9 @@ class PhpClassTest extends TestCase
     /**
      * @test
      * @depends removeParts
+     * @throws AlreadyExistsException
      */
-    public function addAnotherParts(PhpClass $class): void
+    public function addAnotherParts(PhpClass $class): PhpClass
     {
         $class->setAbstract();
         $class->createDocBlock()
@@ -224,5 +226,27 @@ class PhpClassTest extends TestCase
         CODE);
 
         echo $class;
+
+        return $class;
+    }
+
+    /**
+     * @test
+     * @depends addAnotherParts
+     */
+    public function getMethodByName(PhpClass $class)
+    {
+        $name = 'myCustomMethod';
+        $this->assertSame($name, $class->getMethod($name)->signature->getName());
+    }
+
+    /**
+     * @test
+     * @depends addAnotherParts
+     */
+    public function creatingSameMethod(PhpClass $class)
+    {
+        $this->expectException(AlreadyExistsException::class);
+        $class->addMethod('myCustomMethod');
     }
 }

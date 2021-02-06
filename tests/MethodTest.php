@@ -83,7 +83,7 @@ class MethodTest extends TestCase
      * @test
      * @depends addArguments
      */
-    public function modifyParts(Method $method): Method
+    public function modifySignature(Method $method): Method
     {
         $method->setStatic();
         $method->setReturnType(Collection::class);
@@ -123,7 +123,43 @@ class MethodTest extends TestCase
 
     /**
      * @test
-     * @depends modifyParts
+     * @depends modifySignature
+     */
+    public function insertLines(Method $method)
+    {
+        $method->append('$myArray = ', Collection::numeric());
+        $method->append('$myArray2 = ', Collection::numeric());
+        $method->insertBefore(2, '$string = "Abu Dhabi"');
+        $method->insertAfter(2, '$string2 = "Berlin"');
+
+        $this->expectOutputString(<<<'CODE'
+        /**
+         * Another simple function
+         * 
+         * @param SqlHeap|null $arg1
+         * @param string       $arg2
+         * @param mixed        $arg3
+         */
+        private static function myMethod(?SplHeap $arg1 = null, string &$arg2 = '', $arg3, $arg4, ...$arg5): Collection
+        {
+            $object = new stdClass();
+            $myArray = [];
+            $string = "Abu Dhabi";
+            $string2 = "Berlin";
+            $myArray2 = [];
+        }
+        CODE);
+
+        echo $method;
+
+        $this->assertEquals(5, $method->countContentBlocks());
+
+        return $method;
+    }
+
+    /**
+     * @test
+     * @depends insertLines
      */
     public function removeParts(Method $method): void
     {
@@ -131,13 +167,16 @@ class MethodTest extends TestCase
         $method->removeArgument(2);
         $method->removeArgument(3);
         $method->unsetStatic();
-        $method->clearContent();
+        $method->remove(0);
+        $method->remove(2);
         $method->removeDocBlock();
 
         $this->expectOutputString(<<<'CODE'
         private function myMethod($arg4, ...$arg5): Collection
         {
-        
+            $myArray = [];
+            $string = "Abu Dhabi";
+            $myArray2 = [];
         }
         CODE);
 

@@ -21,11 +21,7 @@ trait ScopedContentTrait
      */
     public function append(...$values): self
     {
-        if (end($values) instanceof BlockInterface) {
-            $this->content[] = [...$values];
-        } else {
-            $this->content[] = [...$values, ';'];
-        }
+        $this->content[] = $this->createExpressionOrBlock($values);;
 
         foreach ($values as $value) {
             if ($value instanceof DependencyAwareGenerator) {
@@ -43,11 +39,7 @@ trait ScopedContentTrait
      */
     public function prepend(...$values): self
     {
-        if (end($values) instanceof BlockInterface) {
-            array_unshift($this->content, [...$values]);
-        } else {
-            array_unshift($this->content, [...$values, ';']);
-        }
+        array_unshift($this->content, $this->createExpressionOrBlock($values));
 
         foreach ($values as $value) {
             if ($value instanceof DependencyAwareGenerator) {
@@ -76,6 +68,63 @@ trait ScopedContentTrait
         $this->content = [];
 
         return $this;
+    }
+
+    public function countContentBlocks(): int
+    {
+        return count($this->content);
+    }
+
+    /**
+     * @param int                       $index
+     * @param GeneratorInterface|string ...$values
+     *
+     * @return $this
+     */
+    public function insertBefore(int $index, ...$values): self
+    {
+        $values = $this->createExpressionOrBlock($values);
+
+        array_splice($this->content, $index, 0, [$values]);
+
+        return $this;
+    }
+
+    private function createExpressionOrBlock(array $values): array
+    {
+        if (end($values) instanceof BlockInterface) {
+            return [...$values];
+        }
+
+        return [...$values, ';'];
+    }
+
+    /**
+     * @param int                       $index
+     * @param GeneratorInterface|string ...$values
+     *
+     * @return $this
+     */
+    public function insertAfter(int $index, ...$values): self
+    {
+        return $this->insertBefore(++$index, ...$values);
+    }
+
+    /**
+     * @param int $index
+     *
+     * @return $this
+     */
+    public function remove(int $index): self
+    {
+        array_splice($this->content, $index, 1);
+
+        return $this;
+    }
+
+    public function getContent(): array
+    {
+        return $this->content;
     }
 
     protected function generateContent(): string

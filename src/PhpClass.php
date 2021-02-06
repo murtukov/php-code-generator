@@ -4,14 +4,19 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator;
 
+use Murtukov\PHPCodeGenerator\Exception\AlreadyExistsException;
 use function join;
 
+/**
+ * TODO: use WeakMap to store methods in PHP >= 8.0
+ */
 class PhpClass extends OOPStructure
 {
     protected string $extends = '';
     protected bool   $isAbstract = false;
     protected bool   $isFinal = false;
     protected array  $implements = [];
+    protected array  $methods = [];
 
     public function setExtends(string $fqcn): self
     {
@@ -76,19 +81,41 @@ class PhpClass extends OOPStructure
         return $this->append(new Property($name, $modifier, $type, $defaulValue));
     }
 
+    /**
+     * @throws AlreadyExistsException
+     *
+     * @return $this
+     */
     public function addMethod(string $name, string $modifier = 'public', string $returnType = ''): self
     {
-        return $this
-            ->append(new Method($name, $modifier, $returnType))
-            ->emptyLine()
-        ;
+        $method = $this->newMethod($name, $modifier, $returnType);
+
+        return $this->append($method)->emptyLine();
     }
 
+    /**
+     * @throws AlreadyExistsException
+     */
     public function createMethod(string $name, string $modifier = 'public', string $returnType = ''): Method
     {
-        $method = new Method($name, $modifier, $returnType);
+        $method = $this->newMethod($name, $modifier, $returnType);
 
         $this->append($method)->emptyLine();
+
+        return $method;
+    }
+
+    /**
+     * @throws AlreadyExistsException
+     */
+    private function newMethod(string $name, string $modifier, string $returnType): Method
+    {
+        if (isset($this->methods[$name])) {
+            throw new AlreadyExistsException("Method '$name' already exists.");
+        }
+
+        $method = new Method($name, $modifier, $returnType);
+        $this->methods[$name] = $method;
 
         return $method;
     }
@@ -138,6 +165,11 @@ class PhpClass extends OOPStructure
         $this->isAbstract = false;
 
         return $this;
+    }
+
+    public function getMethod(string $name): ?Method
+    {
+        return $this->methods[$name] ?? null;
     }
 
     /**

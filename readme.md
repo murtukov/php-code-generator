@@ -25,6 +25,7 @@ A library to generate PHP 7.4 code
     - [Loops](#loops)
 - [Comments](#comments)
 - [Namespaces](#namespaces)
+- [Literal](#literal)
 - [Global Configs](#global-configs)
 
 ## Installation
@@ -647,6 +648,36 @@ $method->append('return ' . Instance::new('App\MyClass'));
 pass parts as separate arguments, as `append` is a [variadic function](#https://www.php.net/manual/en/migration56.new-features.php#migration56.new-features.variadics):
 ```php
 $method->append('return ', Instance::new('App\MyClass'));
+```
+
+## Literal
+
+Generate code easily
+
+```php
+$format = '$foo = "bar";';
+$literal = new Literal($format);
+echo $literal; // will display $foo = "bar";
+```
+
+With `GeneratorInterface` as values
+```php
+$literal = new Literal(
+    '$foo = %s; %s',
+    new Literal('"bar"'),
+    new Literal('echo $foo;')
+);
+echo $literal; // will display $foo = "bar"; echo $foo;
+```
+
+Quoting reserve `%` char
+```php
+$literal = new Literal(
+    '$foo = %s; sprintf("This value should not be quote %%s.", %s);',
+    new Literal('"bar"'),
+    new Literal('$foo')
+);
+echo $literal; // will display $foo = "bar"; sprintf("This value should not be quote %s.", $foo);;
 ```
 
 ## Global Configs

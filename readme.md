@@ -638,7 +638,7 @@ use App\Service\UserManager as Manager;
 use Symfony\Validator\Converters\{NotNull, Length, Range};
 ```
 
-Although all components if this library implement the magic `__toString()` method, avoid concatenating
+Although all components of this library implement the magic `__toString()` method, avoid concatenating
 them, as it will convert them into string scalars and all class qualifiers will be lost.
 
 So instead of concatenation:
@@ -652,34 +652,43 @@ $method->append('return ', Instance::new('App\MyClass'));
 
 ## Literal
 
-Generate code easily
+Generates code literally as provided (without any additional processing)
 
 ```php
-$format = '$foo = "bar";';
-$literal = new Literal($format);
-echo $literal; // will display $foo = "bar";
+echo Literal::new('$foo = "bar";');
+```
+Result:
+```php
+$foo = "bar";
 ```
 
-With `GeneratorInterface` as values
+The string can hold placeholders similar to `sprintf` function:
 ```php
-$literal = new Literal(
+$literal = Literal::new(
     '$foo = %s; %s',
-    new Literal('"bar"'),
-    new Literal('echo $foo;')
+    Literal::new('"bar"'),
+    Literal::new('echo $foo;')
 );
-echo $literal; // will display $foo = "bar"; echo $foo;
+echo $literal;
 ```
-
-Quoting reserve `%` char
+Result:
 ```php
-$literal = new Literal(
-    '$foo = %s; sprintf("This value should not be quote %%s.", %s);',
-    new Literal('"bar"'),
-    new Literal('$foo')
-);
-echo $literal; // will display $foo = "bar"; sprintf("This value should not be quote %s.", $foo);;
+$foo = "bar"; echo $foo;
 ```
 
+Escaping the reserved `%` char:
+```php
+$literal = Literal::new(
+    '$foo = %s; sprintf("This value should not be quoted %%s.", %s);',
+    Literal::new('"bar"'),
+    Literal::new('$foo')
+);
+echo $literal;
+```
+Result:
+```php
+$foo = "bar"; sprintf("This value should not be quoted %s.", $foo);
+```
 ## Global Configs
 All global configs are stored as static properties in the `Config` class.
 

@@ -25,6 +25,7 @@ A library to generate PHP 7.4 code
     - [Loops](#loops)
 - [Comments](#comments)
 - [Namespaces](#namespaces)
+- [Literal](#literal)
 - [Global Configs](#global-configs)
 
 ## Installation
@@ -637,7 +638,7 @@ use App\Service\UserManager as Manager;
 use Symfony\Validator\Converters\{NotNull, Length, Range};
 ```
 
-Although all components if this library implement the magic `__toString()` method, avoid concatenating
+Although all components of this library implement the magic `__toString()` method, avoid concatenating
 them, as it will convert them into string scalars and all class qualifiers will be lost.
 
 So instead of concatenation:
@@ -649,6 +650,45 @@ pass parts as separate arguments, as `append` is a [variadic function](#https://
 $method->append('return ', Instance::new('App\MyClass'));
 ```
 
+## Literal
+
+Generates code literally as provided (without any additional processing)
+
+```php
+echo Literal::new('$foo = "bar";');
+```
+Result:
+```php
+$foo = "bar";
+```
+
+The string can hold placeholders similar to `sprintf` function:
+```php
+$literal = Literal::new(
+    '$foo = %s; %s',
+    Literal::new('"bar"'),
+    Literal::new('echo $foo;')
+);
+echo $literal;
+```
+Result:
+```php
+$foo = "bar"; echo $foo;
+```
+
+Escaping the reserved `%` char:
+```php
+$literal = Literal::new(
+    '$foo = %s; sprintf("This value should not be quoted %%s.", %s);',
+    Literal::new('"bar"'),
+    Literal::new('$foo')
+);
+echo $literal;
+```
+Result:
+```php
+$foo = "bar"; sprintf("This value should not be quoted %s.", $foo);
+```
 ## Global Configs
 All global configs are stored as static properties in the `Config` class.
 

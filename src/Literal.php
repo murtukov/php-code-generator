@@ -4,25 +4,30 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator;
 
-class Literal extends AbstractGenerator
-{
-    private string $value;
+use function sprintf;
 
-    public final function __construct(string $value)
+class Literal extends DependencyAwareGenerator
+{
+    private string $format;
+    private array $values;
+
+    final public function __construct(string $format, GeneratorInterface ...$values)
     {
-        $this->value = $value;
+        $this->format = $format;
+        $this->values = $values ?? [];
+        $this->dependencyAwareChildren = [$this->values];
     }
 
     /**
      * @return static
      */
-    public static function new(string $value): self
+    public static function new(string $format, GeneratorInterface ...$values): self
     {
-        return new static($value);
+        return new static($format, ...$values);
     }
 
     public function generate(): string
     {
-        return $this->value;
+        return sprintf($this->format, ...$this->values);
     }
 }

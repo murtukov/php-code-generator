@@ -19,13 +19,14 @@ class IfElse extends AbstractGenerator implements BlockInterface
     /**
      * @param GeneratorInterface|string $ifExpression
      */
-    public final function __construct($ifExpression = '')
+    final public function __construct($ifExpression = '')
     {
         $this->expression = $ifExpression;
     }
 
     /**
      * @param string $ifExpression
+     *
      * @return static
      */
     public static function new($ifExpression = ''): self

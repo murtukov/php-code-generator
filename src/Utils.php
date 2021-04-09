@@ -106,6 +106,7 @@ class Utils
                 if (!$value instanceof GeneratorInterface) {
                     try {
                         $result = json_encode($value->__toString());
+
                         return false !== $result ? $result : '[object]';
                     } catch (Error $e) {
                         $class = get_class($value);

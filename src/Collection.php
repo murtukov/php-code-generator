@@ -19,7 +19,7 @@ class Collection extends DependencyAwareGenerator
 
     protected Utils $utils;
 
-    private final function __construct(array $items = [], bool $multiline = false, bool $withKeys = true)
+    final private function __construct(array $items = [], bool $multiline = false, bool $withKeys = true)
     {
         $this->items = $items;
         $this->multiline = $multiline;

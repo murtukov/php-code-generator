@@ -14,7 +14,7 @@ class Comment extends AbstractGenerator implements BlockInterface
     protected string $type;
     protected array  $lines = [];
 
-    private final function __construct(string $text = '', string $type = self::TYPE_STAR)
+    final private function __construct(string $text = '', string $type = self::TYPE_STAR)
     {
         $this->addText($text);
         $this->type = $type;

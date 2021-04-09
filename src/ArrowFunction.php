@@ -12,7 +12,7 @@ class ArrowFunction extends AbstractFunction
     /**
      * @param mixed $expression
      */
-    public final function __construct($expression = null, string $returnType = '')
+    final public function __construct($expression = null, string $returnType = '')
     {
         $this->signature = new Signature('', Modifier::NONE, $returnType, 'fn');
         $this->expression = $this->manageExprDependency($expression);

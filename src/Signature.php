@@ -123,6 +123,7 @@ class Signature extends DependencyAwareGenerator
 
     /**
      * @return $this
+     *
      * @throws Exception\UnrecognizedValueTypeException
      */
     public function addArguments(string ...$names): self

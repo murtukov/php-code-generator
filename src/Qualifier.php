@@ -8,7 +8,7 @@ class Qualifier extends DependencyAwareGenerator
 {
     private string $name;
 
-    public final function __construct(string $className)
+    final public function __construct(string $className)
     {
         $this->name = $this->resolveQualifier($className);
     }

@@ -8,7 +8,7 @@ class Closure extends AbstractFunction
 {
     use ScopedContentTrait;
 
-    public final function __construct(string $returnType = '')
+    final public function __construct(string $returnType = '')
     {
         $this->signature = new Signature('', Modifier::NONE, $returnType);
         $this->dependencyAwareChildren = [$this->signature];

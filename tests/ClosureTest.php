@@ -31,6 +31,7 @@ class ClosureTest extends TestCase
     /**
      * @test
      * @depends emptyBase
+     *
      * @throws UnrecognizedValueTypeException
      */
     public function addArguments(CLosure $closure): Closure

@@ -26,7 +26,7 @@ class Property extends DependencyAwareGenerator
      *
      * @throws Exception\UnrecognizedValueTypeException
      */
-    public final function __construct(string $name, ?string $modifier, string $typeHint = '', $defaultValue = self::NO_PARAM)
+    final public function __construct(string $name, ?string $modifier, string $typeHint = '', $defaultValue = self::NO_PARAM)
     {
         $this->name = $name;
         $this->modifier = $modifier ?? Modifier::PUBLIC;

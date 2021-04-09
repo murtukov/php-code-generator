@@ -69,6 +69,7 @@ class PhpClass extends OOPStructure
 
     /**
      * @param mixed $defaulValue
+     *
      * @return $this
      */
     public function addProperty(string $name, string $modifier = Modifier::PUBLIC, string $type = '', $defaulValue = ''): self

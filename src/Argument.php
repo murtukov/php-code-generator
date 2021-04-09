@@ -29,7 +29,7 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
      *
      * @throws Exception\UnrecognizedValueTypeException
      */
-    public final function __construct(string $name, string $type = '', $defaultValue = self::NO_PARAM)
+    final public function __construct(string $name, string $type = '', $defaultValue = self::NO_PARAM)
     {
         $this->name = $name;
         $this->type = $this->resolveQualifier($type);
@@ -43,6 +43,7 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
      * @param mixed $defaultValue
      *
      * @return static
+     *
      * @throws Exception\UnrecognizedValueTypeException
      */
     public static function new(string $name, string $type = '', $defaultValue = self::NO_PARAM): self

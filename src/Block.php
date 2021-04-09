@@ -8,7 +8,7 @@ class Block extends AbstractGenerator implements BlockInterface
 {
     use ScopedContentTrait;
 
-    public final function __construct()
+    final public function __construct()
     {
     }
 

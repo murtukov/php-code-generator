@@ -16,7 +16,7 @@ class Loop extends DependencyAwareGenerator implements BlockInterface
     private string $condition;
     private string $type;
 
-    public final function __construct(string $condition = '', string $type = self::TYPE_WHILE)
+    final public function __construct(string $condition = '', string $type = self::TYPE_WHILE)
     {
         $this->condition = $condition;
         $this->type = $type;

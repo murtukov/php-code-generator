@@ -8,12 +8,12 @@ class Instance extends DependencyAwareGenerator
 {
     private array  $args;
     private string $qualifier;
-    public  bool   $multiline = false;
+    public bool   $multiline = false;
 
     /**
      * @param mixed ...$args
      */
-    public final function __construct(string $qualifier, ...$args)
+    final public function __construct(string $qualifier, ...$args)
     {
         $this->qualifier = $this->resolveQualifier($qualifier);
         $this->args = $args;

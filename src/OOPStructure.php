@@ -11,7 +11,7 @@ abstract class OOPStructure extends DependencyAwareGenerator
 
     public string $name;
 
-    public final function __construct(string $name)
+    final public function __construct(string $name)
     {
         $this->name = $name;
     }

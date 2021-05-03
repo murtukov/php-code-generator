@@ -13,9 +13,10 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
 
     private string $type;
     private string $name;
-    private bool   $isSpread = false;
+    private bool   $isSpread      = false;
     private bool   $isByReference = false;
-    private bool   $isNullable = false;
+    private bool   $isNullable    = false;
+    private string $modifier      = Modifier::NONE;
 
     /**
      * @var mixed
@@ -29,10 +30,15 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
      *
      * @throws Exception\UnrecognizedValueTypeException
      */
-    final public function __construct(string $name, string $type = '', $defaultValue = self::NO_PARAM)
-    {
+    final public function __construct(
+        string $name,
+        string $type = '',
+        $defaultValue = self::NO_PARAM,
+        string $modifier = Modifier::NONE
+    ) {
         $this->name = $name;
         $this->type = $this->resolveQualifier($type);
+        $this->modifier = $modifier;
 
         if (INF !== $defaultValue) {
             $this->defaultValue = Utils::stringify($defaultValue);
@@ -46,14 +52,18 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
      *
      * @throws Exception\UnrecognizedValueTypeException
      */
-    public static function new(string $name, string $type = '', $defaultValue = self::NO_PARAM): self
+    public static function new(string $name, string $type = '', $defaultValue = self::NO_PARAM, string $modifier = Modifier::NONE): self
     {
-        return new static($name, $type, $defaultValue);
+        return new static($name, $type, $defaultValue, $modifier);
     }
 
     public function generate(): string
     {
         $code = '';
+
+        if (Modifier::NONE !== $this->modifier) {
+            $code .= $this->modifier . ' ';
+        }
 
         if ($this->type) {
             if ($this->isNullable && '?' !== $this->type[0]) {
@@ -178,6 +188,13 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
     public function setNullable(): self
     {
         $this->isNullable = true;
+
+        return $this;
+    }
+
+    public function setModifier(string $modifier): self
+    {
+        $this->modifier = $modifier;
 
         return $this;
     }

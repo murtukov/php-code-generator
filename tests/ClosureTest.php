@@ -17,11 +17,7 @@ class ClosureTest extends TestCase
     {
         $closure = Closure::new('array');
 
-        $this->expectOutputString(<<<CODE
-        function (): array {
-        
-        }
-        CODE);
+        $this->expectOutputString('function (): array {}');
 
         echo $closure;
 
@@ -47,9 +43,7 @@ class ClosureTest extends TestCase
         $closure->add($arg);
 
         $this->expectOutputString(<<<'CODE'
-        function ($value, array $options = [], bool $filter = false): array {
-        
-        }
+        function ($value, array $options = [], bool $filter = false): array {}
         CODE);
 
         echo $closure;
@@ -67,9 +61,7 @@ class ClosureTest extends TestCase
         $closure->bindVar('global', true);
 
         $this->expectOutputString(<<<'CODE'
-        function ($value, array $options = [], bool $filter = false) use ($this, $name, &$global): array {
-        
-        }
+        function ($value, array $options = [], bool $filter = false) use ($this, $name, &$global): array {}
         CODE);
 
         echo $closure;

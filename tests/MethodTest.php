@@ -20,9 +20,7 @@ class MethodTest extends TestCase
 
         $this->expectOutputString(<<<CODE
         private function myMethod(): void
-        {
-        
-        }
+        {}
         CODE);
 
         echo $method;
@@ -136,11 +134,35 @@ class MethodTest extends TestCase
 
         $this->expectOutputString(<<<'CODE'
         private function myMethod($arg4, ...$arg5): Collection
-        {
-        
-        }
+        {}
         CODE);
 
         echo $method;
+    }
+
+    /**
+     * @test
+     */
+    public function withPromotedArguments(): void
+    {
+        $method = Method::new('__construct');
+
+        $method->addArgument('firstName', 'string', 'Alex', Modifier::PRIVATE);
+        $method->addArgument('lastName', 'string', 'Kowalski', Modifier::PRIVATE);
+        $method->addArgument('age', 'int', Argument::NO_PARAM, Modifier::PRIVATE);
+        $method->addArgument('isStudent', 'bool', false);
+
+        $method->signature->setMultiline();
+
+        echo $method;
+
+        $this->expectOutputString(<<<'CODE'
+        public function __construct(
+            private string $firstName = 'Alex',
+            private string $lastName = 'Kowalski',
+            private int $age,
+            bool $isStudent = false
+        ) {}
+        CODE);
     }
 }

@@ -19,9 +19,7 @@ class PhpInterfaceTest extends TestCase
     {
         $code = <<<CODE
         interface StringifierInterface
-        {
-        
-        }
+        {}
         CODE;
 
         $interface = PhpInterface::new('StringifierInterface');
@@ -38,9 +36,7 @@ class PhpInterfaceTest extends TestCase
     {
         $code = <<<CODE
         interface StringifierInterface extends BlockInterface, ConverterInterface
-        {
-        
-        }
+        {}
         CODE;
 
         $interface->addExtends(BlockInterface::class, ConverterInterface::class);

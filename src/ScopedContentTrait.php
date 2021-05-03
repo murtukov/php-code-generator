@@ -83,12 +83,10 @@ trait ScopedContentTrait
         $content = '';
 
         if (!empty($this->content)) {
-            $content = Utils::indent(join(
-                "\n",
-                array_map(fn ($line) => join('', $line), $this->content)
-            ));
+            $content = Utils::indent(join("\n", array_map(fn ($line) => join('', $line), $this->content)));
+            $content = "\n" . rtrim($content) . "\n";
         }
 
-        return rtrim($content);
+        return $content;
     }
 }

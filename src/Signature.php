@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator;
 
-use function implode;
+use function func_num_args;
+use function is_string;
+use function join;
+use function ltrim;
 
 class Signature extends DependencyAwareGenerator
 {
@@ -13,6 +16,7 @@ class Signature extends DependencyAwareGenerator
     public string $name;
     public bool   $isStatic = false;
     public string $modifier;
+    public bool   $isMultiline = false;
 
     protected string $returnType = '';
     protected array  $args = [];
@@ -98,9 +102,13 @@ class Signature extends DependencyAwareGenerator
      *
      * @throws Exception\UnrecognizedValueTypeException
      */
-    public function createArgument(string $name, string $type = '', $defaultValue = Argument::NO_PARAM): Argument
-    {
-        return $this->args[] = new Argument($name, $type, $defaultValue);
+    public function createArgument(
+        string $name,
+        string $type = '',
+        $defaultValue = Argument::NO_PARAM,
+        string $modifier = Modifier::NONE
+    ): Argument {
+        return $this->args[] = new Argument($name, $type, $defaultValue, $modifier);
     }
 
     /**
@@ -110,12 +118,16 @@ class Signature extends DependencyAwareGenerator
      *
      * @return $this
      */
-    public function addArgument(string $name, string $type = '', $defaultValue = Argument::NO_PARAM): self
-    {
+    public function addArgument(
+        string $name,
+        string $type = '',
+        $defaultValue = Argument::NO_PARAM,
+        string $modifier = Modifier::NONE
+    ): self {
         if (1 === func_num_args()) {
             $this->args[] = "$$name";
         } else {
-            $this->args[] = new Argument($name, $type, $defaultValue);
+            $this->args[] = new Argument($name, $type, $defaultValue, $modifier);
         }
 
         return $this;
@@ -173,14 +185,19 @@ class Signature extends DependencyAwareGenerator
 
     public function generate(bool $withDocBlock = true): string
     {
-        $args = join(', ', $this->args);
+        if ($this->isMultiline) {
+            $args = "\n" . Utils::indent(join(",\n", $this->args)) . "\n";
+        } else {
+            $args = join(', ', $this->args);
+        }
+
         $uses = '';
         $isStatic = $this->isStatic ? 'static ' : '';
         $modifier = $this->modifier ? "$this->modifier " : '';
         $returnType = '';
 
         if (!empty($this->uses)) {
-            $uses = ' use ('.implode(', ', $this->uses).')';
+            $uses = ' use ('. join(', ', $this->uses).')';
         }
 
         if ('' !== $this->returnType) {
@@ -198,5 +215,19 @@ class Signature extends DependencyAwareGenerator
     public function removeBindVars(): void
     {
         $this->uses = [];
+    }
+
+    public function setMultiline(bool $isMultiline = true): self
+    {
+        $this->isMultiline = $isMultiline;
+
+        return $this;
+    }
+
+    public function unsetMultiline(): self
+    {
+        $this->isMultiline = false;
+
+        return $this;
     }
 }

@@ -22,6 +22,6 @@ class ElseBlock extends AbstractGenerator
 
     public function generate(): string
     {
-        return " else {\n{$this->generateContent()}\n}";
+        return " else {{$this->generateContent()}}";
     }
 }

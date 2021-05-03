@@ -55,9 +55,7 @@ class PhpTrait extends OOPStructure
     {
         return <<<CODE
         {$this->buildDocBlock()}trait $this->name
-        {
-        {$this->generateContent()}
-        }
+        {{$this->generateContent()}}
         CODE;
     }
 }

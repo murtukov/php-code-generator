@@ -3,14 +3,17 @@
 declare(strict_types=1);
 
 use Murtukov\PHPCodeGenerator\Argument;
+use Murtukov\PHPCodeGenerator\Exception\UnrecognizedValueTypeException;
+use Murtukov\PHPCodeGenerator\Modifier;
 use PHPUnit\Framework\TestCase;
 
 class ArgumentTest extends TestCase
 {
     /**
      * @test
+     * @throws UnrecognizedValueTypeException
      */
-    public function emptyBase(): Argument
+    public function fullBase(): Argument
     {
         $argument = Argument::new('arg1', SplHeap::class, null)
             ->setNullable()
@@ -22,6 +25,16 @@ class ArgumentTest extends TestCase
         $this->assertEquals(true, $argument->isByReference());
         $this->assertEquals('?SplHeap &...$arg1 = null', $argument->generate());
 
+        return $argument;
+    }
+
+    /**
+     * @test
+     * @depends fullBase
+     * @throws UnrecognizedValueTypeException
+     */
+    public function removeAttributes(Argument $argument): Argument
+    {
         $argument->unsetNullable();
         $argument->unsetByReference();
         $argument->unsetSpread();
@@ -29,6 +42,22 @@ class ArgumentTest extends TestCase
         $argument->setType('');
 
         $this->assertEquals('$arg1', $argument->generate());
+
+        return $argument;
+    }
+
+    /**
+     * @test
+     * @depends removeAttributes
+     */
+    public function makePromoted(Argument $argument): Argument
+    {
+        $argument->setModifier(Modifier::PRIVATE);
+        $argument->setType(SplHeap::class);
+        $argument->setNullable();
+        $argument->setDefaultValue(null);
+
+        $this->assertEquals('private ?SplHeap $arg1 = null', $argument->generate());
 
         return $argument;
     }

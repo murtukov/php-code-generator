@@ -107,9 +107,7 @@ class PhpClass extends OOPStructure
     {
         return <<<CODE
         {$this->buildDocBlock()}{$this->buildPrefix()}class $this->name{$this->buildExtends()}{$this->buildImplements()}
-        {
-        {$this->generateContent()}
-        }
+        {{$this->generateContent()}}
         CODE;
     }
 

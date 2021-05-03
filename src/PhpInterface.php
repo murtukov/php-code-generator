@@ -21,9 +21,7 @@ class PhpInterface extends OOPStructure
 
         return <<<CODE
         {$this->buildDocBlock()}interface $this->name{$extends}
-        {
-        {$this->generateContent()}
-        }
+        {{$this->generateContent()}}
         CODE;
     }
 

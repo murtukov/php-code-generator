@@ -19,9 +19,7 @@ class PhpTraitTest extends TestCase
     {
         $this->expectOutputString(<<<CODE
         trait Stringifier
-        {
-        
-        }
+        {}
         CODE);
 
         $trait = PhpTrait::new('Stringifier');
@@ -122,19 +120,13 @@ class PhpTraitTest extends TestCase
             public $anotherProperty;
             
             public function __construct()
-            {
-            
-            }
+            {}
             
             public function anotherMethod()
-            {
-            
-            }
+            {}
             
             public function createdMethod()
-            {
-            
-            }
+            {}
         }
         CODE);
 

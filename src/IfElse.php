@@ -50,9 +50,7 @@ class IfElse extends AbstractGenerator implements BlockInterface
         $elseIfBlocks = implode($this->elseIfBlocks);
 
         return <<<CODE
-        if ($this->expression) {
-        {$this->generateContent()}  
-        }{$elseIfBlocks}$this->elseBlock
+        if ($this->expression) {{$this->generateContent()}}{$elseIfBlocks}$this->elseBlock
         CODE;
     }
 

@@ -23,6 +23,9 @@ abstract class AbstractFunction extends DependencyAwareGenerator
         return $this;
     }
 
+    /**
+     * @throws Exception\UnrecognizedValueTypeException
+     */
     public function getArgument(int $index = 1): ?Argument
     {
         return $this->signature->getArgument($index);
@@ -50,26 +53,29 @@ abstract class AbstractFunction extends DependencyAwareGenerator
 
     /**
      * @param mixed $defaultValue
+     * @throws Exception\UnrecognizedValueTypeException
      */
-    public function createArgument(string $name, string $type = '', $defaultValue = Argument::NO_PARAM): Argument
+    public function createArgument(string $name, string $type = '', $defaultValue = Argument::NO_PARAM, string $modifier = Modifier::NONE): Argument
     {
-        return $this->signature->createArgument($name, $type, $defaultValue);
+        return $this->signature->createArgument($name, $type, $defaultValue, $modifier);
     }
 
     /**
      * @param mixed $defaultValue
      *
      * @return $this
+     * @throws Exception\UnrecognizedValueTypeException
      */
-    public function addArgument(string $name, string $type = '', $defaultValue = Argument::NO_PARAM): self
+    public function addArgument(string $name, string $type = '', $defaultValue = Argument::NO_PARAM, string $modifier = Modifier::NONE): self
     {
-        $this->signature->addArgument($name, $type, $defaultValue);
+        $this->signature->addArgument($name, $type, $defaultValue, $modifier);
 
         return $this;
     }
 
     /**
      * @return $this
+     * @throws Exception\UnrecognizedValueTypeException
      */
     public function addArguments(string ...$names): self
     {
@@ -136,7 +142,7 @@ abstract class AbstractFunction extends DependencyAwareGenerator
     /**
      * @return $this
      */
-    public function unsetStatic()
+    public function unsetStatic(): self
     {
         $this->signature->isStatic = false;
 

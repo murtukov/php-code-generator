@@ -24,9 +24,7 @@ class Func extends AbstractFunction implements BlockInterface
     {
         return <<<CODE
         {$this->buildDocBlock()}{$this->signature->generate(false)}
-        {
-        {$this->generateContent()}
-        }
+        {{$this->generateContent()}}
         CODE;
     }
 }

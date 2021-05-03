@@ -18,9 +18,7 @@ class FuncTest extends TestCase
 
         $this->expectOutputString(<<<CODE
         function myMethod(): void
-        {
-        
-        }
+        {}
         CODE);
 
         echo $func;
@@ -39,9 +37,7 @@ class FuncTest extends TestCase
         $this->expectOutputString(<<<'CODE'
         function myMethod(): void
         {
-            foreach ($users as $user) {
-            
-            }
+            foreach ($users as $user) {}
         }
         CODE);
 
@@ -63,9 +59,7 @@ class FuncTest extends TestCase
         $this->expectOutputString(<<<'CODE'
         function myMethod(?SplHeap $arg1 = null, string $arg2 = '', $arg3): void
         {
-            foreach ($users as $user) {
-            
-            }
+            foreach ($users as $user) {}
         }
         CODE);
 

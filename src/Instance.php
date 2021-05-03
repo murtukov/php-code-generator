@@ -19,9 +19,6 @@ class Instance extends DependencyAwareGenerator
         $this->args = $args;
     }
 
-    /**
-     * @throws Exception\UnrecognizedValueTypeException
-     */
     public function generate(): string
     {
         if (empty($this->args)) {

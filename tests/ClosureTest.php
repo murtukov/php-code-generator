@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Murtukov\PHPCodeGenerator\Argument;
 use Murtukov\PHPCodeGenerator\Closure;
-use Murtukov\PHPCodeGenerator\Exception\UnrecognizedValueTypeException;
 use Murtukov\PHPCodeGenerator\Loop;
 use PHPUnit\Framework\TestCase;
 
@@ -27,8 +26,6 @@ class ClosureTest extends TestCase
     /**
      * @test
      * @depends emptyBase
-     *
-     * @throws UnrecognizedValueTypeException
      */
     public function addArguments(CLosure $closure): Closure
     {

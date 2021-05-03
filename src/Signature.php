@@ -57,8 +57,6 @@ class Signature extends DependencyAwareGenerator
      * If they are requested, they are first converted into objects then
      * returned back.
      *
-     * @throws Exception\UnrecognizedValueTypeException
-     *
      * @return Argument
      */
     public function getArgument(int $index = 1): ?Argument
@@ -99,8 +97,6 @@ class Signature extends DependencyAwareGenerator
 
     /**
      * @param mixed $defaultValue
-     *
-     * @throws Exception\UnrecognizedValueTypeException
      */
     public function createArgument(
         string $name,
@@ -113,8 +109,6 @@ class Signature extends DependencyAwareGenerator
 
     /**
      * @param mixed$defaultValue
-     *
-     * @throws Exception\UnrecognizedValueTypeException
      *
      * @return $this
      */
@@ -135,8 +129,6 @@ class Signature extends DependencyAwareGenerator
 
     /**
      * @return $this
-     *
-     * @throws Exception\UnrecognizedValueTypeException
      */
     public function addArguments(string ...$names): self
     {

@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Murtukov\PHPCodeGenerator\Argument;
-use Murtukov\PHPCodeGenerator\Exception\UnrecognizedValueTypeException;
 use Murtukov\PHPCodeGenerator\Modifier;
 use PHPUnit\Framework\TestCase;
 
@@ -11,7 +10,6 @@ class ArgumentTest extends TestCase
 {
     /**
      * @test
-     * @throws UnrecognizedValueTypeException
      */
     public function fullBase(): Argument
     {
@@ -31,7 +29,6 @@ class ArgumentTest extends TestCase
     /**
      * @test
      * @depends fullBase
-     * @throws UnrecognizedValueTypeException
      */
     public function removeAttributes(Argument $argument): Argument
     {

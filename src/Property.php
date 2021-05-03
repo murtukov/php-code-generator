@@ -23,8 +23,6 @@ class Property extends DependencyAwareGenerator
 
     /**
      * @param mixed $defaultValue
-     *
-     * @throws Exception\UnrecognizedValueTypeException
      */
     final public function __construct(string $name, ?string $modifier, string $typeHint = '', $defaultValue = self::NO_PARAM)
     {
@@ -45,8 +43,6 @@ class Property extends DependencyAwareGenerator
      * @param mixed $value
      *
      * @return static
-     *
-     * @throws Exception\UnrecognizedValueTypeException
      */
     public static function new(
         string $name,
@@ -105,8 +101,6 @@ class Property extends DependencyAwareGenerator
      * @param mixed $value
      *
      * @return $this
-     *
-     * @throws Exception\UnrecognizedValueTypeException
      */
     public function setDefaultValue($value): self
     {

@@ -27,8 +27,6 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
      * Argument constructor.
      *
      * @param mixed $defaultValue
-     *
-     * @throws Exception\UnrecognizedValueTypeException
      */
     final public function __construct(
         string $name,
@@ -49,8 +47,6 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
      * @param mixed $defaultValue
      *
      * @return static
-     *
-     * @throws Exception\UnrecognizedValueTypeException
      */
     public static function new(string $name, string $type = '', $defaultValue = self::NO_PARAM, string $modifier = Modifier::NONE): self
     {
@@ -158,8 +154,6 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
      * @param mixed $value
      *
      * @return $this
-     *
-     * @throws Exception\UnrecognizedValueTypeException
      */
     public function setDefaultValue($value): self
     {

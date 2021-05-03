@@ -6,7 +6,6 @@ namespace Murtukov\PHPCodeGenerator;
 
 use Error;
 use Exception;
-use Murtukov\PHPCodeGenerator\Exception\UnrecognizedValueTypeException;
 use function get_class;
 use function is_int;
 use function json_encode;
@@ -46,8 +45,6 @@ class Utils
 
     /**
      * @param mixed $value
-     *
-     * @throws UnrecognizedValueTypeException
      */
     public static function stringify($value, ?bool $multiline = null, ?bool $withKeys = null, array $converters = []): string
     {
@@ -62,7 +59,6 @@ class Utils
     /**
      * @param mixed $value
      *
-     * @throws UnrecognizedValueTypeException
      * @throws Exception
      */
     private static function stringifyValue($value, bool $topLevel = false): string
@@ -118,12 +114,12 @@ class Utils
             case 'NULL':
                 return self::$skipNullValues ? '' : 'null';
             default:
-                throw new UnrecognizedValueTypeException('Cannot stringify value of unrecognized type.');
+                return "'[UNKNOWN VALUE]'";
         }
     }
 
     /**
-     * @throws UnrecognizedValueTypeException
+     * @throws Exception
      */
     private static function stringifyAssocArray(array $items, ?bool $multiline = true): string
     {
@@ -154,7 +150,7 @@ class Utils
     }
 
     /**
-     * @throws UnrecognizedValueTypeException
+     * @throws Exception
      */
     private static function stringifyNumericArray(array $items, ?bool $multiline = false): string
     {

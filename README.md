@@ -65,7 +65,6 @@ final class MyClass extends BaseClass implements Traversable, JsonSerializable
 {
     public function __construct()
     {
-    
     }
 }
 ```
@@ -89,8 +88,6 @@ $class->emptyLine();
 
 $class->createConstructor()
     ->append('parent::__construct(...func_get_args())');
-
-$class->emptyLine();
 
 # Create a method separately
 $method = Method::new('getErrors', Modifier::PUBLIC, 'array')

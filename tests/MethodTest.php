@@ -145,14 +145,13 @@ class MethodTest extends TestCase
     /**
      * @test
      */
-    public function withPromotedArguments(): void
+    public function withPromotedArguments(): Method
     {
         $method = Method::new('__construct');
 
         $method->addArgument('firstName', 'string', 'Alex', Modifier::PRIVATE);
         $method->addArgument('lastName', 'string', 'Kowalski', Modifier::PRIVATE);
         $method->addArgument('age', 'int', Argument::NO_PARAM, Modifier::PRIVATE);
-        $method->addArgument('isStudent', 'bool', false);
 
         $method->signature->setMultiline();
 
@@ -162,9 +161,59 @@ class MethodTest extends TestCase
         public function __construct(
             private string $firstName = 'Alex',
             private string $lastName = 'Kowalski',
-            private int $age,
-            bool $isStudent = false
+            private int $age
         ) {}
+        CODE);
+
+        return $method;
+    }
+
+    /**
+     * @test
+     * @depends withPromotedArguments
+     */
+    public function addNormalArguments(Method $method): Method
+    {
+        $method->addArgument('isStudent', 'bool');
+        $method->addArgument('isEmployed');
+
+        echo $method;
+
+        $this->expectOutputString(<<<'CODE'
+        public function __construct(
+            private string $firstName = 'Alex',
+            private string $lastName = 'Kowalski',
+            private int $age,
+            bool $isStudent,
+            $isEmployed
+        ) {}
+        CODE);
+
+        return $method;
+    }
+
+    /**
+     * @test
+     * @depends addNormalArguments
+     */
+    public function addBody(Method $method): void
+    {
+        $method->append('$this->age = $age');
+        $method->append('$this->isStudent = $isStudent');
+
+        echo $method;
+
+        $this->expectOutputString(<<<'CODE'
+        public function __construct(
+            private string $firstName = 'Alex',
+            private string $lastName = 'Kowalski',
+            private int $age,
+            bool $isStudent,
+            $isEmployed
+        ) {
+            $this->age = $age;
+            $this->isStudent = $isStudent;
+        }
         CODE);
     }
 }

@@ -178,7 +178,7 @@ class Signature extends DependencyAwareGenerator
     public function generate(bool $withDocBlock = true): string
     {
         if ($this->isMultiline) {
-            $args = "\n" . Utils::indent(join(",\n", $this->args)) . "\n";
+            $args = "\n".Utils::indent(join(",\n", $this->args))."\n";
         } else {
             $args = join(', ', $this->args);
         }
@@ -189,7 +189,7 @@ class Signature extends DependencyAwareGenerator
         $returnType = '';
 
         if (!empty($this->uses)) {
-            $uses = ' use ('. join(', ', $this->uses).')';
+            $uses = ' use ('.join(', ', $this->uses).')';
         }
 
         if ('' !== $this->returnType) {

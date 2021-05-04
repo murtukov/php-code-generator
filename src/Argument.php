@@ -13,10 +13,10 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
 
     private string $type;
     private string $name;
-    private bool   $isSpread      = false;
+    private bool   $isSpread = false;
     private bool   $isByReference = false;
-    private bool   $isNullable    = false;
-    private string $modifier      = Modifier::NONE;
+    private bool   $isNullable = false;
+    private string $modifier = Modifier::NONE;
 
     /**
      * @var mixed
@@ -58,7 +58,7 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
         $code = '';
 
         if (Modifier::NONE !== $this->modifier) {
-            $code .= $this->modifier . ' ';
+            $code .= $this->modifier.' ';
         }
 
         if ($this->type) {

@@ -84,9 +84,6 @@ trait ScopedContentTrait
         return $this;
     }
 
-    /**
-     * @return array|null
-     */
     public function getLastLine(): ?array
     {
         $length = count($this->content);
@@ -121,6 +118,6 @@ trait ScopedContentTrait
             return '';
         }
 
-        return $left . $content . $right;
+        return $left.$content.$right;
     }
 }

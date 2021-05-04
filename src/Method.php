@@ -26,7 +26,7 @@ class Method extends AbstractFunction implements BlockInterface
     public function generate(): string
     {
         if ($this->signature->isMultiline) {
-            return $this->buildDocBlock() . $this->signature->generate(false) . " {{$this->generateWrappedContent()}}";
+            return $this->buildDocBlock().$this->signature->generate(false)." {{$this->generateWrappedContent()}}";
         }
 
         return <<<CODE

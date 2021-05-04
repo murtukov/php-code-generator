@@ -281,6 +281,44 @@ private function myMethod(?SplHeap $arg1 = null, string $arg2 = '', $arg3): void
 }
 ```
 
+### Constructor properties promotion
+
+```php
+$method = Method::new('__construct');
+
+$method->addArgument('firstName', 'string', Argument::NO_PARAM, Modifier::PRIVATE);
+$method->addArgument('lastName', 'string', 'Kowalski', Modifier::PRIVATE);
+$method->addArgument('age', 'int', 15);
+
+$method->signature->setMultiline();
+
+echo $method;
+```
+Result:
+```php
+public function __construct(
+    private string $firstName,
+    private string $lastName = 'Kowalski',
+    int $age = 15
+) {}
+```
+Same but creating from a class object:
+```php
+$class = PhpClass::new('MyClass');
+
+$class->createConstructor()
+      ->addArgument('firstName', 'string', Argument::NO_PARAM, Modifier::PRIVATE)
+      ->addArgument('lastName', 'string', 'Kowalski', Modifier::PRIVATE)
+      ->addArgument('age', 'int', 15)
+      ->signature->setMultiline();
+```
+Modifiers can also be set directly on agument objects:
+```php
+$argument = Argument::new("firstName")->setModifier(Modifier::PUBLIC);
+
+$constructor->add($argument);
+```
+
 ## Closure
 ```php
 use Murtukov\PHPCodeGenerator\Argument;

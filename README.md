@@ -16,7 +16,7 @@ A library to generate PHP 7.4 code
 - Functions
     - [Function](#function)
     - [Method](#method)
-      - [Constructor Property Promotion](#constructor-propertiy-promotion)
+      - [Constructor Property Promotion](#constructor-property-promotion)
     - [Closure](#closure)
     - [Arrow Function](#arrow-function)
 - [Object Instantiation](#object-instantiation)
@@ -282,7 +282,7 @@ private function myMethod(?SplHeap $arg1 = null, string $arg2 = '', $arg3): void
 }
 ```
 
-### Constructor propertiy promotion
+### Constructor property promotion
 
 ```php
 $method = Method::new('__construct');

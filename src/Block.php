@@ -15,7 +15,7 @@ class Block extends AbstractGenerator implements BlockInterface
     public function generate(): string
     {
         return <<<CODE
-        {{$this->generateContent()}}
+        {{$this->generateWrappedContent()}}
         CODE;
     }
 

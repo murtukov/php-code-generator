@@ -23,7 +23,11 @@ class ElseIfBlock extends AbstractGenerator
 
     public function generate(): string
     {
-        return " elseif ($this->expression) {{$this->generateContent()}}";
+        return <<<CODE
+         elseif ($this->expression) {
+        {$this->generateContent()}
+        }
+        CODE;
     }
 
     public function end(): IfElse

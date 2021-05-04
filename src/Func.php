@@ -22,9 +22,12 @@ class Func extends AbstractFunction implements BlockInterface
 
     public function generate(): string
     {
+        $content = $this->generateWrappedContent("\n", '');
+
         return <<<CODE
         {$this->buildDocBlock()}{$this->signature->generate(false)}
-        {{$this->generateContent()}}
+        {{$content}
+        }
         CODE;
     }
 }

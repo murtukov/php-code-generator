@@ -73,7 +73,8 @@ class PhpFileTest extends TestCase
         abstract class ArrayConverter
         {
             public function __construct()
-            {}
+            {
+            }
             
             public function convert(array $array = []): string
             {
@@ -122,7 +123,8 @@ class PhpFileTest extends TestCase
         namespace App\Converter;
 
         class YetAnotherClass
-        {}
+        {
+        }
         CODE);
 
         echo $file;

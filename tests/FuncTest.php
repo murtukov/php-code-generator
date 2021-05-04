@@ -18,7 +18,8 @@ class FuncTest extends TestCase
 
         $this->expectOutputString(<<<CODE
         function myMethod(): void
-        {}
+        {
+        }
         CODE);
 
         echo $func;

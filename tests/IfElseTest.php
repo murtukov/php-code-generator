@@ -14,7 +14,9 @@ class IfElseTest extends TestCase
         $ifElse = IfElse::new('"name" === 15');
 
         $expected = <<<CODE
-        if ("name" === 15) {}
+        if ("name" === 15) {
+        
+        }
         CODE;
 
         $this->assertEquals($expected, (string) $ifElse);
@@ -27,7 +29,11 @@ class IfElseTest extends TestCase
         $ifElse->createElse();
 
         $expected = <<<CODE
-        if (true) {} else {}
+        if (true) {
+        
+        } else {
+        
+        }
         CODE;
 
         $this->assertEquals($expected, (string) $ifElse);
@@ -41,7 +47,13 @@ class IfElseTest extends TestCase
         $ifElse->createElseIf('false');
 
         $expected = <<<CODE
-        if (true) {} elseif (false) {} else {}
+        if (true) {
+        
+        } elseif (false) {
+        
+        } else {
+        
+        }
         CODE;
 
         $this->assertEquals($expected, (string) $ifElse);

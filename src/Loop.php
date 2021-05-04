@@ -27,13 +27,17 @@ class Loop extends DependencyAwareGenerator implements BlockInterface
         // do ... while
         if (self::TYPE_DO_WHILE === $this->type) {
             return <<<CODE
-            do {{$this->generateContent()}} while ($this->condition)
+            do {
+            {$this->generateContent()}
+            } while ($this->condition)
             CODE;
         }
 
         // Other loop types
         return <<<CODE
-        $this->type ($this->condition) {{$this->generateContent()}}
+        $this->type ($this->condition) {
+        {$this->generateContent()}
+        }
         CODE;
     }
 

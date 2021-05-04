@@ -105,9 +105,12 @@ class PhpClass extends OOPStructure
 
     public function generate(): string
     {
+        $content = $this->generateWrappedContent("\n", '');
+
         return <<<CODE
         {$this->buildDocBlock()}{$this->buildPrefix()}class $this->name{$this->buildExtends()}{$this->buildImplements()}
-        {{$this->generateContent()}}
+        {{$content}
+        }
         CODE;
     }
 

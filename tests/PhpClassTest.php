@@ -18,7 +18,8 @@ class PhpClassTest extends TestCase
     {
         $code = <<<CODE
         class Stringifier
-        {}
+        {
+        }
         CODE;
 
         $class = PhpClass::new('Stringifier');
@@ -35,7 +36,8 @@ class PhpClassTest extends TestCase
     {
         $code = <<<CODE
         class Stringifier extends SplStack
-        {}
+        {
+        }
         CODE;
 
         $class->setExtends(SplStack::class);
@@ -52,7 +54,8 @@ class PhpClassTest extends TestCase
     {
         $code = <<<CODE
         class Stringifier extends SplStack implements JsonSerializable, ArrayAccess
-        {}
+        {
+        }
         CODE;
 
         $class->addImplements(JsonSerializable::class, ArrayAccess::class);
@@ -175,7 +178,8 @@ class PhpClassTest extends TestCase
 
         $this->expectOutputString(<<<CODE
         class Stringifier
-        {}
+        {
+        }
         CODE);
 
         echo $class;
@@ -209,7 +213,8 @@ class PhpClassTest extends TestCase
         class Stringifier
         {
             public function myCustomMethod()
-            {}
+            {
+            }
         }
         CODE);
 

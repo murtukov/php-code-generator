@@ -6,11 +6,17 @@ namespace Murtukov\PHPCodeGenerator;
 
 use function array_map;
 use function array_unshift;
+use function count;
+use function end;
 use function join;
+use function rtrim;
 
 trait ScopedContentTrait
 {
-    private array $content = [];
+    /**
+     * @var array[]
+     */
+    protected array $content = [];
     private int $emptyLinesBuffer = 0;
     protected array $dependencyAwareChildren = [];
 
@@ -78,15 +84,43 @@ trait ScopedContentTrait
         return $this;
     }
 
+    /**
+     * @return array|null
+     */
+    public function getLastLine(): ?array
+    {
+        $length = count($this->content);
+
+        if ($length > 0) {
+            return $this->content[--$length];
+        }
+
+        return null;
+    }
+
     protected function generateContent(): string
     {
         $content = '';
 
         if (!empty($this->content)) {
             $content = Utils::indent(join("\n", array_map(fn ($line) => join('', $line), $this->content)));
-            $content = "\n" . rtrim($content) . "\n";
+            $content = rtrim($content);
         }
 
         return $content;
+    }
+
+    /**
+     * Generate content wrapped with new lines.
+     */
+    protected function generateWrappedContent(string $left = "\n", string $right = "\n"): string
+    {
+        $content = $this->generateContent();
+
+        if (!$content) {
+            return '';
+        }
+
+        return $left . $content . $right;
     }
 }

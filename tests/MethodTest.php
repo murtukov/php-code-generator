@@ -20,7 +20,8 @@ class MethodTest extends TestCase
 
         $this->expectOutputString(<<<CODE
         private function myMethod(): void
-        {}
+        {
+        }
         CODE);
 
         echo $method;
@@ -134,7 +135,8 @@ class MethodTest extends TestCase
 
         $this->expectOutputString(<<<'CODE'
         private function myMethod($arg4, ...$arg5): Collection
-        {}
+        {
+        }
         CODE);
 
         echo $method;

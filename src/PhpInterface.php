@@ -19,9 +19,12 @@ class PhpInterface extends OOPStructure
             $extends = ' extends '.join(', ', $this->extends);
         }
 
+        $content = $this->generateWrappedContent("\n", '');
+
         return <<<CODE
         {$this->buildDocBlock()}interface $this->name{$extends}
-        {{$this->generateContent()}}
+        {{$content}
+        }
         CODE;
     }
 
@@ -62,7 +65,7 @@ class PhpInterface extends OOPStructure
     /**
      * @return $this
      */
-    public function addExtends(string ...$extends)
+    public function addExtends(string ...$extends): self
     {
         foreach ($extends as $extend) {
             $this->extends[] = $this->resolveQualifier($extend);

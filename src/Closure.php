@@ -25,7 +25,7 @@ class Closure extends AbstractFunction
     public function generate(): string
     {
         return <<<CODE
-        $this->signature {{$this->generateContent()}}
+        $this->signature {{$this->generateWrappedContent()}}
         CODE;
     }
 }

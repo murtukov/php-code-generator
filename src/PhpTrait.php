@@ -53,9 +53,12 @@ class PhpTrait extends OOPStructure
 
     public function generate(): string
     {
+        $content = $this->generateWrappedContent("\n", '');
+
         return <<<CODE
         {$this->buildDocBlock()}trait $this->name
-        {{$this->generateContent()}}
+        {{$content}
+        }
         CODE;
     }
 }

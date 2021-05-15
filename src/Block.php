@@ -10,6 +10,7 @@ class Block extends AbstractGenerator implements BlockInterface
 
     final public function __construct()
     {
+        $this->dependencyAwareChildren = [&$this->content];
     }
 
     public function generate(): string

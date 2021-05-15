@@ -12,7 +12,7 @@ class Func extends AbstractFunction implements BlockInterface
     final public function __construct(string $name, string $returnType = '')
     {
         $this->signature = new Signature($name, Modifier::NONE, $returnType);
-        $this->dependencyAwareChildren = [$this->signature];
+        $this->dependencyAwareChildren = [$this->signature, &$this->content];
     }
 
     public static function new(string $name, string $returnType = ''): self

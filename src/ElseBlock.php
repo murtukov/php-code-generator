@@ -13,6 +13,8 @@ class ElseBlock extends AbstractGenerator
     public function __construct(IfElse $parent)
     {
         $this->parent = $parent;
+
+        $this->dependencyAwareChildren = [&$this->content];
     }
 
     public function end(): IfElse

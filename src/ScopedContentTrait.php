@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator;
 
-use function array_map;
+use function array_slice;
 use function array_unshift;
-use function count;
 use function end;
 use function join;
 use function rtrim;
@@ -14,7 +13,7 @@ use function rtrim;
 trait ScopedContentTrait
 {
     /**
-     * @var array[]
+     * @var object[]
      */
     protected array $content = [];
     private int $emptyLinesBuffer = 0;
@@ -27,17 +26,7 @@ trait ScopedContentTrait
      */
     public function append(...$values): self
     {
-        if (end($values) instanceof BlockInterface) {
-            $this->content[] = [...$values];
-        } else {
-            $this->content[] = [...$values, ';'];
-        }
-
-        foreach ($values as $value) {
-            if ($value instanceof DependencyAwareGenerator) {
-                $this->dependencyAwareChildren[] = $value;
-            }
-        }
+        $this->content[] = $this->createNewLine($values);
 
         return $this;
     }
@@ -49,17 +38,7 @@ trait ScopedContentTrait
      */
     public function prepend(...$values): self
     {
-        if (end($values) instanceof BlockInterface) {
-            array_unshift($this->content, [...$values]);
-        } else {
-            array_unshift($this->content, [...$values, ';']);
-        }
-
-        foreach ($values as $value) {
-            if ($value instanceof DependencyAwareGenerator) {
-                $this->dependencyAwareChildren[] = $value;
-            }
-        }
+        array_unshift($this->content, $this->createNewLine($values));
 
         return $this;
     }
@@ -69,7 +48,7 @@ trait ScopedContentTrait
      */
     public function emptyLine(): self
     {
-        $this->content[] = [];
+        $this->content[] = '';
 
         return $this;
     }
@@ -84,15 +63,19 @@ trait ScopedContentTrait
         return $this;
     }
 
-    public function getLastLine(): ?array
+    public function getFirstLine(): ?object
     {
-        $length = count($this->content);
+        return $this->content[0] ?? null;
+    }
 
-        if ($length > 0) {
-            return $this->content[--$length];
-        }
+    public function getLastLine(): ?object
+    {
+        return end($this->content) ?: null;
+    }
 
-        return null;
+    public function getRange(int $start = 0, int $end = null): array
+    {
+        return array_slice($this->content, $start, $end);
     }
 
     protected function generateContent(): string
@@ -100,7 +83,7 @@ trait ScopedContentTrait
         $content = '';
 
         if (!empty($this->content)) {
-            $content = Utils::indent(join("\n", array_map(fn ($line) => join('', $line), $this->content)));
+            $content = Utils::indent(join("\n", $this->content));
             $content = rtrim($content);
         }
 
@@ -108,7 +91,7 @@ trait ScopedContentTrait
     }
 
     /**
-     * Generate content wrapped with new lines.
+     * Generate content optionally wrapped with new lines.
      */
     protected function generateWrappedContent(string $left = "\n", string $right = "\n"): string
     {
@@ -119,5 +102,33 @@ trait ScopedContentTrait
         }
 
         return $left.$content.$right;
+    }
+
+    private function createNewLine($values)
+    {
+        return new class($values) extends DependencyAwareGenerator
+        {
+            private array $parts;
+
+            public function __construct(array $values)
+            {
+                $this->parts = $values;
+
+                foreach ($values as $value) {
+                    if ($value instanceof DependencyAwareGenerator) {
+                        $this->dependencyAwareChildren[] = $value;
+                    }
+                }
+
+                if (!end($values) instanceof BlockInterface) {
+                    $this->parts[] = ';';
+                }
+            }
+
+            public function generate(): string
+            {
+                return join($this->parts);
+            }
+        };
     }
 }

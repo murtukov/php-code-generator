@@ -14,6 +14,7 @@ abstract class OOPStructure extends DependencyAwareGenerator
     final public function __construct(string $name)
     {
         $this->name = $name;
+        $this->dependencyAwareChildren = [&$this->content];
     }
 
     /**

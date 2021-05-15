@@ -19,6 +19,8 @@ class ElseIfBlock extends AbstractGenerator
     {
         $this->expression = $expression;
         $this->parent = $parent;
+
+        $this->dependencyAwareChildren = [&$this->content];
     }
 
     public function generate(): string

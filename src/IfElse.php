@@ -22,6 +22,8 @@ class IfElse extends AbstractGenerator implements BlockInterface
     final public function __construct($ifExpression = '')
     {
         $this->expression = $ifExpression;
+
+        $this->dependencyAwareChildren = [&$this->content];
     }
 
     /**

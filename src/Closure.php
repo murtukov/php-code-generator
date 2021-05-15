@@ -11,7 +11,7 @@ class Closure extends AbstractFunction
     final public function __construct(string $returnType = '')
     {
         $this->signature = new Signature('', Modifier::NONE, $returnType);
-        $this->dependencyAwareChildren = [$this->signature];
+        $this->dependencyAwareChildren = [$this->signature, &$this->content];
     }
 
     /**

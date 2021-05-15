@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator;
 
-abstract class DependencyAwareGenerator extends AbstractGenerator
+trait DependencyAwareTrait
 {
     protected array $usePaths = [];
     protected array $useGroups = [];
@@ -79,7 +79,7 @@ abstract class DependencyAwareGenerator extends AbstractGenerator
         $result = [];
 
         foreach ($this->useGroups as $path => $classNames) {
-            $result[rtrim($path, '\\').'\{'.join(', ', $classNames).'}'] = '';
+            $result[rtrim($path, '\\').'\{'.implode(', ', $classNames).'}'] = '';
         }
 
         return $result;
@@ -97,8 +97,10 @@ abstract class DependencyAwareGenerator extends AbstractGenerator
 
         foreach ($this->dependencyAwareChildren as $child) {
             if (is_array($child)) {
-                foreach ($child as $subchild) if ($subchild instanceof self) {
-                    $mergedPaths = $mergedPaths + $subchild->getUsePaths();
+                foreach ($child as $subchild) {
+                    if ($subchild instanceof self) {
+                        $mergedPaths = $mergedPaths + $subchild->getUsePaths();
+                    }
                 }
             } else {
                 $mergedPaths = $mergedPaths + $child->getUsePaths();

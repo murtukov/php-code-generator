@@ -50,7 +50,7 @@ class Collection extends DependencyAwareGenerator
      *
      * @return static
      */
-    public static function map(array $items, callable $map, bool $withKeys = true): self
+    public static function map(iterable $items, callable $map, bool $withKeys = true): self
     {
         $array = new static([], true, $withKeys);
 

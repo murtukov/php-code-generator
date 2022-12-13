@@ -12,6 +12,8 @@ use function mkdir;
 
 class PhpFile extends DependencyAwareGenerator
 {
+    public const STRICT = 'strict_types';
+
     protected string   $namespace = '';
     protected string   $name;
     protected ?Comment $comment;
@@ -33,14 +35,47 @@ class PhpFile extends DependencyAwareGenerator
         return new self($name);
     }
 
+    public function addDeclare(string $name, $value): self
+    {
+        $this->declares[$name] = Utils::stringify($value);
+
+        return $this;
+    }
+
+    public function removeDeclare(string $name): self
+    {
+        unset($this->declares[$name]);
+
+        return $this;
+    }
+
+    public function addStrict(): self
+    {
+        $this->addDeclare(self::STRICT, 1);
+
+        return $this;
+    }
+
+    public function removeStrict(): self
+    {
+        $this->removeDeclare(self::STRICT);
+
+        return $this;
+    }
+
     public function generate(): string
     {
+        $declareItems = [];
+        foreach ($this->declares as $key => $value) {
+            $declareItems[] = "declare($key=$value);";
+        }
+        $declares = count($declareItems) > 0 ? implode("\n", $declareItems) . "\n" : '';
         $namespace = $this->namespace ? "\nnamespace $this->namespace;\n" : '';
         $classes = implode("\n\n", $this->classes);
 
         return <<<CODE
         <?php
-        $namespace{$this->buildUseStatements()}
+        $declares$namespace{$this->buildUseStatements()}
         $classes
         CODE;
     }

@@ -11,6 +11,9 @@ use Murtukov\PHPCodeGenerator\Method;
 use Murtukov\PHPCodeGenerator\Modifier;
 use Murtukov\PHPCodeGenerator\PhpClass;
 use Murtukov\PHPCodeGenerator\PhpFile;
+use Murtukov\PHPCodeGenerator\PhpInterface;
+use Murtukov\PHPCodeGenerator\PhpTrait;
+use Murtukov\PHPCodeGenerator\Property;
 use Murtukov\PHPCodeGenerator\Qualifier;
 use PHPUnit\Framework\TestCase;
 
@@ -167,7 +170,7 @@ class PhpFileTest extends TestCase
      * @test
      * @depends modifyComments
      */
-    public function saveFile(PhpFile $file): void
+    public function saveFile(PhpFile $file): PhpFile
     {
         $path = sys_get_temp_dir().'/PHPCodeGenerator/GeneratedFile.php';
 
@@ -189,5 +192,165 @@ class PhpFileTest extends TestCase
 
         // @phpstan-ignore-next-line
         $this->assertEquals(['status' => 200], $yetAnotherClass->getArray());
+
+        @unlink($path);
+
+        return $file;
+    }
+
+    /**
+     * @test
+     * @depends saveFile
+     */
+    public function modifyFileClassToTrait(PhpFile $file): PhpFile
+    {
+        $file->removeClass('YetAnotherClass');
+        $file->addTrait(new PhpTrait('TAnotherTrait'));
+
+        $this->assertNull($file->getClass('NonExistentClass'));
+        $this->assertEquals('App\Converter', $file->getNamespace());
+
+        $this->assertNotNull($file->getTrait('TAnotherTrait'));
+        $this->assertNotNull($file->getOOPStructure('TAnotherTrait'));
+        $this->assertInstanceOf(PhpTrait::class, $file->getOOPStructure('TAnotherTrait'));
+        $this->assertNull($file->getClass('TAnotherTrait'));
+        $this->assertNull($file->getInterface('TAnotherTrait'));
+
+        $this->expectOutputString(<<<'CODE'
+        <?php
+
+        namespace App\Converter;
+
+        trait TAnotherTrait
+        {
+        }
+        CODE
+        );
+
+        echo $file;
+
+        return $file;
+    }
+
+
+    /**
+     * @test
+     * @depends modifyFileClassToTrait
+     */
+    public function modifyFileAddAnotherTrait(PhpFile $file): PhpFile
+    {
+        $file->createTrait('TYetAnotherTrait')
+            ->append(Method::new('getName'));
+
+        $this->expectOutputString(<<<'CODE'
+        <?php
+
+        namespace App\Converter;
+
+        trait TAnotherTrait
+        {
+        }
+
+        trait TYetAnotherTrait
+        {
+            public function getName()
+            {
+            }
+        }
+        CODE);
+
+        echo $file;
+
+        return $file;
+    }
+
+
+    /**
+     * @test
+     * @depends modifyFileClassToTrait
+     */
+    public function modifyFileTraitToInterface(PhpFile $file): PhpFile
+    {
+        $file->removeTrait('TAnotherTrait');
+        $file->removeTrait('TYetAnotherTrait');
+        $file->addInterface(new PhpInterface('IAnotherTrait'));
+
+        $this->assertNull($file->getClass('NonExistentClass'));
+        $this->assertEquals('App\Converter', $file->getNamespace());
+
+        $this->assertNotNull($file->getInterface('IAnotherTrait'));
+        $this->assertNotNull($file->getOOPStructure('IAnotherTrait'));
+        $this->assertInstanceOf(PhpInterface::class, $file->getOOPStructure('IAnotherTrait'));
+        $this->assertNull($file->getClass('IAnotherTrait'));
+        $this->assertNull($file->getTrait('IAnotherTrait'));
+
+        $this->expectOutputString(<<<'CODE'
+        <?php
+
+        namespace App\Converter;
+
+        interface IAnotherTrait
+        {
+        }
+        CODE
+        );
+
+        echo $file;
+
+        return $file;
+    }
+
+
+    /**
+     * @test
+     * @depends modifyFileTraitToInterface
+     */
+    public function modifyFileAddAnotherInterface(PhpFile $file): PhpFile
+    {
+        $file->createInterface('IYetAnotherTrait')
+            ->createSignature('getName');
+
+        $this->expectOutputString(<<<'CODE'
+        <?php
+
+        namespace App\Converter;
+
+        interface IAnotherTrait
+        {
+        }
+
+        interface IYetAnotherTrait
+        {
+            public function getName();
+        }
+        CODE);
+
+        echo $file;
+
+        return $file;
+    }
+
+    /**
+     * @test
+     * @depends modifyFileAddAnotherInterface
+     */
+    public function modifyFileARemoveInterface(PhpFile $file): PhpFile
+    {
+        $file->removeInterface('IAnotherTrait');
+
+        $this->expectOutputString(<<<'CODE'
+        <?php
+
+        namespace App\Converter;
+
+        interface IYetAnotherTrait
+        {
+            public function getName();
+        }
+        CODE);
+
+        echo $file;
+
+        return $file;
     }
 }

@@ -22,6 +22,23 @@ class PropertyTest extends TestCase
         $this->assertEquals($anotherName, $property->getName());
         $this->assertEquals(Modifier::PUBLIC, $property->getModifier());
 
+        $property->setTypeHint('int');
+        $this->assertEquals("public int $$anotherName", $property->generate());
+
+        $property->setDefaultValue(0);
+        $this->assertEquals("public int $$anotherName = 0", $property->generate());
+
+        $property->setDefaultValue(Property::NO_PARAM);
+        $this->assertEquals("public int $$anotherName", $property->generate());
+
+        $property->setTypeHint('');
+        $property->setDefaultValue('');
+        $this->assertEquals("public $$anotherName = ''", $property->generate());
+
+        $property->setDefaultValue(null);
+        $this->assertEquals("public $$anotherName = null", $property->generate());
+
+        $property->setDefaultValue(Property::NO_PARAM);
         $property->setStatic();
         $this->assertTrue($property->isStatic);
         $this->assertEquals("public static $$anotherName", $property->generate());

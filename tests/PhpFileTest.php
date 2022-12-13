@@ -24,7 +24,8 @@ class PhpFileTest extends TestCase
         $file = PhpFile::new()
             ->setNamespace('App\Converter')
             ->addUseGroup('Symfony\Validator\Converters', 'NotNull', 'Symfony\Validator\Converters\Length')
-            ->setComment('This file was generated and should not be modified manually.');
+            ->setComment('This file was generated and should not be modified manually.')
+            ->addStrict();
 
         $class = $file->createClass('ArrayConverter')
             ->setAbstract()
@@ -59,6 +60,7 @@ class PhpFileTest extends TestCase
 
         $this->expectOutputString(<<<'CODE'
         <?php
+        declare(strict_types=1);
 
         namespace App\Converter;
 
@@ -109,6 +111,7 @@ class PhpFileTest extends TestCase
      */
     public function modifyFile(PhpFile $file): PhpFile
     {
+        $file->removeStrict();
         $file->removeClass('ArrayConverter');
         $file->removeUse('Symfony\Validator\Converters');
         $file->addClass(new PhpClass('YetAnotherClass'));

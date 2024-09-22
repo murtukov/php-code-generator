@@ -12,8 +12,8 @@ use function mkdir;
 
 class PhpFile extends DependencyAwareGenerator
 {
-    protected string   $namespace = '';
-    protected string   $name;
+    protected string $namespace = '';
+    protected string $name;
     protected ?Comment $comment;
 
     /** @var PhpClass[] */

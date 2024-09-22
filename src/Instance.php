@@ -6,14 +6,11 @@ namespace Murtukov\PHPCodeGenerator;
 
 class Instance extends DependencyAwareGenerator
 {
-    private array  $args;
+    private array $args;
     private string $qualifier;
-    public bool   $multiline = false;
+    public bool $multiline = false;
 
-    /**
-     * @param mixed ...$args
-     */
-    final public function __construct(string $qualifier, ...$args)
+    final public function __construct(string $qualifier, mixed ...$args)
     {
         $this->qualifier = $this->resolveQualifier($qualifier);
         $this->args = $args;
@@ -47,11 +44,9 @@ class Instance extends DependencyAwareGenerator
     }
 
     /**
-     * @param mixed $arg
-     *
      * @return $this
      */
-    public function addArgument($arg): self
+    public function addArgument(mixed $arg): self
     {
         $this->args[] = $arg;
 
@@ -59,11 +54,9 @@ class Instance extends DependencyAwareGenerator
     }
 
     /**
-     * @param mixed ...$args
-     *
      * @return static
      */
-    public static function multiline(string $qualifier, ...$args): self
+    public static function multiline(string $qualifier, mixed ...$args): self
     {
         $instance = new static($qualifier, ...$args);
         $instance->multiline = true;
@@ -72,11 +65,9 @@ class Instance extends DependencyAwareGenerator
     }
 
     /**
-     * @param mixed ...$args
-     *
      * @return static
      */
-    public static function new(string $qualifier, ...$args): self
+    public static function new(string $qualifier, mixed ...$args): self
     {
         return new static($qualifier, ...$args);
     }

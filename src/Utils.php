@@ -6,6 +6,7 @@ namespace Murtukov\PHPCodeGenerator;
 
 use Error;
 use Exception;
+
 use function get_class;
 use function is_int;
 use function json_encode;
@@ -16,12 +17,12 @@ use function var_export;
 
 class Utils
 {
-    const TYPE_STRING = 'string';
-    const TYPE_INT = 'integer';
-    const TYPE_BOOL = 'boolean';
-    const TYPE_DOUBLE = 'double';
-    const TYPE_OBJECT = 'object';
-    const TYPE_ARRAY = 'array';
+    public const TYPE_STRING = 'string';
+    public const TYPE_INT = 'integer';
+    public const TYPE_BOOL = 'boolean';
+    public const TYPE_DOUBLE = 'double';
+    public const TYPE_OBJECT = 'object';
+    public const TYPE_ARRAY = 'array';
 
     /**
      * @var bool whether arrays should be split into multiple lines
@@ -43,10 +44,7 @@ class Utils
      */
     private static array $customConverters = [];
 
-    /**
-     * @param mixed $value
-     */
-    public static function stringify($value, ?bool $multiline = null, ?bool $withKeys = null, array $converters = []): string
+    public static function stringify(mixed $value, ?bool $multiline = null, ?bool $withKeys = null, array $converters = []): string
     {
         // Common options to avoid passing them recursively
         self::$multiline = $multiline;
@@ -57,11 +55,9 @@ class Utils
     }
 
     /**
-     * @param mixed $value
-     *
      * @throws Exception
      */
-    private static function stringifyValue($value, bool $topLevel = false): string
+    private static function stringifyValue(mixed $value, bool $topLevel = false): string
     {
         $type = gettype($value);
 
@@ -104,7 +100,7 @@ class Utils
                         $result = json_encode($value->__toString());
 
                         return false !== $result ? $result : '[object]';
-                    } catch (Error $e) {
+                    } catch (Error) {
                         $class = get_class($value);
                         throw new Exception("Cannot stringify object of class: '$class'.");
                     }
@@ -180,14 +176,11 @@ class Utils
 
     private static function filterString(string $string): string
     {
-        switch ($string[0]) {
-            case Config::$suppressSymbol:
-                return substr($string, 1);
-            case '$':
-                return $string;
-            default:
-                return var_export($string, true);
-        }
+        return match ($string[0]) {
+            Config::$suppressSymbol => substr($string, 1),
+            '$' => $string,
+            default => var_export($string, true),
+        };
     }
 
     public static function indent(string $code, bool $leadingIndent = true): string
@@ -202,10 +195,7 @@ class Utils
         return $code;
     }
 
-    /**
-     * @return false|string
-     */
-    public static function resolveQualifier(string $path)
+    public static function resolveQualifier(string $path): bool|string
     {
         if ($portion = strrchr($path, '\\')) {
             return substr($portion, 1);

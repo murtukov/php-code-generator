@@ -12,7 +12,7 @@ class Comment extends AbstractGenerator implements BlockInterface
     public const TYPE_SLASH = 'Slash';
 
     protected string $type;
-    protected array  $lines = [];
+    protected array $lines = [];
 
     final private function __construct(string $text = '', string $type = self::TYPE_STAR)
     {

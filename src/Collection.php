@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace Murtukov\PHPCodeGenerator;
 
 use Closure;
+
 use function count;
-use function is_bool;
 use function is_callable;
 
 class Collection extends DependencyAwareGenerator
 {
-    protected array  $items = [];
-    protected bool   $multiline = false;
-    protected bool   $withKeys = true;
-    protected array  $converters = [];
+    protected array $items = [];
+    protected bool $multiline = false;
+    protected bool $withKeys = true;
+    protected array $converters = [];
     protected string $orderBy = 'none';
 
     protected Utils $utils;
@@ -64,11 +64,9 @@ class Collection extends DependencyAwareGenerator
     /**
      * Adds item to the array.
      *
-     * @param mixed $value
-     *
      * @return $this
      */
-    public function addItem(string $key, $value): self
+    public function addItem(string $key, mixed $value): self
     {
         $this->items[$key] = $value;
 
@@ -81,10 +79,8 @@ class Collection extends DependencyAwareGenerator
 
     /**
      * Adds item to the array if it's not equal null.
-     *
-     * @param mixed $value
      */
-    public function addIfNotNull(string $key, $value): self
+    public function addIfNotNull(string $key, mixed $value): self
     {
         if (null === $value) {
             return $this;
@@ -96,11 +92,9 @@ class Collection extends DependencyAwareGenerator
     /**
      * Adds item to the array if it's not empty.
      *
-     * @param mixed $value
-     *
      * @return $this
      */
-    public function addIfNotEmpty(string $key, $value): self
+    public function addIfNotEmpty(string $key, mixed $value): self
     {
         if (empty($value)) {
             return $this;
@@ -112,11 +106,9 @@ class Collection extends DependencyAwareGenerator
     /**
      * Adds item to the array if it's not equal false.
      *
-     * @param mixed $value
-     *
      * @return $this
      */
-    public function addIfNotFalse(string $key, $value): self
+    public function addIfNotFalse(string $key, mixed $value): self
     {
         if (false === $value) {
             return $this;
@@ -127,20 +119,14 @@ class Collection extends DependencyAwareGenerator
 
     /**
      * Returns self if value is true or callback returns true, otherwise returns a mock object.
-     *
-     * @param bool|Closure $value
-     *
-     * @return self|Mock
      */
-    public function ifTrue($value)
+    public function ifTrue(mixed $value): self|Mock
     {
-        if (is_bool($value)) {
-            return $value ? $this : Mock::getInstance($this);
-        } elseif (is_callable($value)) {
-            return $value() ? $this : Mock::getInstance($this);
+        if (is_callable($value)) {
+            $value = $value(); // unwrap the closure
         }
 
-        return Mock::getInstance($this);
+        return $value ? $this : Mock::getInstance($this);
     }
 
     public function getConverters(): array

@@ -14,20 +14,20 @@ class Signature extends DependencyAwareGenerator
     use DocBlockTrait;
 
     public string $name;
-    public bool   $isStatic = false;
+    public bool $isStatic = false;
     public string $modifier;
-    public bool   $isMultiline = false;
+    public bool $isMultiline = false;
 
     protected string $returnType = '';
-    protected array  $args = [];
-    protected array  $uses = []; // variables of parent scope
+    protected array $args = [];
+    protected array $uses = []; // variables of parent scope
     protected string $qualifier;
 
     public function __construct(
         string $name = '',
         string $modifier = Modifier::NONE,
         string $returnType = '',
-        string $qualifier = 'function '
+        string $qualifier = 'function ',
     ) {
         $this->name = $name;
         $this->modifier = $modifier;
@@ -56,8 +56,6 @@ class Signature extends DependencyAwareGenerator
      * Some arguments are stored as simple strings for better performance.
      * If they are requested, they are first converted into objects then
      * returned back.
-     *
-     * @return Argument
      */
     public function getArgument(int $index = 1): ?Argument
     {
@@ -95,28 +93,23 @@ class Signature extends DependencyAwareGenerator
         return $this;
     }
 
-    /**
-     * @param mixed $defaultValue
-     */
     public function createArgument(
         string $name,
         string $type = '',
-        $defaultValue = Argument::NO_PARAM,
-        string $modifier = Modifier::NONE
+        mixed $defaultValue = Argument::NO_PARAM,
+        string $modifier = Modifier::NONE,
     ): Argument {
         return $this->args[] = new Argument($name, $type, $defaultValue, $modifier);
     }
 
     /**
-     * @param mixed$defaultValue
-     *
      * @return $this
      */
     public function addArgument(
         string $name,
         string $type = '',
-        $defaultValue = Argument::NO_PARAM,
-        string $modifier = Modifier::NONE
+        mixed $defaultValue = Argument::NO_PARAM,
+        string $modifier = Modifier::NONE,
     ): self {
         if (1 === func_num_args()) {
             $this->args[] = "$$name";
@@ -144,9 +137,7 @@ class Signature extends DependencyAwareGenerator
      */
     public function add(FunctionMemberInterface $member): self
     {
-        if ($member instanceof Argument) {
-            $this->args[] = $member;
-        }
+        $this->args[] = $member;
 
         return $this;
     }

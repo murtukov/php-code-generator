@@ -31,6 +31,7 @@ class PhpInterfaceTest extends TestCase
 
     /**
      * @test
+     *
      * @depends emptyBase
      */
     public function addExtends(PhpInterface $interface): PhpInterface
@@ -49,6 +50,7 @@ class PhpInterfaceTest extends TestCase
 
     /**
      * @test
+     *
      * @depends addExtends
      */
     public function addConsts(PhpInterface $interface): PhpInterface
@@ -71,6 +73,7 @@ class PhpInterfaceTest extends TestCase
 
     /**
      * @test
+     *
      * @depends addConsts
      */
     public function addSignatures(PhpInterface $interface): void

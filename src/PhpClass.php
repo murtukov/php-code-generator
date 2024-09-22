@@ -9,9 +9,9 @@ use function join;
 class PhpClass extends OOPStructure
 {
     protected string $extends = '';
-    protected bool   $isAbstract = false;
-    protected bool   $isFinal = false;
-    protected array  $implements = [];
+    protected bool $isAbstract = false;
+    protected bool $isFinal = false;
+    protected array $implements = [];
 
     public function setExtends(string $fqcn): self
     {
@@ -58,21 +58,17 @@ class PhpClass extends OOPStructure
     }
 
     /**
-     * @param mixed $value
-     *
      * @return $this
      */
-    public function addConst(string $name, $value, string $modifier = Modifier::PUBLIC): self
+    public function addConst(string $name, mixed $value, string $modifier = Modifier::PUBLIC): self
     {
         return $this->append(Property::new($name, $modifier, '', $value)->setConst());
     }
 
     /**
-     * @param mixed $defaulValue
-     *
      * @return $this
      */
-    public function addProperty(string $name, string $modifier = Modifier::PUBLIC, string $type = '', $defaulValue = ''): self
+    public function addProperty(string $name, string $modifier = Modifier::PUBLIC, string $type = '', mixed $defaulValue = ''): self
     {
         return $this->append(new Property($name, $modifier, $type, $defaulValue));
     }

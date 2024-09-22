@@ -10,7 +10,7 @@ namespace Murtukov\PHPCodeGenerator;
 class Mock
 {
     private static Collection $caller;
-    private static self   $instance;
+    private static self $instance;
 
     public static function getInstance(Collection $caller): self
     {

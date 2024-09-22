@@ -13,26 +13,21 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
 
     private string $type;
     private string $name;
-    private bool   $isSpread = false;
-    private bool   $isByReference = false;
-    private bool   $isNullable = false;
-    private string $modifier = Modifier::NONE;
+    private bool $isSpread = false;
+    private bool $isByReference = false;
+    private bool $isNullable = false;
+    private string $modifier;
 
-    /**
-     * @var mixed
-     */
-    private $defaultValue;
+    private mixed $defaultValue = '';
 
     /**
      * Argument constructor.
-     *
-     * @param mixed $defaultValue
      */
     final public function __construct(
         string $name,
         string $type = '',
-        $defaultValue = self::NO_PARAM,
-        string $modifier = Modifier::NONE
+        mixed $defaultValue = self::NO_PARAM,
+        string $modifier = Modifier::NONE,
     ) {
         $this->name = $name;
         $this->type = $this->resolveQualifier($type);
@@ -44,11 +39,9 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
     }
 
     /**
-     * @param mixed $defaultValue
-     *
      * @return static
      */
-    public static function new(string $name, string $type = '', $defaultValue = self::NO_PARAM, string $modifier = Modifier::NONE): self
+    public static function new(string $name, string $type = '', mixed $defaultValue = self::NO_PARAM, string $modifier = Modifier::NONE): self
     {
         return new static($name, $type, $defaultValue, $modifier);
     }
@@ -151,11 +144,9 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
     }
 
     /**
-     * @param mixed $value
-     *
      * @return $this
      */
-    public function setDefaultValue($value): self
+    public function setDefaultValue(mixed $value): self
     {
         if (INF !== $value) {
             $this->defaultValue = Utils::stringify($value);

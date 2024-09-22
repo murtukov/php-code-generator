@@ -31,6 +31,7 @@ class MethodTest extends TestCase
 
     /**
      * @test
+     *
      * @depends emptyBase
      */
     public function addContent(Method $method): Method
@@ -51,6 +52,7 @@ class MethodTest extends TestCase
 
     /**
      * @test
+     *
      * @depends addContent
      */
     public function addArguments(Method $method): Method
@@ -80,6 +82,7 @@ class MethodTest extends TestCase
 
     /**
      * @test
+     *
      * @depends addArguments
      */
     public function modifyParts(Method $method): Method
@@ -122,6 +125,7 @@ class MethodTest extends TestCase
 
     /**
      * @test
+     *
      * @depends modifyParts
      */
     public function removeParts(Method $method): void
@@ -170,6 +174,7 @@ class MethodTest extends TestCase
 
     /**
      * @test
+     *
      * @depends withPromotedArguments
      */
     public function addNormalArguments(Method $method): Method
@@ -194,6 +199,7 @@ class MethodTest extends TestCase
 
     /**
      * @test
+     *
      * @depends addNormalArguments
      */
     public function addBody(Method $method): void

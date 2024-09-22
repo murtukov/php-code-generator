@@ -73,7 +73,7 @@ trait ScopedContentTrait
         return end($this->content) ?: null;
     }
 
-    public function getRange(int $start = 0, int $end = null): array
+    public function getRange(int $start = 0, ?int $end = null): array
     {
         return array_slice($this->content, $start, $end);
     }
@@ -106,8 +106,7 @@ trait ScopedContentTrait
 
     private function createNewLine($values)
     {
-        return new class($values) extends DependencyAwareGenerator
-        {
+        return new class($values) extends DependencyAwareGenerator {
             private array $parts;
 
             public function __construct(array $values)

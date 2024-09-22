@@ -12,8 +12,6 @@ trait DependencyAwareTrait
     /**
      * List of all generator children, which maintain their own use dependencies.
      * The list should be defined in the constructor.
-     *
-     * @var mixed[]
      */
     protected array $dependencyAwareChildren = [];
 

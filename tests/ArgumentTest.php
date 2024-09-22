@@ -28,6 +28,7 @@ class ArgumentTest extends TestCase
 
     /**
      * @test
+     *
      * @depends fullBase
      */
     public function removeAttributes(Argument $argument): Argument
@@ -45,6 +46,7 @@ class ArgumentTest extends TestCase
 
     /**
      * @test
+     *
      * @depends removeAttributes
      */
     public function makePromoted(Argument $argument): Argument

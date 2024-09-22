@@ -12,8 +12,6 @@ abstract class DependencyAwareGenerator extends AbstractGenerator
     /**
      * List of all generator children, which maintain their own use dependencies.
      * The list should be defined in the constructor.
-     *
-     * @var mixed[]
      */
     protected array $dependencyAwareChildren = [];
 
@@ -97,8 +95,10 @@ abstract class DependencyAwareGenerator extends AbstractGenerator
 
         foreach ($this->dependencyAwareChildren as $child) {
             if (is_array($child)) {
-                foreach ($child as $subchild) if ($subchild instanceof self) {
-                    $mergedPaths = $mergedPaths + $subchild->getUsePaths();
+                foreach ($child as $subchild) {
+                    if ($subchild instanceof self) {
+                        $mergedPaths = $mergedPaths + $subchild->getUsePaths();
+                    }
                 }
             } else {
                 $mergedPaths = $mergedPaths + $child->getUsePaths();

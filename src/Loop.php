@@ -20,7 +20,7 @@ class Loop extends DependencyAwareGenerator implements BlockInterface
     {
         $this->condition = $condition;
         $this->type = $type;
-        
+
         $this->dependencyAwareChildren = [&$this->content];
     }
 

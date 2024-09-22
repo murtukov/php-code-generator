@@ -32,6 +32,7 @@ class PhpTraitTest extends TestCase
 
     /**
      * @test
+     *
      * @depends emptyBase
      */
     public function addProperties(PhpTrait $trait): PhpTrait
@@ -54,6 +55,7 @@ class PhpTraitTest extends TestCase
 
     /**
      * @test
+     *
      * @depends addProperties
      */
     public function addMethodsAndDocBlock(PhpTrait $trait): PhpTrait
@@ -101,6 +103,7 @@ class PhpTraitTest extends TestCase
 
     /**
      * @test
+     *
      * @depends addMethodsAndDocBlock
      */
     public function modifyTrait(PhpTrait $trait): void

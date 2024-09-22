@@ -29,6 +29,7 @@ class FuncTest extends TestCase
 
     /**
      * @test
+     *
      * @depends emptyBase
      */
     public function addContent(Func $func): Func
@@ -49,6 +50,7 @@ class FuncTest extends TestCase
 
     /**
      * @test
+     *
      * @depends addContent
      */
     public function addArguments(Func $func): Func

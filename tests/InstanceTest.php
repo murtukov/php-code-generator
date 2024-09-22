@@ -40,6 +40,7 @@ class InstanceTest extends TestCase
 
     /**
      * @test
+     *
      * @depends withOneArg
      */
     public function addSecondArgument(Instance $instance): void

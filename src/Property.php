@@ -11,20 +11,17 @@ class Property extends DependencyAwareGenerator
      */
     public const NO_PARAM = INF;
 
-    public string   $name;
+    public string $name;
     public ?Comment $docBlock = null;
-    public bool     $isNullable = false;
-    public bool     $isStatic = false;
-    public bool     $isConst = false;
+    public bool $isNullable = false;
+    public bool $isStatic = false;
+    public bool $isConst = false;
 
     private string $value = '';
     private string $modifier;
     private string $typeHint;
 
-    /**
-     * @param mixed $defaultValue
-     */
-    final public function __construct(string $name, ?string $modifier, string $typeHint = '', $defaultValue = self::NO_PARAM)
+    final public function __construct(string $name, ?string $modifier, string $typeHint = '', mixed $defaultValue = self::NO_PARAM)
     {
         $this->name = $name;
         $this->modifier = $modifier ?? Modifier::PUBLIC;
@@ -40,15 +37,13 @@ class Property extends DependencyAwareGenerator
     }
 
     /**
-     * @param mixed $value
-     *
      * @return static
      */
     public static function new(
         string $name,
         ?string $modifier = Modifier::PUBLIC,
         string $typeHint = '',
-        $value = self::NO_PARAM
+        mixed $value = self::NO_PARAM,
     ): self {
         return new static($name, $modifier, $typeHint, $value);
     }
@@ -98,8 +93,6 @@ class Property extends DependencyAwareGenerator
     }
 
     /**
-     * @param mixed $value
-     *
      * @return $this
      */
     public function setDefaultValue($value): self

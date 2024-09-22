@@ -53,11 +53,9 @@ class PhpInterface extends OOPStructure
     }
 
     /**
-     * @param mixed $value
-     *
      * @return $this
      */
-    public function addConst(string $name, $value): self
+    public function addConst(string $name, mixed $value): self
     {
         return $this->append(Property::new($name, Modifier::PUBLIC, '', $value)->setConst());
     }

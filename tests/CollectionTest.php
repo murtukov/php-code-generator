@@ -26,6 +26,7 @@ class CollectionTest extends TestCase
 
     /**
      * @test
+     *
      * @depends emptyAssoc
      */
     public function addItemsAssoc(Collection $collection): void
@@ -111,7 +112,7 @@ class CollectionTest extends TestCase
             ->setMultiline()
         ;
 
-        $this->assertEquals(5, $collection->count());
+        $this->assertEquals(6, $collection->count());
         $this->assertEquals(['Jack', 'Black'], $collection->getFirstItem());
 
         $this->assertEquals(<<<CODE
@@ -121,13 +122,14 @@ class CollectionTest extends TestCase
             'test' => 'Test',
             'test2' => 'value2',
             'test3' => 'value3',
+            'test6' => 'value6',
         ]
         CODE, $collection->generate());
 
         $collection->setInline();
 
         $this->assertEquals(
-            "['names' => ['Jack', 'Black'], 'number' => 1, 'test' => 'Test', 'test2' => 'value2', 'test3' => 'value3']",
+            "['names' => ['Jack', 'Black'], 'number' => 1, 'test' => 'Test', 'test2' => 'value2', 'test3' => 'value3', 'test6' => 'value6']",
             $collection->generate()
         );
     }
@@ -203,7 +205,7 @@ class CollectionTest extends TestCase
      */
     public function stringifyWithCustomConverter(): void
     {
-        $converter = new class() implements ConverterInterface {
+        $converter = new class implements ConverterInterface {
             public function convert($value)
             {
                 return new Text(ltrim($value, 'pre_'));

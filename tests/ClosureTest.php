@@ -25,9 +25,10 @@ class ClosureTest extends TestCase
 
     /**
      * @test
+     *
      * @depends emptyBase
      */
-    public function addArguments(CLosure $closure): Closure
+    public function addArguments(Closure $closure): Closure
     {
         $closure->addArgument('value');
 
@@ -50,6 +51,7 @@ class ClosureTest extends TestCase
 
     /**
      * @test
+     *
      * @depends addArguments
      */
     public function bindVars(Closure $closure): Closure
@@ -68,6 +70,7 @@ class ClosureTest extends TestCase
 
     /**
      * @test
+     *
      * @depends bindVars
      */
     public function addContent(Closure $closure): Closure
@@ -92,6 +95,7 @@ class ClosureTest extends TestCase
 
     /**
      * @test
+     *
      * @depends addContent
      */
     public function modifyParts(Closure $closure): void

@@ -25,6 +25,7 @@ class ArrowFunctionTest extends TestCase
 
     /**
      * @test
+     *
      * @depends emptyBody
      */
     public function setExpression(ArrowFunction $arrow): array
@@ -54,6 +55,7 @@ class ArrowFunctionTest extends TestCase
 
     /**
      * @test
+     *
      * @depends setExpression
      */
     public function setStatic(array $values): void

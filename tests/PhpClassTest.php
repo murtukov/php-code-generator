@@ -30,6 +30,7 @@ class PhpClassTest extends TestCase
 
     /**
      * @test
+     *
      * @depends emptyBase
      */
     public function addExtend(PhpClass $class): PhpClass
@@ -48,6 +49,7 @@ class PhpClassTest extends TestCase
 
     /**
      * @test
+     *
      * @depends addExtend
      */
     public function addImplements(PhpClass $class): PhpClass
@@ -66,6 +68,7 @@ class PhpClassTest extends TestCase
 
     /**
      * @test
+     *
      * @depends addImplements
      */
     public function addProperties(PhpClass $class): PhpClass
@@ -165,6 +168,7 @@ class PhpClassTest extends TestCase
 
     /**
      * @test
+     *
      * @depends fullBuild
      */
     public function removeParts(PhpClass $class): PhpClass
@@ -189,6 +193,7 @@ class PhpClassTest extends TestCase
 
     /**
      * @test
+     *
      * @depends removeParts
      */
     public function addAnotherParts(PhpClass $class): void

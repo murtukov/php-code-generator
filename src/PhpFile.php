@@ -16,8 +16,8 @@ class PhpFile extends DependencyAwareGenerator
     protected string $name;
     protected ?Comment $comment;
 
-    /** @var PhpClass[] */
-    protected array $classes = [];
+    /** @var OOPStructure[] */
+    protected array $oopStructures = [];
 
     /** @var string[] */
     protected array $declares = [];
@@ -25,7 +25,7 @@ class PhpFile extends DependencyAwareGenerator
     public function __construct(string $name = '')
     {
         $this->name = $name;
-        $this->dependencyAwareChildren = [&$this->classes];
+        $this->dependencyAwareChildren = [&$this->oopStructures];
     }
 
     public static function new(string $name = ''): self
@@ -36,12 +36,12 @@ class PhpFile extends DependencyAwareGenerator
     public function generate(): string
     {
         $namespace = $this->namespace ? "\nnamespace $this->namespace;\n" : '';
-        $classes = implode("\n\n", $this->classes);
+        $oopStructures = implode("\n\n", $this->oopStructures);
 
         return <<<CODE
         <?php
         $namespace{$this->buildUseStatements()}
-        $classes
+        $oopStructures
         CODE;
     }
 
@@ -50,38 +50,92 @@ class PhpFile extends DependencyAwareGenerator
         return $this->generate();
     }
 
+    public function removeOOPStructure(string $name, ?string $type = null): self
+    {
+        foreach ($this->oopStructures as $key => $oopStructure) {
+            if ($oopStructure->name === $name && ($type === null || $oopStructure instanceof $type)) {
+                unset($this->oopStructures[$key]);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getOOPStructure(string $name, ?string $type = null): ?OOPStructure
+    {
+        foreach ($this->oopStructures as $key => $oopStructure) {
+            if ($oopStructure->name === $name && ($type === null || $oopStructure instanceof $type)) {
+                return $this->oopStructures[$key];
+            }
+        }
+
+        return null;
+    }
+
     public function addClass(PhpClass $class): self
     {
-        $this->classes[] = $class;
+        $this->oopStructures[] = $class;
 
         return $this;
     }
 
     public function createClass(string $name): PhpClass
     {
-        return $this->classes[] = PhpClass::new($name);
+        return $this->oopStructures[] = PhpClass::new($name);
     }
 
     public function removeClass(string $name): self
     {
-        foreach ($this->classes as $key => $class) {
-            if ($class->name === $name) {
-                unset($this->classes[$key]);
-            }
-        }
-
-        return $this;
+        return $this->removeOOPStructure($name, PhpClass::class);
     }
 
     public function getClass(string $name): ?PhpClass
     {
-        foreach ($this->classes as $key => $class) {
-            if ($class->name === $name) {
-                return $this->classes[$key];
-            }
-        }
+        return $this->getOOPStructure($name, PhpClass::class);
+    }
 
-        return null;
+    public function addTrait(PhpTrait $trait): self
+    {
+        $this->oopStructures[] = $trait;
+
+        return $this;
+    }
+
+    public function createTrait(string $name): PhpTrait
+    {
+        return $this->oopStructures[] = PhpTrait::new($name);
+    }
+
+    public function removeTrait(string $name): self
+    {
+        return $this->removeOOPStructure($name, PhpTrait::class);
+    }
+
+    public function getTrait(string $name): ?PhpTrait
+    {
+        return $this->getOOPStructure($name, PhpTrait::class);
+    }
+
+    public function addInterface(PhpInterface $trait): self
+    {
+        $this->oopStructures[] = $trait;
+
+        return $this;
+    }
+
+    public function createInterface(string $name): PhpInterface
+    {
+        return $this->oopStructures[] = PhpInterface::new($name);
+    }
+
+    public function removeInterface(string $name): self
+    {
+        return $this->removeOOPStructure($name, PhpInterface::class);
+    }
+
+    public function getInterface(string $name): ?PhpInterface
+    {
+        return $this->getOOPStructure($name, PhpInterface::class);
     }
 
     public function getNamespace(): string

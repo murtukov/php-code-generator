@@ -96,6 +96,10 @@ class Utils
 
             case 'object':
                 if (!$value instanceof GeneratorInterface) {
+                    if (enum_exists($value::class)) {
+                        return '\\'.$value::class.'::'.$value->name;
+                    }
+
                     try {
                         $result = json_encode($value->__toString());
 

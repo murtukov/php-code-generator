@@ -19,6 +19,11 @@
             "Murtukov\\PHPCodeGenerator\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
     "require-dev": {
         "phpstan/phpstan": "^1.12.4",
         "phpunit/phpunit": "^10",

@@ -25,7 +25,7 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
         private string $name,
         string $type = '',
         mixed $defaultValue = self::NO_PARAM,
-        private string $modifier = Modifier::NONE,
+        private Modifier $modifier = Modifier::NONE,
     ) {
         $this->type = $this->resolveQualifier($type);
 
@@ -37,7 +37,7 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
     /**
      * @return static
      */
-    public static function new(string $name, string $type = '', mixed $defaultValue = self::NO_PARAM, string $modifier = Modifier::NONE): self
+    public static function new(string $name, string $type = '', mixed $defaultValue = self::NO_PARAM, Modifier $modifier = Modifier::NONE): self
     {
         return new static($name, $type, $defaultValue, $modifier);
     }
@@ -47,7 +47,7 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
         $code = '';
 
         if (Modifier::NONE !== $this->modifier) {
-            $code .= $this->modifier.' ';
+            $code .= $this->modifier->value.' ';
         }
 
         if ($this->type) {
@@ -173,7 +173,7 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
         return $this;
     }
 
-    public function setModifier(string $modifier): self
+    public function setModifier(Modifier $modifier): self
     {
         $this->modifier = $modifier;
 

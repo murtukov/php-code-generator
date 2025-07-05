@@ -11,7 +11,7 @@ class Method extends AbstractFunction implements BlockInterface
 
     final public function __construct(
         string $name,
-        string $modifier = Modifier::PUBLIC,
+        Modifier $modifier = Modifier::PUBLIC,
         string $returnType = '',
     ) {
         $this->signature = new Signature($name, $modifier, $returnType);
@@ -21,7 +21,7 @@ class Method extends AbstractFunction implements BlockInterface
     /**
      * @return static
      */
-    public static function new(string $name, string $modifier = Modifier::PUBLIC, string $returnType = ''): self
+    public static function new(string $name, Modifier $modifier = Modifier::PUBLIC, string $returnType = ''): self
     {
         return new static($name, $modifier, $returnType);
     }

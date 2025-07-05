@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator;
 
-abstract class Modifier
+enum Modifier: string
 {
-    public const NONE = '';
-    public const PUBLIC = 'public';
-    public const PROTECTED = 'protected';
-    public const PRIVATE = 'private';
+    case NONE = '';
+    case PUBLIC = 'public';
+    case PROTECTED = 'protected';
+    case PRIVATE = 'private';
 }

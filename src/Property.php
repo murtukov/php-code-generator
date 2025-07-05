@@ -17,12 +17,12 @@ class Property extends DependencyAwareGenerator
     public bool $isConst = false;
 
     private string $value = '';
-    private string $modifier;
+    private Modifier $modifier;
     private string $typeHint;
 
     final public function __construct(
         public string $name,
-        ?string $modifier,
+        ?Modifier $modifier,
         string $typeHint = '',
         mixed $defaultValue = self::NO_PARAM,
     ) {
@@ -43,7 +43,7 @@ class Property extends DependencyAwareGenerator
      */
     public static function new(
         string $name,
-        ?string $modifier = Modifier::PUBLIC,
+        ?Modifier $modifier = Modifier::PUBLIC,
         string $typeHint = '',
         mixed $value = self::NO_PARAM,
     ): self {
@@ -66,10 +66,10 @@ class Property extends DependencyAwareGenerator
         }
 
         if ($this->isConst) {
-            return "$docBlock$this->modifier const $this->name$value";
+            return "$docBlock{$this->modifier->value} const $this->name$value";
         }
 
-        return "{$docBlock}{$this->modifier} {$isStatic}{$typeHint}$$this->name{$value}";
+        return "$docBlock{$this->modifier->value} {$isStatic}{$typeHint}$$this->name{$value}";
     }
 
     public function getName(): string
@@ -84,7 +84,7 @@ class Property extends DependencyAwareGenerator
         return $this;
     }
 
-    public function getModifier(): string
+    public function getModifier(): Modifier
     {
         return $this->modifier;
     }
@@ -136,21 +136,21 @@ class Property extends DependencyAwareGenerator
 
     public function setPublic(): self
     {
-        $this->modifier = 'public';
+        $this->modifier = Modifier::PUBLIC;
 
         return $this;
     }
 
     public function setPrivate(): self
     {
-        $this->modifier = 'private';
+        $this->modifier = Modifier::PRIVATE;
 
         return $this;
     }
 
     public function setProtected(): self
     {
-        $this->modifier = 'protected';
+        $this->modifier = Modifier::PROTECTED;
 
         return $this;
     }

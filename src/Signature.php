@@ -22,7 +22,7 @@ class Signature extends DependencyAwareGenerator
 
     public function __construct(
         public string $name = '',
-        public string $modifier = Modifier::NONE,
+        public Modifier $modifier = Modifier::NONE,
         string $returnType = '',
         protected string $qualifier = 'function ',
     ) {
@@ -90,7 +90,7 @@ class Signature extends DependencyAwareGenerator
         string $name,
         string $type = '',
         mixed $defaultValue = Argument::NO_PARAM,
-        string $modifier = Modifier::NONE,
+        Modifier $modifier = Modifier::NONE,
     ): Argument {
         return $this->args[] = new Argument($name, $type, $defaultValue, $modifier);
     }
@@ -102,7 +102,7 @@ class Signature extends DependencyAwareGenerator
         string $name,
         string $type = '',
         mixed $defaultValue = Argument::NO_PARAM,
-        string $modifier = Modifier::NONE,
+        Modifier $modifier = Modifier::NONE,
     ): self {
         if (1 === func_num_args()) {
             $this->args[] = "$$name";
@@ -169,7 +169,7 @@ class Signature extends DependencyAwareGenerator
 
         $uses = '';
         $isStatic = $this->isStatic ? 'static ' : '';
-        $modifier = $this->modifier ? "$this->modifier " : '';
+        $modifier = $this->modifier !== Modifier::NONE ? "{$this->modifier->value} " : '';
         $returnType = '';
 
         if (!empty($this->uses)) {
@@ -203,6 +203,20 @@ class Signature extends DependencyAwareGenerator
     public function unsetMultiline(): self
     {
         $this->isMultiline = false;
+
+        return $this;
+    }
+
+    public function setModifier(Modifier $modifier): self
+    {
+        $this->modifier = $modifier;
+
+        return $this;
+    }
+
+    public function unsetModifier(): self
+    {
+        $this->modifier = Modifier::NONE;
 
         return $this;
     }

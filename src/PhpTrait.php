@@ -9,12 +9,12 @@ class PhpTrait extends OOPStructure
     /**
      * @return $this
      */
-    public function addProperty(string $name, string $modifier = Modifier::PUBLIC, string $type = '', mixed $defaulValue = Property::NO_PARAM): self
+    public function addProperty(string $name, Modifier $modifier = Modifier::PUBLIC, string $type = '', mixed $defaulValue = Property::NO_PARAM): self
     {
         return $this->append(new Property($name, $modifier, $type, $defaulValue));
     }
 
-    public function createProperty(string $name, string $modifier = Modifier::PUBLIC, string $type = '', mixed $defaulValue = Property::NO_PARAM): Property
+    public function createProperty(string $name, Modifier $modifier = Modifier::PUBLIC, string $type = '', mixed $defaulValue = Property::NO_PARAM): Property
     {
         $property = new Property($name, $modifier, $type, $defaulValue);
 
@@ -23,12 +23,12 @@ class PhpTrait extends OOPStructure
         return $property;
     }
 
-    public function addMethod(string $name, string $modifier = 'public', string $returnType = ''): self
+    public function addMethod(string $name, Modifier $modifier = Modifier::PUBLIC, string $returnType = ''): self
     {
         return $this->append(new Method($name, $modifier, $returnType))->emptyLine();
     }
 
-    public function createMethod(string $name, string $modifier = 'public', string $returnType = ''): Method
+    public function createMethod(string $name, Modifier $modifier = Modifier::PUBLIC, string $returnType = ''): Method
     {
         $method = new Method($name, $modifier, $returnType);
 
@@ -37,7 +37,7 @@ class PhpTrait extends OOPStructure
         return $method;
     }
 
-    public function createConstructor(string $modifier = 'public'): Method
+    public function createConstructor(Modifier $modifier = Modifier::PUBLIC): Method
     {
         $constructor = new Method('__construct', $modifier, '');
 

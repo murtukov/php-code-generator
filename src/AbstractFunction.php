@@ -48,7 +48,7 @@ abstract class AbstractFunction extends DependencyAwareGenerator
         return $this;
     }
 
-    public function createArgument(string $name, string $type = '', mixed $defaultValue = Argument::NO_PARAM, string $modifier = Modifier::NONE): Argument
+    public function createArgument(string $name, string $type = '', mixed $defaultValue = Argument::NO_PARAM, Modifier $modifier = Modifier::NONE): Argument
     {
         return $this->signature->createArgument($name, $type, $defaultValue, $modifier);
     }
@@ -56,7 +56,7 @@ abstract class AbstractFunction extends DependencyAwareGenerator
     /**
      * @return $this
      */
-    public function addArgument(string $name, string $type = '', mixed $defaultValue = Argument::NO_PARAM, string $modifier = Modifier::NONE): self
+    public function addArgument(string $name, string $type = '', mixed $defaultValue = Argument::NO_PARAM, Modifier $modifier = Modifier::NONE): self
     {
         $this->signature->addArgument($name, $type, $defaultValue, $modifier);
 

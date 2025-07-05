@@ -60,7 +60,7 @@ class PhpClass extends OOPStructure
     /**
      * @return $this
      */
-    public function addConst(string $name, mixed $value, string $modifier = Modifier::PUBLIC): self
+    public function addConst(string $name, mixed $value, Modifier $modifier = Modifier::PUBLIC): self
     {
         return $this->append(Property::new($name, $modifier, '', $value)->setConst());
     }
@@ -68,12 +68,12 @@ class PhpClass extends OOPStructure
     /**
      * @return $this
      */
-    public function addProperty(string $name, string $modifier = Modifier::PUBLIC, string $type = '', mixed $defaulValue = ''): self
+    public function addProperty(string $name, Modifier $modifier = Modifier::PUBLIC, string $type = '', mixed $defaulValue = ''): self
     {
         return $this->append(new Property($name, $modifier, $type, $defaulValue));
     }
 
-    public function addMethod(string $name, string $modifier = 'public', string $returnType = ''): self
+    public function addMethod(string $name, Modifier $modifier = Modifier::PUBLIC, string $returnType = ''): self
     {
         return $this
             ->append(new Method($name, $modifier, $returnType))
@@ -81,7 +81,7 @@ class PhpClass extends OOPStructure
         ;
     }
 
-    public function createMethod(string $name, string $modifier = 'public', string $returnType = ''): Method
+    public function createMethod(string $name, Modifier $modifier = Modifier::PUBLIC, string $returnType = ''): Method
     {
         $method = new Method($name, $modifier, $returnType);
 
@@ -90,7 +90,7 @@ class PhpClass extends OOPStructure
         return $method;
     }
 
-    public function createConstructor(string $modifier = 'public'): Method
+    public function createConstructor(Modifier $modifier = Modifier::PUBLIC): Method
     {
         $constructor = new Method('__construct', $modifier, '');
 

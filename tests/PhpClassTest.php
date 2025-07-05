@@ -196,7 +196,7 @@ class PhpClassTest extends TestCase
      *
      * @depends removeParts
      */
-    public function addAnotherParts(PhpClass $class): void
+    public function addOtherParts(PhpClass $class): PhpClass
     {
         $class->setAbstract();
         $class->createDocBlock()
@@ -220,6 +220,37 @@ class PhpClassTest extends TestCase
             public function myCustomMethod()
             {
             }
+        }
+        CODE);
+
+        echo $class;
+
+        return $class;
+    }
+
+    /**
+     * @test
+     *
+     * @depends addOtherParts
+     */
+    public function constructorPropertyPromotion(PhpClass $class): void
+    {
+        $class->removeDocBlock();
+        $class->clearContent();
+
+        // Add promoted properties
+        $class->addPromotedProperty('repository', Modifier::PRIVATE, 'UserRepository');
+        $class->addPromotedProperty('logger', Modifier::PRIVATE, '?LoggerInterface', null);
+        $class->addPromotedProperty('config', Modifier::PROTECTED, 'array', []);
+
+        $this->expectOutputString(<<<'CODE'
+        class Stringifier
+        {
+            public function __construct(
+                private UserRepository $repository,
+                private ?LoggerInterface $logger = null,
+                protected array $config = []
+            ) {}
         }
         CODE);
 

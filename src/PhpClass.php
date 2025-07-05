@@ -12,6 +12,7 @@ class PhpClass extends OOPStructure
     protected bool $isAbstract = false;
     protected bool $isFinal = false;
     protected array $implements = [];
+    protected Method $constructor;
 
     public function setExtends(string $fqcn): self
     {
@@ -92,11 +93,27 @@ class PhpClass extends OOPStructure
 
     public function createConstructor(Modifier $modifier = Modifier::PUBLIC): Method
     {
-        $constructor = new Method('__construct', $modifier, '');
+        $this->constructor = new Method('__construct', $modifier, '');
 
-        $this->append($constructor)->emptyLine();
+        $this->append($this->constructor)->emptyLine();
 
-        return $constructor;
+        return $this->constructor;
+    }
+
+    public function addPromotedProperty(
+        string $name,
+        Modifier $modifier = Modifier::PUBLIC,
+        string $type = '', 
+        mixed $defaultValue = Argument::NO_PARAM
+    ): self {
+        if (empty($this->constructor)) {
+            $this->createConstructor();
+            $this->constructor->signature->setMultiline();
+        }
+
+        $this->constructor->addArgument($name, $type, $defaultValue, $modifier);
+
+        return $this;
     }
 
     public function generate(): string

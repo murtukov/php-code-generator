@@ -12,11 +12,9 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
     public const NO_PARAM = INF;
 
     private string $type;
-    private string $name;
     private bool $isSpread = false;
     private bool $isByReference = false;
     private bool $isNullable = false;
-    private string $modifier;
 
     private mixed $defaultValue = '';
 
@@ -24,14 +22,12 @@ class Argument extends DependencyAwareGenerator implements FunctionMemberInterfa
      * Argument constructor.
      */
     final public function __construct(
-        string $name,
+        private string $name,
         string $type = '',
         mixed $defaultValue = self::NO_PARAM,
-        string $modifier = Modifier::NONE,
+        private string $modifier = Modifier::NONE,
     ) {
-        $this->name = $name;
         $this->type = $this->resolveQualifier($type);
-        $this->modifier = $modifier;
 
         if (INF !== $defaultValue) {
             $this->defaultValue = Utils::stringify($defaultValue);

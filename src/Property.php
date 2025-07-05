@@ -11,7 +11,6 @@ class Property extends DependencyAwareGenerator
      */
     public const NO_PARAM = INF;
 
-    public string $name;
     public ?Comment $docBlock = null;
     public bool $isNullable = false;
     public bool $isStatic = false;
@@ -21,9 +20,12 @@ class Property extends DependencyAwareGenerator
     private string $modifier;
     private string $typeHint;
 
-    final public function __construct(string $name, ?string $modifier, string $typeHint = '', mixed $defaultValue = self::NO_PARAM)
-    {
-        $this->name = $name;
+    final public function __construct(
+        public string $name,
+        ?string $modifier,
+        string $typeHint = '',
+        mixed $defaultValue = self::NO_PARAM,
+    ) {
         $this->modifier = $modifier ?? Modifier::PUBLIC;
         $this->typeHint = $this->resolveQualifier($typeHint);
 

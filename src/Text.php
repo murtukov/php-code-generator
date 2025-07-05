@@ -6,13 +6,10 @@ namespace Murtukov\PHPCodeGenerator;
 
 class Text extends AbstractGenerator
 {
-    public string $value;
-    public bool $doubleQuotes;
-
-    public function __construct(string $value, bool $doubleQuotes = false)
-    {
-        $this->value = $value;
-        $this->doubleQuotes = $doubleQuotes;
+    public function __construct(
+        public string $value,
+        public bool $doubleQuotes = false,
+    ) {
     }
 
     public static function new(string $value, bool $doubleQuotes = false): self

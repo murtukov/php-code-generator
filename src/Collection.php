@@ -4,26 +4,20 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator;
 
-use Closure;
-
 use function count;
 use function is_callable;
 
 class Collection extends DependencyAwareGenerator
 {
-    protected array $items = [];
-    protected bool $multiline = false;
-    protected bool $withKeys = true;
     protected array $converters = [];
     protected string $orderBy = 'none';
-
     protected Utils $utils;
 
-    final private function __construct(array $items = [], bool $multiline = false, bool $withKeys = true)
-    {
-        $this->items = $items;
-        $this->multiline = $multiline;
-        $this->withKeys = $withKeys;
+    final private function __construct(
+        protected array $items = [],
+        protected bool $multiline = false,
+        protected bool $withKeys = true,
+    ) {
         $this->utils = new Utils();
     }
 
@@ -46,7 +40,7 @@ class Collection extends DependencyAwareGenerator
     }
 
     /**
-     * Creates a multiline array and adds all provided items, after applying a callback to them.
+     * Creates a multiline array and adds all provided items after applying a callback to them.
      *
      * @return static
      */
@@ -78,7 +72,7 @@ class Collection extends DependencyAwareGenerator
     }
 
     /**
-     * Adds item to the array if it's not equal null.
+     * Adds an item to the array if it's not equal null.
      */
     public function addIfNotNull(string $key, mixed $value): self
     {
@@ -167,10 +161,7 @@ class Collection extends DependencyAwareGenerator
         return count($this->items);
     }
 
-    /**
-     * @return GeneratorInterface|string|null
-     */
-    public function getFirstItem()
+    public function getFirstItem(): array|null
     {
         return reset($this->items) ?: null;
     }
@@ -193,10 +184,7 @@ class Collection extends DependencyAwareGenerator
         );
     }
 
-    /**
-     * @param string|GeneratorInterface $item
-     */
-    public function push($item): self
+    public function push(GeneratorInterface|string $item): self
     {
         $this->items[] = $item;
 

@@ -50,7 +50,7 @@ class ArrowFunction extends AbstractFunction
         return $this;
     }
 
-    protected function manageExprDependency(mixed $value)
+    protected function manageExprDependency(mixed $value): mixed
     {
         if ($value instanceof DependencyAwareGenerator) {
             $this->dependencyAwareChildren['expr'] = $value;

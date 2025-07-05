@@ -16,30 +16,21 @@ class IfElse extends AbstractGenerator implements BlockInterface
 
     private ?ElseBlock $elseBlock = null;
 
-    /**
-     * @param GeneratorInterface|string $ifExpression
-     */
-    final public function __construct($ifExpression = '')
+    final public function __construct(GeneratorInterface|string $ifExpression = '')
     {
         $this->expression = $ifExpression;
-
         $this->dependencyAwareChildren = [&$this->content];
     }
 
     /**
-     * @param string $ifExpression
-     *
      * @return static
      */
-    public static function new($ifExpression = ''): self
+    public static function new(GeneratorInterface|string $ifExpression = ''): self
     {
         return new static($ifExpression);
     }
 
-    /**
-     * @param GeneratorInterface|string $expression
-     */
-    public function setExpression($expression): self
+    public function setExpression(GeneratorInterface|string $expression): self
     {
         $this->expression = $expression;
 
@@ -58,10 +49,7 @@ class IfElse extends AbstractGenerator implements BlockInterface
         CODE;
     }
 
-    /**
-     * @param GeneratorInterface|string $expression
-     */
-    public function createElseIf($expression = ''): ElseIfBlock
+    public function createElseIf(GeneratorInterface|string $expression = ''): ElseIfBlock
     {
         return $this->elseIfBlocks[] = new ElseIfBlock($expression, $this);
     }

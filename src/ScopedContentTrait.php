@@ -104,7 +104,7 @@ trait ScopedContentTrait
         return $left.$content.$right;
     }
 
-    private function createNewLine($values)
+    private function createNewLine($values): DependencyAwareGenerator
     {
         return new class($values) extends DependencyAwareGenerator {
             private array $parts;

@@ -8,18 +8,10 @@ class ElseIfBlock extends AbstractGenerator
 {
     use ScopedContentTrait;
 
-    /** @var GeneratorInterface|string */
-    public $expression;
-    public IfElse $parent;
-
-    /**
-     * @param GeneratorInterface|string $expression
-     */
-    public function __construct($expression, IfElse $parent)
-    {
-        $this->expression = $expression;
-        $this->parent = $parent;
-
+    public function __construct(
+        public GeneratorInterface|string $expression,
+        public IfElse $parent,
+    ) {
         $this->dependencyAwareChildren = [&$this->content];
     }
 

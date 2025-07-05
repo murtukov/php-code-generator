@@ -13,10 +13,10 @@ interface ConverterInterface
     public const TYPE_OBJECT = 'object';
     public const TYPE_ARRAY = 'array';
 
-    public function convert($value);
+    public function convert(mixed $value): mixed;
 
     /**
-     * Checks, whether the value should be converted.
+     * Checks whether the value should be converted.
      */
-    public function check($value): bool;
+    public function check(mixed $value): bool;
 }

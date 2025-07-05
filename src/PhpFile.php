@@ -13,7 +13,6 @@ use function mkdir;
 class PhpFile extends DependencyAwareGenerator
 {
     protected string $namespace = '';
-    protected string $name;
     protected ?Comment $comment;
 
     /** @var PhpClass[] */
@@ -22,9 +21,8 @@ class PhpFile extends DependencyAwareGenerator
     /** @var string[] */
     protected array $declares = [];
 
-    public function __construct(string $name = '')
+    public function __construct(protected string $name = '')
     {
-        $this->name = $name;
         $this->dependencyAwareChildren = [&$this->classes];
     }
 

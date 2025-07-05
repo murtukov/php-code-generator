@@ -13,14 +13,10 @@ class Loop extends DependencyAwareGenerator implements BlockInterface
     public const TYPE_FOREACH = 'foreach';
     public const TYPE_DO_WHILE = 'doWhile';
 
-    private string $condition;
-    private string $type;
-
-    final public function __construct(string $condition = '', string $type = self::TYPE_WHILE)
-    {
-        $this->condition = $condition;
-        $this->type = $type;
-
+    final public function __construct(
+        private readonly string $condition = '',
+        private readonly string $type = self::TYPE_WHILE,
+    ) {
         $this->dependencyAwareChildren = [&$this->content];
     }
 

@@ -8,12 +8,12 @@ use function sprintf;
 
 class Literal extends DependencyAwareGenerator
 {
-    private string $format;
     private array $values;
 
-    final public function __construct(string $format, GeneratorInterface ...$values)
-    {
-        $this->format = $format;
+    final public function __construct(
+        private readonly string $format,
+        GeneratorInterface ...$values,
+    ) {
         $this->values = $values ?? [];
         $this->dependencyAwareChildren = [$this->values];
     }

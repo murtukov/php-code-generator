@@ -10,14 +10,13 @@ class Comment extends AbstractGenerator implements BlockInterface
     public const TYPE_DOCBLOCK = 'DocBlock';
     public const TYPE_HASH = 'Hash';
     public const TYPE_SLASH = 'Slash';
-
-    protected string $type;
     protected array $lines = [];
 
-    final private function __construct(string $text = '', string $type = self::TYPE_STAR)
-    {
+    final private function __construct(
+        string $text = '',
+        protected string $type = self::TYPE_STAR,
+    ) {
         $this->addText($text);
-        $this->type = $type;
     }
 
     /**

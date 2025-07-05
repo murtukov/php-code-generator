@@ -44,6 +44,9 @@ class Utils
      */
     private static array $customConverters = [];
 
+    /**
+     * @throws Exception
+     */
     public static function stringify(mixed $value, ?bool $multiline = null, ?bool $withKeys = null, array $converters = []): string
     {
         // Common options to avoid passing them recursively

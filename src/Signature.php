@@ -13,27 +13,20 @@ class Signature extends DependencyAwareGenerator
 {
     use DocBlockTrait;
 
-    public string $name;
     public bool $isStatic = false;
-    public string $modifier;
     public bool $isMultiline = false;
 
     protected string $returnType = '';
     protected array $args = [];
     protected array $uses = []; // variables of parent scope
-    protected string $qualifier;
 
     public function __construct(
-        string $name = '',
-        string $modifier = Modifier::NONE,
+        public string $name = '',
+        public string $modifier = Modifier::NONE,
         string $returnType = '',
-        string $qualifier = 'function ',
+        protected string $qualifier = 'function ',
     ) {
-        $this->name = $name;
-        $this->modifier = $modifier;
         $this->returnType = $this->resolveQualifier($returnType);
-        $this->qualifier = $qualifier;
-
         $this->dependencyAwareChildren = [&$this->args];
     }
 

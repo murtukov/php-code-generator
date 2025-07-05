@@ -8,12 +8,8 @@ class ElseBlock extends AbstractGenerator
 {
     use ScopedContentTrait;
 
-    public IfElse $parent;
-
-    public function __construct(IfElse $parent)
+    public function __construct(public IfElse $parent)
     {
-        $this->parent = $parent;
-
         $this->dependencyAwareChildren = [&$this->content];
     }
 

@@ -41,7 +41,7 @@ class CollectionTest extends TestCase
             ->addItem('money', null)
             ->addItem('friends', ['Alex', 'Mary', 'Paul'])
             ->addItem('foes', Collection::numeric(['Max', 'Joel', 'Bryan'], true))
-            ->addItem('colleаgues', Collection::assoc([
+            ->addItem('colleagues', Collection::assoc([
                 'Jane' => [
                     'position' => 'designer',
                     'age' => 30,
@@ -68,7 +68,7 @@ class CollectionTest extends TestCase
                 'Joel',
                 'Bryan',
             ],
-            'colleаgues' => [
+            'colleagues' => [
                 'Jane' => [
                     'position' => 'designer',
                     'age' => 30,
@@ -206,14 +206,14 @@ class CollectionTest extends TestCase
     public function stringifyWithCustomConverter(): void
     {
         $converter = new class implements ConverterInterface {
-            public function convert($value)
+            public function convert(mixed $value): Text
             {
                 return new Text(ltrim($value, 'pre_'));
             }
 
-            public function check($string): bool
+            public function check(mixed $value): bool
             {
-                if (\is_string($string) && 'pre_' === substr($string, 0, 4)) {
+                if (is_string($value) && str_starts_with($value, 'pre_')) {
                     return true;
                 }
 

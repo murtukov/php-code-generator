@@ -9,8 +9,11 @@ class Method extends AbstractFunction implements BlockInterface
     use ScopedContentTrait;
     use DocBlockTrait;
 
-    final public function __construct(string $name, string $modifier = Modifier::PUBLIC, string $returnType = '')
-    {
+    final public function __construct(
+        string $name,
+        string $modifier = Modifier::PUBLIC,
+        string $returnType = '',
+    ) {
         $this->signature = new Signature($name, $modifier, $returnType);
         $this->dependencyAwareChildren = [$this->signature, &$this->content];
     }

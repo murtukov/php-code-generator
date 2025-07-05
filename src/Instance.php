@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Murtukov\PHPCodeGenerator;
 
+use Exception;
+
 class Instance extends DependencyAwareGenerator
 {
     private array $args;
@@ -16,6 +18,9 @@ class Instance extends DependencyAwareGenerator
         $this->args = $args;
     }
 
+    /**
+     * @throws Exception
+     */
     public function generate(): string
     {
         if (empty($this->args)) {

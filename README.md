@@ -13,6 +13,7 @@ A library to generate PHP 7.4 code
     - [Class](#class)
     - [Interface](#interface)
     - [Trait](#trait)
+    - [Enum](#enum)
 - Functions
     - [Function](#function)
     - [Method](#method)
@@ -109,12 +110,12 @@ final class Stringifier extends Exception implements JsonSerializable, ArrayAcce
 {
     private const KNOWN_TYPES = ['DYNAMIC', 'STATIC'];
     private $errors = [];
-    
+
     public function __construct()
     {
         parent::__construct(...func_get_args());
     }
-    
+
     public function getErrors(): array
     {
         // Add here your content...
@@ -158,7 +159,7 @@ interface StringifierInterface extends BlockInterface, ConverterInterface
 {
     public const NAME = 'MyInterface';
     public const TYPE = 'Component';
-    
+
     public function parse(): string;
 
     /**
@@ -206,16 +207,182 @@ trait Stringifier
 {
     private array $cache = [];
     protected ?SplHeap $heap = null;
-    
+
     public function __construct()
     {
         parent::__construct(...func_get_args());
     }
-    
+
     public function getErrors(): array
     {
         # Add your content here...
         return [];
+    }
+}
+```
+
+## Enum
+
+### Basic Usage
+
+```php
+use Murtukov\PHPCodeGenerator\Enum;
+
+// Add cases without values
+$enum = Enum::new('Status')
+    ->addCase('PENDING')
+    ->addCase('ACTIVE')
+    ->addCase('INACTIVE');
+
+echo $enum;
+```
+Result:
+```php
+enum Status
+{
+    case PENDING;
+    case ACTIVE;
+    case INACTIVE;
+}
+```
+
+### Backed Enum
+
+Enums can be typed using the `EnumType` enum:
+
+```php
+use Murtukov\PHPCodeGenerator\Enum;
+use Murtukov\PHPCodeGenerator\EnumType;
+
+// String enum with values
+$enum = Enum::new('Status')
+    ->setType(EnumType::STRING)
+    ->addCase('PENDING', 'pending')
+    ->addCase('ACTIVE', 'active')
+    ->addCase('INACTIVE', 'inactive');
+
+echo $enum;
+```
+Result:
+```php
+enum Status: string
+{
+    case PENDING = 'pending';
+    case ACTIVE = 'active';
+    case INACTIVE = 'inactive';
+}
+```
+
+### Integer Enums
+
+```php
+use Murtukov\PHPCodeGenerator\Enum;
+use Murtukov\PHPCodeGenerator\EnumType;
+
+// Integer enum with values
+$enum = Enum::new('HttpStatus')
+    ->setType(EnumType::INT)
+    ->addCase('OK', 200)
+    ->addCase('NOT_FOUND', 404)
+    ->addCase('INTERNAL_SERVER_ERROR', 500);
+
+echo $enum;
+```
+Result:
+```php
+enum HttpStatus: int
+{
+    case OK = 200;
+    case NOT_FOUND = 404;
+    case INTERNAL_SERVER_ERROR = 500;
+}
+```
+
+### Implementing Interfaces
+
+```php
+use Murtukov\PHPCodeGenerator\Enum;
+use Murtukov\PHPCodeGenerator\EnumType;
+
+$enum = Enum::new('Status')
+    ->setType(EnumType::STRING)
+    ->addCase('PENDING', 'pending')
+    ->addCase('ACTIVE', 'active')
+    ->addCase('INACTIVE', 'inactive')
+    ->addImplements(JsonSerializable::class);
+
+echo $enum;
+```
+Result:
+```php
+enum Status: string implements JsonSerializable
+{
+    case PENDING = 'pending';
+    case ACTIVE = 'active';
+    case INACTIVE = 'inactive';
+}
+```
+
+### Advanced Example With Methods
+
+```php
+use Murtukov\PHPCodeGenerator\Comment;
+use Murtukov\PHPCodeGenerator\Enum;
+use Murtukov\PHPCodeGenerator\EnumType;
+use Murtukov\PHPCodeGenerator\IfElse;
+use Murtukov\PHPCodeGenerator\Loop;
+use Murtukov\PHPCodeGenerator\Method;
+use Murtukov\PHPCodeGenerator\Modifier;
+
+$enum = Enum::new('Status')
+    ->setType(EnumType::STRING)
+    ->addCase('PENDING', 'pending')
+    ->addCase('ACTIVE', 'active')
+    ->addCase('INACTIVE', 'inactive')
+    ->addImplements(JsonSerializable::class)
+    ->addDocBlock('Status enum representing different states of an entity.');
+
+$enum->createMethod('jsonSerialize', Modifier::PUBLIC, 'mixed')
+    ->append('return $this->value');
+
+$enum->createMethod('fromValue', Modifier::PUBLIC, '?self')
+    ->setStatic()
+    ->addArgument('value', 'string')
+    ->append(
+        Loop::foreach('self::cases() as $case')
+            ->append(
+                IfElse::new('$case->value === $value')
+                    ->append('return $case')
+            )
+    )
+    ->append('return null');
+
+echo $enum;
+```
+Result:
+```php
+/**
+ * Status enum representing different states of an entity.
+ */
+enum Status: string implements JsonSerializable
+{
+    case PENDING = 'pending';
+    case ACTIVE = 'active';
+    case INACTIVE = 'inactive';
+
+    public function jsonSerialize(): mixed
+    {
+        return $this->value;
+    }
+
+    public static function fromValue(string $value): ?self
+    {
+        foreach (self::cases() as $case) {
+            if ($case->value === $value) {
+                return $case;
+            }
+        }
+        return null;
     }
 }
 ```
@@ -545,7 +712,7 @@ Results:
 ```php
 for ($i = 1; $i < 1000; ++$i) {
     $x = $i;
-    
+
     # Ok, stop now...
     break;
 }

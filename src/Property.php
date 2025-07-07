@@ -53,7 +53,7 @@ class Property extends DependencyAwareGenerator
     public function generate(): string
     {
         $docBlock = $this->docBlock ? "$this->docBlock\n" : '';
-        $value = $this->value ? " = $this->value" : '';
+        $value = $this->value !== '' ? " = $this->value" : '';
         $isStatic = $this->isStatic ? 'static ' : '';
 
         $typeHint = '';
